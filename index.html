@@ -178,6 +178,28 @@ body.return-mode .location strong{
   border-radius:999px;padding:7px 11px;font-size:.9rem;cursor:pointer
 }
 .cat-chip:hover{border-color:#9fb5c2;background:#fff}
+.quicktopics{
+  margin-top:14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.topic-btn{
+  border:1px solid #cbd8df;
+  background:#f8fbfc;
+  color:#203746;
+  border-radius:999px;
+  padding:8px 12px;
+  font-size:.95rem;
+  font-weight:700;
+  cursor:pointer;
+}
+.topic-btn:hover,.topic-btn:focus-visible{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+  outline:none;
+}
+body.return-mode .quicktopics{display:none}
 .return-instruction{
   display:none;
   background:var(--return-soft);
@@ -228,7 +250,21 @@ footer{
              placeholder="Titel, Autor, Thema, Genre, Stichwort …">
       <button class="clearbtn" id="clear" type="button" title="Suche löschen" aria-label="Suche löschen">×</button>
     </div>
-    <p class="helper" id="helper">Du kannst auch Themen eingeben, z. B. „Freundschaft“, „Fantasy“, „Nationalsozialismus“ oder „Englisch“.</p>
+    <p class="helper" id="helper">Du kannst auch einfach nach Stimmung oder Thema suchen, z. B. „spannend“, „lustig“, „gruselig“, „Liebe“, „Freundschaft“, „Fantasy“, „Tiere“, „Fußball“, „Weltraum“ oder „Englisch“.</p>
+    <div class="quicktopics" id="quicktopics" aria-label="Beliebte Themen">
+      <button class="topic-btn" type="button" data-query="lustig">😂 Lustig</button>
+      <button class="topic-btn" type="button" data-query="spannend">🔍 Spannend</button>
+      <button class="topic-btn" type="button" data-query="gruselig">👻 Gruselig</button>
+      <button class="topic-btn" type="button" data-query="liebe">❤️ Liebe</button>
+      <button class="topic-btn" type="button" data-query="freundschaft">🤝 Freundschaft</button>
+      <button class="topic-btn" type="button" data-query="fantasy">🐉 Fantasy</button>
+      <button class="topic-btn" type="button" data-query="tiere">🐾 Tiere</button>
+      <button class="topic-btn" type="button" data-query="pferde">🐴 Pferde</button>
+      <button class="topic-btn" type="button" data-query="fussball">⚽ Fußball</button>
+      <button class="topic-btn" type="button" data-query="abenteuer">🧭 Abenteuer</button>
+      <button class="topic-btn" type="button" data-query="manga">💥 Manga</button>
+      <button class="topic-btn" type="button" data-query="wissen">🧠 Wissen</button>
+    </div>
     <div class="return-instruction">Tippe möglichst Titel oder Autor ein. Der Ablageort wird bei jedem Treffer groß angezeigt.</div>
   </section>
 
@@ -285,11 +321,107 @@ for(const b of BOOKS){
   b._all = [b._title,b._author,b._category,b._language,b._series,b._status,b._note,b._keywords].join(" ");
 }
 
+// Thematische Suchbegriffe: Kinder und Jugendliche suchen oft nach Stimmung oder Alltagssprache
+// statt nach der exakten Katalogrubrik. Ein Oberbegriff darf deshalb mehrere passende Begriffe treffen.
+const SEARCH_ALIASES = {
+  "spannung": ["Spannung","spannend","Krimi","Action","Thriller","Detektiv","Detektive","Mystery","Ermittlung","Verbrechen","Mord","Geheimnis","Rätsel"],
+  "spannend": ["Spannung","spannend","Krimi","Action","Thriller","Detektiv","Detektive","Mystery","Ermittlung","Verbrechen","Mord","Geheimnis","Rätsel"],
+  "spannendes": ["Spannung","spannend","Krimi","Action","Thriller","Detektiv","Detektive","Mystery","Ermittlung","Verbrechen","Mord","Geheimnis","Rätsel"],
+  "actionreich": ["Action","Spannung","Thriller","Abenteuer","Krimi"],
+
+  "lustig": ["Humor","lustig","witzig","Komik","Witze","Spaß","Spass"],
+  "lustiges": ["Humor","lustig","witzig","Komik","Witze","Spaß","Spass"],
+  "witzig": ["Humor","lustig","witzig","Komik","Witze","Spaß","Spass"],
+  "witziges": ["Humor","lustig","witzig","Komik","Witze","Spaß","Spass"],
+  "lachen": ["Humor","lustig","witzig","Komik","Witze"],
+
+  "grusel": ["Grusel","gruseln","gruselig","Horror","unheimlich","Spuk","Geist","Geister","Gespenster","Phantom","Vampire","Werwolf"],
+  "gruselig": ["Grusel","gruseln","gruselig","Horror","unheimlich","Spuk","Geist","Geister","Gespenster","Phantom","Vampire","Werwolf"],
+  "gruseliges": ["Grusel","gruseln","gruselig","Horror","unheimlich","Spuk","Geist","Geister","Gespenster","Phantom","Vampire","Werwolf"],
+  "horror": ["Horror","Grusel","gruseln","unheimlich","Spuk","Geister","Gespenster"],
+
+  "liebe": ["Liebe","Romance","Romantik","romantisch","verliebt","Beziehung","Liebesgeschichte","Liebeskummer","Kuss","Herz"],
+  "romantisch": ["Liebe","Romance","Romantik","romantisch","verliebt","Beziehung","Liebesgeschichte","Kuss","Herz"],
+  "romantisches": ["Liebe","Romance","Romantik","romantisch","verliebt","Beziehung","Liebesgeschichte","Kuss","Herz"],
+  "romantik": ["Liebe","Romance","Romantik","verliebt","Beziehung","Liebesgeschichte"],
+  "verliebt": ["Liebe","Romance","Romantik","verliebt","Beziehung","Liebesgeschichte","Kuss"],
+
+  "freundschaft": ["Freundschaft","Freunde","Freund","Freundin","Clique","beste Freunde"],
+  "freunde": ["Freundschaft","Freunde","Freund","Freundin","Clique"],
+  "familie": ["Familie","Eltern","Mutter","Vater","Geschwister","Schwester","Bruder","Oma","Großmutter","Generationen"],
+  "schule": ["Schule","Schulalltag","Klasse","Klassenfahrt","Lehrer","Lehrerin","Schüler","Mobbing"],
+  "mobbing": ["Mobbing","Bullying","Ausgrenzung","Diskriminierung"],
+
+  "abenteuer": ["Abenteuer","Reise","Expedition","Survival","Wildnis","Piraten","Ritter"],
+  "abenteuerlich": ["Abenteuer","Reise","Expedition","Survival","Wildnis","Piraten","Ritter"],
+  "fantasy": ["Fantasy","Magie","magisch","Zauber","Hexen","Drachen","Parallelwelt","fantastische Welt"],
+  "magisch": ["Fantasy","Magie","magisch","Zauber","Hexen","Drachen","Parallelwelt"],
+  "magisches": ["Fantasy","Magie","magisch","Zauber","Hexen","Drachen","Parallelwelt"],
+  "zauber": ["Fantasy","Magie","magisch","Zauber","Hexen","Drachen"],
+
+  "traurig": ["Trauer","traurig","Verlust","Abschied","Tod","Kummer","Liebeskummer"],
+  "trauriges": ["Trauer","traurig","Verlust","Abschied","Tod","Kummer","Liebeskummer"],
+  "weinen": ["Trauer","Verlust","Abschied","Tod","Kummer"],
+
+  "tiere": ["Tiere","Tier","Hund","Hunde","Katze","Katzen","Pferde","Wolf","Wölfe","Delfin","Delfine","Zoo"],
+  "tierbuch": ["Tiere","Tier","Hund","Hunde","Katze","Katzen","Pferde","Wolf","Wölfe","Delfin","Delfine","Zoo"],
+  "tiergeschichten": ["Tiere","Tier","Hund","Hunde","Katze","Katzen","Pferde","Wolf","Wölfe","Delfin","Delfine","Zoo"],
+  "pferd": ["Pferd","Pferde","Pony","Ponys"],
+  "pferde": ["Pferd","Pferde","Pony","Ponys"],
+  "hund": ["Hund","Hunde"],
+  "hunde": ["Hund","Hunde"],
+  "katze": ["Katze","Katzen"],
+  "katzen": ["Katze","Katzen"],
+
+  "sport": ["Sport","Fußball","Fussball","Basketball","Schwimmen","Reiten","Lacrosse"],
+  "fussball": ["Fußball","Fussball","Soccer","Kicken","Kicker"],
+  "kicken": ["Fußball","Fussball","Soccer","Kicken","Kicker"],
+
+  "natur": ["Natur","Umwelt","Klima","Wald","Meer","Tiere","Pflanzen","Ökologie","Oekologie"],
+  "umwelt": ["Umwelt","Klima","Natur","Wald","Meer","Pflanzen","Ökologie","Oekologie"],
+  "klima": ["Klima","Umwelt","Natur","Klimawandel"],
+  "technik": ["Technik","Computer","Roboter","Robotik","digital","Internet","KI","künstliche Intelligenz"],
+  "computer": ["Computer","Technik","digital","Internet","Roboter","KI"],
+  "weltraum": ["Weltraum","Weltall","Astronomie","Planet","Planeten","Sonne","Mond","Sterne","Universum","Raumfahrt"],
+  "weltall": ["Weltraum","Weltall","Astronomie","Planet","Planeten","Sonne","Mond","Sterne","Universum","Raumfahrt"],
+  "space": ["Weltraum","Weltall","Astronomie","Planet","Planeten","Sonne","Mond","Sterne","Universum","Raumfahrt"],
+  "dinos": ["Dinos","Dinosaurier","Dinosaur"],
+  "dinosaurier": ["Dinos","Dinosaurier","Dinosaur"],
+
+  "geschichte": ["Geschichte","historisch","Vergangenheit","Zeitgeschichte","Mittelalter","Antike","Nationalsozialismus","Weltkrieg"],
+  "historisch": ["Geschichte","historisch","Vergangenheit","Zeitgeschichte","Mittelalter","Antike","Nationalsozialismus","Weltkrieg"],
+  "nazis": ["Nationalsozialismus","Nazis","NS","Drittes Reich","Holocaust","Shoah","Weltkrieg","Widerstand"],
+  "holocaust": ["Holocaust","Shoah","Nationalsozialismus","Judenverfolgung","Konzentrationslager"],
+
+  "biografie": ["Biografie","Biographie","Lebensgeschichte","wahre Geschichte","Personen"],
+  "biographie": ["Biografie","Biographie","Lebensgeschichte","wahre Geschichte","Personen"],
+  "wissen": ["Wissen","Sachbuch","Lexikon","wissenswert","Kinderwissen","Was ist was","Schauen und Wissen"],
+  "sachbuch": ["Wissen","Sachbuch","Lexikon","wissenswert","Kinderwissen","Was ist was","Schauen und Wissen"],
+  "infos": ["Wissen","Sachbuch","Lexikon","wissenswert","Kinderwissen"],
+
+  "ratsel": ["Rätsel","Raetsel","Geheimnis","Detektiv","Knobeln"],
+  "knobeln": ["Rätsel","Raetsel","Geheimnis","Detektiv","Knobeln"],
+  "manga": ["Manga","Anime","Japan","japanisch"],
+  "anime": ["Manga","Anime","Japan","japanisch"],
+  "comic": ["Comic","Graphic Novel","Bildergeschichte","Bilderroman","Sprechblasen"],
+  "englisch": ["Englisch","English","Fremdsprache","Originalsprache","First English Books"],
+  "english": ["Englisch","English","Fremdsprache","Originalsprache","First English Books"],
+  "queer": ["Queer","LGBTQ","LGBT","Coming-out","lesbisch","schwul","trans","nonbinary","nichtbinär"],
+  "lgbtq": ["Queer","LGBTQ","LGBT","Coming-out","lesbisch","schwul","trans","nonbinary","nichtbinär"],
+  "superhelden": ["Superheld","Superhelden","Superhero"],
+  "superheld": ["Superheld","Superhelden","Superhero"],
+  "piraten": ["Pirat","Piraten","Seefahrt","Schatz","Schiff"],
+  "ritter": ["Ritter","Mittelalter","Burg","Ritterzeit"]
+};
+
 function scoreBook(b, rawQuery){
   const q = norm(rawQuery);
   if(!q) return 0;
   const tokens = q.split(/\s+/).filter(Boolean);
-  if(!tokens.every(t => b._all.includes(t))) return -1;
+  const groups = tokens.map(t => (SEARCH_ALIASES[t] || [t]).map(norm));
+
+  // Alle eingegebenen Suchaspekte müssen passen; innerhalb eines Themenbegriffs reicht ein Synonym.
+  if(!groups.every(group => group.some(term => b._all.includes(term)))) return -1;
 
   let score = 0;
   if(b._title === q) score += 1000;
@@ -302,13 +434,16 @@ function scoreBook(b, rawQuery){
   if(b._keywords.includes(q)) score += 60;
 
   for(const t of tokens){
-    if(b._title.split(" ").includes(t)) score += 45;
-    else if(b._title.includes(t)) score += 30;
-    if(b._author.split(" ").includes(t)) score += 28;
-    else if(b._author.includes(t)) score += 18;
-    if(b._category.includes(t)) score += 12;
-    if(b._keywords.includes(t)) score += 8;
-    if(b._language.includes(t)) score += 6;
+    const alternatives = (SEARCH_ALIASES[t] || [t]).map(norm);
+    for(const term of alternatives){
+      if(b._title.split(" ").includes(term)) score += 45;
+      else if(b._title.includes(term)) score += 30;
+      if(b._author.split(" ").includes(term)) score += 28;
+      else if(b._author.includes(term)) score += 18;
+      if(b._category.includes(term)) score += 12;
+      if(b._keywords.includes(term)) score += 8;
+      if(b._language.includes(term)) score += 6;
+    }
   }
   return score;
 }
@@ -410,7 +545,7 @@ function setMode(next){
   }else{
     searchLabel.textContent = "Wonach suchst du?";
     search.placeholder = "Titel, Autor, Thema, Genre, Stichwort …";
-    helper.textContent = "Du kannst auch Themen eingeben, z. B. „Freundschaft“, „Fantasy“, „Nationalsozialismus“ oder „Englisch“.";
+    helper.textContent = "Du kannst auch einfach nach Stimmung oder Thema suchen, z. B. „spannend“, „lustig“, „gruselig“, „Liebe“, „Freundschaft“, „Fantasy“, „Tiere“, „Fußball“, „Weltraum“ oder „Englisch“.";
   }
   runSearch();
   search.focus();
@@ -421,6 +556,13 @@ search.addEventListener("keydown",e=>{
   if(e.key==="Escape"){ search.value=""; runSearch(); }
 });
 clearBtn.addEventListener("click",()=>{ search.value=""; runSearch(); search.focus(); });
+document.querySelectorAll(".topic-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    search.value = btn.dataset.query || "";
+    runSearch();
+    search.focus();
+  });
+});
 searchMode.addEventListener("click",()=>setMode("search"));
 returnMode.addEventListener("click",()=>setMode("return"));
 
