@@ -349,6 +349,58 @@ body.teacher-mode #content{display:none}
 .bm-flash{position:fixed;inset:0;z-index:99990;pointer-events:none;background:radial-gradient(circle,rgba(250,204,21,.34),rgba(0,0,0,0) 60%);animation:bmFlash .9s ease-out forwards}
 @keyframes bmFlash{from{opacity:1}to{opacity:0}}
 
+
+/* BOOKMATCH Ergebnisse */
+.modebtn.results-mode.active{background:#0f766e;border-color:#0f766e;color:#fff}
+body.results-mode header{background:linear-gradient(135deg,#042f2e,#0f766e)}
+.results-shell{display:none}
+body.results-mode .results-shell{display:block}
+body.results-mode .search-panel,
+body.results-mode #stats,
+body.results-mode #content,
+body.results-mode .bookmatch-shell,
+body.results-mode .teacher-shell{display:none!important}
+
+.bmr-wrap{max-width:1000px;margin:0 auto}
+.bmr-hero{
+  background:linear-gradient(135deg,#0f172a,#111827);
+  color:#fff;border-radius:24px;padding:28px;
+  box-shadow:0 16px 40px rgba(15,23,42,.16);margin-bottom:18px
+}
+.bmr-hero h2{margin:8px 0 8px;font-size:clamp(1.8rem,5vw,3rem)}
+.bmr-hero p{margin:0;color:#cbd5e1;font-size:1.05rem;line-height:1.5}
+.bmr-summary{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.bmr-pill{background:#ffffff12;border:1px solid #ffffff24;border-radius:999px;padding:8px 12px;font-weight:800}
+.bmr-list{display:grid;gap:14px}
+.bmr-book{
+  background:#fff;border:1px solid var(--line);border-radius:18px;
+  padding:18px;box-shadow:0 6px 18px rgba(15,23,42,.05)
+}
+.bmr-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;flex-wrap:wrap}
+.bmr-title{font-size:1.25rem;font-weight:900;margin:0 0 4px}
+.bmr-author{color:#64748b;font-weight:650}
+.bmr-matchbox{
+  min-width:150px;text-align:center;background:#ecfdf5;border:1px solid #a7f3d0;
+  border-radius:14px;padding:10px 14px;color:#166534
+}
+.bmr-matchbox strong{display:block;font-size:1.5rem}
+.bmr-votes{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px
+}
+.bmr-vote{border-radius:12px;padding:10px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0}
+.bmr-vote strong{display:block;font-size:1.15rem}
+.bmr-extra{margin-top:14px;display:grid;gap:8px}
+.bmr-note{background:#f8fafc;border-left:4px solid #94a3b8;border-radius:10px;padding:9px 11px;color:#334155}
+.bmr-empty{
+  background:#fff;border:1px dashed #94a3b8;border-radius:18px;padding:30px;text-align:center;color:#64748b
+}
+.bmr-actions{display:flex;justify-content:flex-end;margin:12px 0 18px}
+.bmr-clear{
+  border:1px solid #fecaca;background:#fff1f2;color:#9f1239;border-radius:12px;
+  padding:10px 13px;font-weight:800;cursor:pointer
+}
+@media(max-width:700px){.bmr-votes{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 <body>
@@ -365,6 +417,7 @@ body.teacher-mode #content{display:none}
     <button class="modebtn return" id="returnMode" type="button">↩️ Buch zurückstellen</button>
     <button class="modebtn bookmatch" id="bookmatchMode" type="button">💜 Blind Date</button>
     <button class="modebtn teacher" id="teacherMode" type="button">👩‍🏫 Für Lehrkräfte</button>
+    <button class="modebtn results-mode" id="resultsMode" type="button">📊 Dating-Ergebnisse</button>
   </div>
 
   <section class="search-panel" aria-label="Buchsuche">
@@ -509,6 +562,22 @@ body.teacher-mode #content{display:none}
     </div>
   </section>
 
+
+  <section class="results-shell" id="resultsShell" aria-label="BOOKMATCH Dating-Ergebnisse">
+    <div class="bmr-wrap">
+      <div class="bmr-hero">
+        <div class="bm-brand">BOOKMATCH · Community</div>
+        <h2>Diese Bücher haben beim Dating mitgemacht</h2>
+        <p>So wurden sie bisher gevotet. Jede Bewertung stammt aus einem echten BOOKMATCH-Date auf diesem Gerät.</p>
+        <div class="bmr-summary" id="bmrSummary"></div>
+      </div>
+      <div class="bmr-actions">
+        <button class="bmr-clear" id="bmrClearResults" type="button">🔐 Ergebnisse löschen (Lehrkraft)</button>
+      </div>
+      <div class="bmr-list" id="bmrList"></div>
+    </div>
+  </section>
+
   <section id="content"></section>
 </main>
 
@@ -531,6 +600,7 @@ const helper = $("#helper");
 const clearBtn = $("#clear");
 const bookmatchMode = $("#bookmatchMode");
 const teacherMode = $("#teacherMode");
+const resultsMode = $("#resultsMode");
 const teacherGrid = $("#teacherGrid");
 const teacherStatus = $("#teacherStatus");
 
@@ -1153,6 +1223,136 @@ document.querySelectorAll("[data-decision]").forEach(btn=>{
 });
 $("#bmRestart").addEventListener("click",bmReset);
 
+
+function loadBmFeedback(){
+  try{
+    const arr = JSON.parse(localStorage.getItem(BM_FEEDBACK_KEY) || "[]");
+    return Array.isArray(arr) ? arr : [];
+  }catch(_){ return []; }
+}
+
+function ratingLabel(rating){
+  return {
+    match:"💚 Match",
+    twist:"🔥 Anders als gedacht",
+    maybe:"👀 Zweites Date?",
+    no:"❌ Kein Match"
+  }[rating] || rating || "—";
+}
+
+function renderBmResults(){
+  const list = $("#bmrList");
+  const summary = $("#bmrSummary");
+  const feedback = loadBmFeedback();
+
+  if(!feedback.length){
+    summary.innerHTML = '<span class="bmr-pill">0 Dates</span><span class="bmr-pill">0 Bücher</span>';
+    list.innerHTML = '<div class="bmr-empty"><strong>Noch keine BOOKMATCH-Dates gespeichert.</strong><br>Sobald ein Date abgeschlossen wurde, erscheint das Buch hier automatisch.</div>';
+    return;
+  }
+
+  const groups = new Map();
+  feedback.forEach(item=>{
+    const key = String(item.bookIndex ?? item.title ?? "unbekannt");
+    if(!groups.has(key)){
+      groups.set(key, {
+        title:item.title || "Unbekanntes Buch",
+        author:"",
+        rows:[]
+      });
+    }
+    groups.get(key).rows.push(item);
+  });
+
+  // Resolve author from catalog if possible
+  for(const [key,g] of groups){
+    const idx = Number(key);
+    if(Number.isInteger(idx) && BOOKS[idx]){
+      g.title = BOOKS[idx].title || g.title;
+      g.author = BOOKS[idx].author || "";
+    }
+  }
+
+  const all = [...groups.values()].sort((a,b)=>{
+    const am = a.rows.filter(r=>r.rating==="match").length;
+    const bm = b.rows.filter(r=>r.rating==="match").length;
+    if(bm !== am) return bm-am;
+    return b.rows.length-a.rows.length;
+  });
+
+  const totalMatches = feedback.filter(x=>x.rating==="match").length;
+  summary.innerHTML = `
+    <span class="bmr-pill">${feedback.length} Dates</span>
+    <span class="bmr-pill">${groups.size} Bücher</span>
+    <span class="bmr-pill">💚 ${totalMatches} Matches</span>`;
+
+  list.innerHTML = all.map(g=>{
+    const n = g.rows.length;
+    const counts = {match:0,twist:0,maybe:0,no:0};
+    g.rows.forEach(r=>{ if(counts[r.rating] !== undefined) counts[r.rating]++; });
+    const pct = n ? Math.round((counts.match/n)*100) : 0;
+
+    const positiveNotes = g.rows
+      .map(r=>r.positiveFree)
+      .filter(Boolean)
+      .slice(-3)
+      .reverse();
+
+    const audienceFree = g.rows
+      .map(r=>r.freeAudience)
+      .filter(Boolean)
+      .slice(-2)
+      .reverse();
+
+    const details = g.rows
+      .map(r=>r.detail)
+      .filter(Boolean);
+    const detailCounts = {};
+    details.forEach(d=>detailCounts[d]=(detailCounts[d]||0)+1);
+    const topDetails = Object.entries(detailCounts)
+      .sort((a,b)=>b[1]-a[1])
+      .slice(0,3)
+      .map(([d,c])=>`${escapeHtml(d)}${c>1 ? ` (${c}×)` : ""}`)
+      .join(" · ");
+
+    const notes = [
+      ...positiveNotes.map(t=>`<div class="bmr-note">💬 „${escapeHtml(t)}“</div>`),
+      ...audienceFree.map(t=>`<div class="bmr-note">👤 Passt vielleicht zu jemandem, der ${escapeHtml(t.replace(/^Jemand,\s*der\s*/i,""))}</div>`)
+    ].join("");
+
+    return `
+      <article class="bmr-book">
+        <div class="bmr-head">
+          <div>
+            <h3 class="bmr-title">${escapeHtml(g.title)}</h3>
+            <div class="bmr-author">${escapeHtml(g.author)}</div>
+          </div>
+          <div class="bmr-matchbox">
+            <strong>${pct}%</strong>
+            würden es als Match wählen
+          </div>
+        </div>
+
+        <div class="bmr-votes">
+          <div class="bmr-vote">💚<strong>${counts.match}</strong>Match</div>
+          <div class="bmr-vote">🔥<strong>${counts.twist}</strong>Anders als gedacht</div>
+          <div class="bmr-vote">👀<strong>${counts.maybe}</strong>Zweites Date?</div>
+          <div class="bmr-vote">❌<strong>${counts.no}</strong>Kein Match</div>
+        </div>
+
+        ${topDetails ? `<div class="bmr-extra"><div><strong>Häufig genannt:</strong> ${topDetails}</div>${notes}</div>` : (notes ? `<div class="bmr-extra">${notes}</div>` : "")}
+        <div class="bm-note" style="margin-top:12px">${n} ${n===1 ? "Date" : "Dates"} insgesamt</div>
+      </article>`;
+  }).join("");
+}
+
+$("#bmrClearResults").addEventListener("click",()=>{
+  if(!requireTeacherPassword("Passwort eingeben, um alle gespeicherten Dating-Ergebnisse zu löschen:")) return;
+  if(!window.confirm("Wirklich alle lokal gespeicherten BOOKMATCH-Ergebnisse löschen?")) return;
+  localStorage.removeItem(BM_FEEDBACK_KEY);
+  renderBmResults();
+});
+
 function setMainMode(next){
   if(bmTimerLocked && next !== "bookmatch"){
     if(!requireTeacherPassword("Das Blind Date läuft noch. Lehrkräfte-Passwort eingeben, um die Seite zu verlassen:")){
@@ -1165,10 +1365,12 @@ function setMainMode(next){
   document.body.classList.toggle("return-mode", next==="return");
   document.body.classList.toggle("bookmatch-mode", next==="bookmatch");
   document.body.classList.toggle("teacher-mode", next==="teacher");
+  document.body.classList.toggle("results-mode", next==="results");
   searchMode.classList.toggle("active", next==="search");
   returnMode.classList.toggle("active", next==="return");
   bookmatchMode.classList.toggle("active", next==="bookmatch");
   teacherMode.classList.toggle("active", next==="teacher");
+  resultsMode.classList.toggle("active", next==="results");
 
   if(next==="bookmatch"){
     bmReset();
@@ -1191,6 +1393,10 @@ function setMainMode(next){
     teacherStatus.textContent = `${count} von 10 Säckchen sind aktuell zugeordnet. Date-Dauer: ${bmSettings.minutes} Minuten.`;
     return;
   }
+  if(next==="results"){
+    renderBmResults();
+    return;
+  }
   setMode(next);
 }
 
@@ -1210,6 +1416,7 @@ searchMode.addEventListener("click",()=>setMainMode("search"));
 returnMode.addEventListener("click",()=>setMainMode("return"));
 bookmatchMode.addEventListener("click",()=>setMainMode("bookmatch"));
 teacherMode.addEventListener("click",()=>setMainMode("teacher"));
+resultsMode.addEventListener("click",()=>setMainMode("results"));
 
 renderStart();
 </script>
