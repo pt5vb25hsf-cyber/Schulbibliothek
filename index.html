@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>Schulbibliothek – Buchsuche & Rückgabe</title>
+<title>Schulbibliothek der Hilde-Domin-Schule</title>
 <style>
 :root{
   --bg:#f4f6f8;
@@ -35,6 +35,7 @@ header{
   padding:28px 20px 24px;
 }
 .header-inner,.main{max-width:1180px;margin:0 auto}
+.header-inner{text-align:center}
 h1{font-size:clamp(1.7rem,4vw,2.55rem);margin:0 0 6px;line-height:1.15}
 .subtitle{margin:0;opacity:.9;font-size:1rem}
 main{padding:22px 18px 60px}
@@ -385,7 +386,7 @@ body.results-mode .teacher-shell{display:none!important}
 }
 .bmr-matchbox strong{display:block;font-size:1.5rem}
 .bmr-votes{
-  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:14px
 }
 .bmr-vote{border-radius:12px;padding:10px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0}
 .bmr-vote strong{display:block;font-size:1.15rem}
@@ -401,13 +402,428 @@ body.results-mode .teacher-shell{display:none!important}
 }
 @media(max-width:700px){.bmr-votes{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+
+/* Mobile-Optimierung nur für Smartphones */
+@media(max-width:640px){
+  .search-panel{
+    position:static;
+    top:auto;
+    z-index:auto;
+    padding:11px 12px;
+    border-radius:14px;
+    box-shadow:0 3px 10px rgba(15,23,42,.06);
+  }
+  .search-label{
+    font-size:.92rem;
+    margin-bottom:6px;
+  }
+  #search{
+    min-height:48px;
+    padding:8px 11px;
+    font-size:1.05rem;
+    border-width:2px;
+    border-radius:12px;
+  }
+  .clearbtn{
+    padding:0 11px;
+    font-size:1.25rem;
+    border-radius:11px;
+  }
+  .helper{
+    margin-top:6px;
+    font-size:.80rem;
+    line-height:1.35;
+  }
+  .quicktopics{
+    margin-top:9px;
+    gap:6px;
+  }
+  .topic-btn{
+    padding:6px 9px;
+    font-size:.82rem;
+  }
+  .return-instruction{
+    margin-top:8px;
+    padding:8px 10px;
+    font-size:.84rem;
+  }
+  .stats{
+    margin-top:11px;
+  }
+}
+
+
+/* v7 Navigation, Empfehlungen, Spiel & Spaß */
+.modebtn.recommend.active{background:#b45309;border-color:#b45309;color:#fff}
+.modebtn.fun.active{background:#7c3aed;border-color:#7c3aed;color:#fff}
+body.recommend-mode header{background:linear-gradient(135deg,#78350f,#b45309)}
+body.fun-mode header{background:linear-gradient(135deg,#4c1d95,#7c3aed)}
+body.recommend-mode .search-panel,
+body.recommend-mode #stats,
+body.recommend-mode #content,
+body.recommend-mode .bookmatch-shell,
+body.recommend-mode .teacher-shell,
+body.recommend-mode .results-shell,
+body.fun-mode .search-panel,
+body.fun-mode #stats,
+body.fun-mode #content,
+body.fun-mode .bookmatch-shell,
+body.fun-mode .teacher-shell,
+body.fun-mode .results-shell{display:none!important}
+
+.recommend-shell,.fun-shell{display:none}
+body.recommend-mode .recommend-shell{display:block}
+body.fun-mode .fun-shell{display:block}
+
+.rec-wrap,.fun-wrap{max-width:1000px;margin:0 auto}
+.rec-card,.fun-card{
+  background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px;
+  box-shadow:var(--shadow)
+}
+.rec-card h2,.fun-card h2{margin-top:0}
+.rec-search-wrap{position:relative}
+.rec-input{
+  width:100%;min-height:56px;border:2px solid #cbd5e1;border-radius:14px;padding:12px 14px;
+  font-size:1.05rem;outline:none
+}
+.rec-input:focus{border-color:#b45309;box-shadow:0 0 0 4px rgba(180,83,9,.12)}
+.rec-suggestions{
+  position:absolute;left:0;right:0;top:60px;background:#fff;border:1px solid #cbd5e1;
+  border-radius:12px;box-shadow:0 14px 30px rgba(15,23,42,.15);z-index:30;max-height:280px;overflow:auto
+}
+.rec-suggestion{padding:10px 12px;border-bottom:1px solid #eef2f7;cursor:pointer}
+.rec-suggestion:last-child{border-bottom:0}
+.rec-suggestion:hover{background:#fff7ed}
+.rec-suggestion strong{display:block}
+.rec-suggestion small{color:#64748b}
+.rec-selected{
+  margin-top:12px;background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:12px 14px
+}
+.rec-section{margin-top:20px}
+.rec-section h3{margin:0 0 10px;font-size:1rem}
+.rec-chips{display:flex;flex-wrap:wrap;gap:8px}
+.rec-chip{
+  border:1px solid #d6d3d1;background:#fafaf9;color:#292524;border-radius:999px;
+  padding:9px 12px;font-weight:750;cursor:pointer
+}
+.rec-chip.selected{background:#b45309;color:#fff;border-color:#b45309}
+.rec-textarea{
+  width:100%;resize:vertical;min-height:110px;border:2px solid #d6d3d1;border-radius:14px;
+  padding:12px 14px;font:inherit;line-height:1.45
+}
+.rec-submit{
+  margin-top:16px;width:100%;border:0;border-radius:14px;padding:14px 18px;
+  background:#b45309;color:#fff;font-weight:900;font-size:1.05rem;cursor:pointer
+}
+.rec-thanks{margin-top:14px;background:#ecfdf5;border:1px solid #a7f3d0;color:#166534;border-radius:14px;padding:12px 14px;font-weight:750}
+
+.fun-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.fun-choice{
+  border:1px solid #ddd6fe;background:#faf5ff;border-radius:20px;padding:22px;text-align:left;
+  cursor:pointer;min-height:160px
+}
+.fun-choice:hover{border-color:#8b5cf6;background:#f3e8ff}
+.fun-choice .emoji{font-size:2.3rem}
+.fun-choice h3{margin:8px 0 6px;font-size:1.3rem}
+.fun-choice p{margin:0;color:#6b7280;line-height:1.45}
+.fun-sub{display:none;margin-top:18px}
+.fun-sub.active{display:block}
+.role-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.role-btn{
+  border:1px solid #c4b5fd;background:#fff;border-radius:18px;padding:20px;cursor:pointer;text-align:left
+}
+.role-btn:hover{background:#f5f3ff;border-color:#8b5cf6}
+.role-btn strong{display:block;font-size:1.15rem;margin-bottom:5px}
+.back-fun{
+  border:1px solid #ddd6fe;background:#fff;color:#5b21b6;border-radius:12px;padding:9px 12px;
+  font-weight:800;cursor:pointer;margin-bottom:12px
+}
+.rally-placeholder{
+  background:#fff;border:1px dashed #a78bfa;border-radius:18px;padding:24px;color:#6b21a8
+}
+@media(max-width:700px){
+  .fun-grid,.role-grid{grid-template-columns:1fr}
+}
+
+
+/* Regalschilder für Suche und Rückgabe */
+.location{display:flex;flex-direction:column;gap:9px}
+.shelf-sign{
+  display:flex;align-items:stretch;gap:0;
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 4px 12px rgba(15,23,42,.08);
+  border:1px solid rgba(0,0,0,.10);
+  background:#ffffff;
+  min-height:92px;
+  width:min(100%, 520px);
+}
+.shelf-sign.blue{background:#ffffff;color:#111827}
+.shelf-sign.red{background:#ffffff;color:#111827}
+.shelf-sign.yellow{background:#ffffff;color:#111827}
+.shelf-sign.white{background:#ffffff;color:#111827;border:1px solid #d1d5db}
+.shelf-sign-left{
+  min-width:104px;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;line-height:1;
+  padding:12px 10px;
+}
+.shelf-sign.blue .shelf-sign-left{background:#8ecff1}
+.shelf-sign.red .shelf-sign-left{background:#f2a6ac}
+.shelf-sign.yellow .shelf-sign-left{background:#f6df72}
+.shelf-sign.white .shelf-sign-left{background:#f3f4f6}
+.shelf-sign-color{
+  display:block;font-size:.82rem;font-weight:900;letter-spacing:.06em;
+  text-transform:uppercase;opacity:.78;margin-bottom:7px
+}
+.shelf-sign-num{
+  display:block;font-size:2.25rem;font-weight:950
+}
+.shelf-sign-main{
+  min-width:0;display:flex;align-items:center;
+  padding:12px 16px;background:#fff;flex:1
+}
+.shelf-sign-label{
+  font-size:1.26rem;font-weight:900;line-height:1.15;
+  word-break:break-word
+}
+.shelf-note{
+  color:#475569;font-size:.93rem
+}
+@media(max-width:640px){
+  .shelf-sign{
+    min-height:78px;
+    border-radius:17px;
+    width:100%;
+  }
+  .shelf-sign-left{
+    min-width:86px;
+    padding:10px 8px;
+  }
+  .shelf-sign-num{font-size:1.9rem}
+  .shelf-sign-label{font-size:1.02rem}
+}
+
+
+/* Auffälliger Hinweis vor dem Wechsel zu Microsoft Forms */
+.forms-next-step{
+  position:relative;
+  margin-top:18px;
+  padding:16px 18px;
+  border-radius:18px;
+  background:#fff7ed;
+  color:#9a3412;
+  font-weight:900;
+  line-height:1.45;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  isolation:isolate;
+  overflow:hidden;
+}
+.forms-next-step::before{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  z-index:-2;
+  border-radius:20px;
+  background:
+    conic-gradient(
+      from 0deg,
+      #fb923c 0deg 42deg,
+      #fdba74 42deg 95deg,
+      #f97316 95deg 150deg,
+      #ffedd5 150deg 210deg,
+      #fb923c 210deg 270deg,
+      #f97316 270deg 330deg,
+      #fdba74 330deg 360deg
+    );
+  animation:formsBorderRun 1.5s linear infinite;
+}
+.forms-next-step::after{
+  content:"";
+  position:absolute;
+  inset:3px;
+  z-index:-1;
+  border-radius:14px;
+  background:#fff7ed;
+}
+.forms-next-step .arrow{
+  display:inline-block;
+  font-size:1.7rem;
+  line-height:1;
+  animation:formsArrowMove .9s ease-in-out infinite alternate;
+}
+.forms-next-step strong{
+  color:#7c2d12;
+}
+@keyframes formsBorderRun{
+  to{transform:rotate(360deg)}
+}
+@keyframes formsArrowMove{
+  from{transform:translateX(0)}
+  to{transform:translateX(7px)}
+}
+@media (prefers-reduced-motion:reduce){
+  .forms-next-step::before,
+  .forms-next-step .arrow{
+    animation:none;
+  }
+}
+
+
+
+/* v21 – Buchberater */
+.modebtn.advisor.active{background:#2563eb;border-color:#2563eb;color:#fff}
+body.advisor-mode header{background:linear-gradient(135deg,#172554,#2563eb)}
+body.advisor-mode .search-panel,
+body.advisor-mode #stats,
+body.advisor-mode #content,
+body.advisor-mode .bookmatch-shell,
+body.advisor-mode .teacher-shell,
+body.advisor-mode .results-shell,
+body.advisor-mode .recommend-shell,
+body.advisor-mode .fun-shell{display:none!important}
+
+.advisor-shell{display:none}
+body.advisor-mode .advisor-shell{display:block}
+.advisor-wrap{max-width:980px;margin:0 auto}
+.advisor-hero{
+  background:linear-gradient(135deg,#eff6ff,#eef2ff);
+  border:1px solid #bfdbfe;border-radius:22px;padding:22px;
+  box-shadow:var(--shadow)
+}
+.advisor-hero h2{margin:0 0 8px;font-size:clamp(1.7rem,5vw,2.6rem)}
+.advisor-hero p{margin:0;color:#475569;line-height:1.55}
+.advisor-box{
+  margin-top:16px;background:#fff;border:1px solid var(--line);
+  border-radius:20px;padding:20px;box-shadow:0 8px 24px rgba(15,23,42,.06)
+}
+.advisor-label{display:block;font-weight:900;margin-bottom:9px}
+.advisor-textarea{
+  width:100%;min-height:92px;resize:vertical;border:2px solid #bfdbfe;border-radius:14px;
+  padding:12px 14px;font:inherit;line-height:1.45;outline:none
+}
+.advisor-textarea:focus{border-color:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,.10)}
+.advisor-section{margin-top:18px}
+.advisor-section h3{margin:0 0 10px;font-size:1rem}
+.advisor-chips{display:flex;flex-wrap:wrap;gap:8px}
+.advisor-chip{
+  border:1px solid #cbd5e1;background:#f8fafc;color:#1e293b;border-radius:999px;
+  padding:9px 12px;font-weight:750;cursor:pointer
+}
+.advisor-chip.selected{background:#2563eb;border-color:#2563eb;color:#fff}
+.advisor-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.advisor-find{
+  flex:1;min-width:220px;border:0;border-radius:14px;padding:14px 18px;
+  background:#2563eb;color:#fff;font-size:1.05rem;font-weight:900;cursor:pointer
+}
+.advisor-reset{
+  border:1px solid #cbd5e1;border-radius:14px;padding:14px 16px;
+  background:#fff;color:#334155;font-weight:800;cursor:pointer
+}
+.advisor-results{margin-top:18px;display:grid;gap:12px}
+.advisor-card{
+  background:#fff;border:1px solid #dbeafe;border-radius:18px;padding:17px;
+  box-shadow:0 5px 16px rgba(15,23,42,.05)
+}
+.advisor-card h3{margin:0 0 4px;font-size:1.2rem}
+.advisor-card .author{margin-bottom:8px}
+.advisor-why{margin-top:10px;background:#eff6ff;border-radius:11px;padding:10px 12px;color:#1e3a8a}
+.advisor-empty{
+  margin-top:18px;background:#fff;border:1px dashed #93c5fd;border-radius:16px;
+  padding:24px;text-align:center;color:#64748b
+}
+.advisor-note{margin-top:10px;font-size:.86rem;color:#64748b}
+
+
+/* v23 – Buchberater kompakter + Regalschilder in Vorschlägen */
+.advisor-wrap{max-width:920px}
+.advisor-hero{
+  padding:18px 20px;
+  box-shadow:0 5px 16px rgba(15,23,42,.05)
+}
+.advisor-hero h2{font-size:clamp(1.55rem,4.5vw,2.25rem)}
+.advisor-box{padding:17px 18px;margin-top:12px}
+.advisor-quickline{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:14px
+}
+.advisor-textinput{
+  width:100%;border:2px solid #bfdbfe;border-radius:13px;
+  padding:11px 13px;font:inherit;outline:none;background:#fff
+}
+.advisor-textinput:focus{border-color:#2563eb;box-shadow:0 0 0 4px rgba(37,99,235,.10)}
+.advisor-section{margin-top:14px}
+.advisor-section h3{margin-bottom:8px}
+.advisor-chip{padding:8px 11px;font-size:.94rem}
+.advisor-actions{margin-top:14px}
+.advisor-note{margin-top:8px}
+.advisor-results{
+  margin-top:14px;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start
+}
+.advisor-card{padding:15px}
+.advisor-card .meta{margin-top:7px}
+.advisor-card .shelf-sign{
+  width:100%;
+  min-height:64px;
+  border-radius:14px;
+  margin-top:12px;
+}
+.advisor-card .shelf-sign-left{
+  min-width:76px;
+  padding:8px 7px;
+}
+.advisor-card .shelf-sign-color{font-size:.68rem;margin-bottom:4px}
+.advisor-card .shelf-sign-num{font-size:1.55rem}
+.advisor-card .shelf-sign-main{padding:9px 11px}
+.advisor-card .shelf-sign-label{font-size:.96rem}
+.advisor-card .advisor-why{
+  margin-top:10px;
+  padding:9px 10px;
+  font-size:.93rem
+}
+@media(max-width:760px){
+  .advisor-results{grid-template-columns:1fr}
+}
+
+
+/* v25 – ruhige Lesearten im Buchberater */
+.advisor-reading-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+}
+.advisor-reading-grid .advisor-chip{
+  width:100%;
+  min-height:44px;
+  border-radius:12px;
+  padding:7px 8px;
+  font-size:.82rem;
+  line-height:1.15;
+}
+.advisor-reading-grid .reading-short{background:#fff8e8;border-color:#ead9ab}
+.advisor-reading-grid .reading-easy{background:#eef8f2;border-color:#c7e4d1}
+.advisor-reading-grid .reading-pictures{background:#f5effb;border-color:#ddcdef}
+.advisor-reading-grid .reading-deep{background:#eef5fb;border-color:#cbddea}
+.advisor-reading-grid .reading-english{background:#f1f5f9;border-color:#d5dde7}
+.advisor-reading-grid .advisor-chip.selected{
+  color:#1e293b;
+  box-shadow:inset 0 0 0 2px #64748b;
+  font-weight:850;
+}
+@media(max-width:620px){
+  .advisor-reading-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
 </style>
 </head>
 <body>
 <header>
   <div class="header-inner">
-    <h1>Schulbibliothek</h1>
-    <p class="subtitle">Bücher finden · Rückgaben richtig einsortieren</p>
+    <h1>Schulbibliothek der Hilde-Domin-Schule</h1>
   </div>
 </header>
 
@@ -415,9 +831,9 @@ body.results-mode .teacher-shell{display:none!important}
   <div class="modebar" aria-label="Ansicht wählen">
     <button class="modebtn active" id="searchMode" type="button">🔎 Buch finden</button>
     <button class="modebtn return" id="returnMode" type="button">↩️ Buch zurückstellen</button>
-    <button class="modebtn bookmatch" id="bookmatchMode" type="button">💜 Blind Date</button>
-    <button class="modebtn teacher" id="teacherMode" type="button">👩‍🏫 Für Lehrkräfte</button>
-    <button class="modebtn results-mode" id="resultsMode" type="button">📊 Dating-Ergebnisse</button>
+    <button class="modebtn recommend" id="recommendMode" type="button">⭐ Buch empfehlen</button>
+    <button class="modebtn advisor" id="advisorMode" type="button">✨ Welches Buch passt zu mir?</button>
+    <button class="modebtn fun" id="funMode" type="button">🎲 Spiel und Spaß</button>
   </div>
 
   <section class="search-panel" aria-label="Buchsuche">
@@ -448,12 +864,114 @@ body.results-mode .teacher-shell{display:none!important}
 
   <div class="stats" id="stats"></div>
 
+
+  <section class="recommend-shell" id="recommendShell" aria-label="Buch empfehlen">
+    <div class="rec-wrap">
+      <div class="rec-card">
+        <h2>⭐ Buch empfehlen</h2>
+        <p>Suche ein Buch aus dem Katalog und sag anderen, warum es sich lohnt.</p>
+
+        <div class="rec-search-wrap">
+          <input id="recBookSearch" class="rec-input" type="search" autocomplete="off"
+                 placeholder="Titel oder Autor suchen …">
+          <div id="recSuggestions" class="rec-suggestions bm-hidden"></div>
+        </div>
+
+        <div id="recSelected" class="rec-selected bm-hidden"></div>
+
+        <div class="rec-section">
+          <h3>Was gefällt dir an dem Buch? <span style="font-weight:500;color:#78716c">(Pflichtfeld · mehrfach möglich)</span></h3>
+          <div class="rec-chips" id="recPositiveChips">
+            <button class="rec-chip" type="button" data-rec-positive="spannend">😱 spannend</button>
+            <button class="rec-chip" type="button" data-rec-positive="lustig">😂 lustig</button>
+            <button class="rec-chip" type="button" data-rec-positive="berührend">❤️ berührend</button>
+            <button class="rec-chip" type="button" data-rec-positive="interessant">🧠 interessant</button>
+            <button class="rec-chip" type="button" data-rec-positive="leicht zu lesen">👀 leicht zu lesen</button>
+            <button class="rec-chip" type="button" data-rec-positive="cool gemacht">🎨 cool gemacht</button>
+            <button class="rec-chip" type="button" data-rec-positive="ungewöhnlich">🌀 ungewöhnlich</button>
+            <button class="rec-chip" type="button" data-rec-positive="gutes Thema">💡 gutes Thema</button>
+            <button class="rec-chip" type="button" data-rec-positive="man ist schnell drin">🔥 man ist schnell drin</button>
+          </div>
+        </div>
+
+        <div class="rec-section">
+          <h3>Für wen passt das Buch? <span style="font-weight:500;color:#78716c">(Pflichtfeld · mehrfach möglich)</span></h3>
+          <div class="rec-chips" id="recAgeChips">
+            <button class="rec-chip" type="button" data-rec-age="eher für Kleinere">🧒 eher für Kleinere</button>
+            <button class="rec-chip" type="button" data-rec-age="eher für Mittlere">🙂 eher für Mittlere</button>
+            <button class="rec-chip" type="button" data-rec-age="eher für Größere">🧑 eher für Größere</button>
+          </div>
+        </div>
+
+        <div class="rec-section">
+          <h3>Warum empfiehlst du das Buch? <span style="font-weight:500;color:#78716c">(optional)</span></h3>
+          <textarea id="recText" class="rec-textarea" maxlength="500"
+                    placeholder="Was magst du an dem Buch? Was sollten andere darüber wissen?"></textarea>
+        </div>
+
+        <div class="forms-next-step" role="note" aria-label="Wichtiger Hinweis zum Absenden">
+  <span class="arrow" aria-hidden="true">➡️</span>
+  <span>Auf <strong>„Blinddate absenden“</strong> drücken. Dann öffnet sich eine neue Seite. Dort ganz nach unten scrollen und auf <strong>„Absenden“</strong> drücken!</span>
+</div>
+<button id="recSubmit" class="rec-submit" type="button">Empfehlung senden →</button>
+        <div id="recThanks" class="rec-thanks bm-hidden"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="fun-shell" id="funShell" aria-label="Spiel und Spaß">
+    <div class="fun-wrap">
+      <div id="funHome" class="fun-card">
+        <h2>🎲 Spiel und Spaß</h2>
+        <p>Wähle aus, was du machen möchtest.</p>
+        <div class="fun-grid">
+          <button class="fun-choice" id="openBlindDate" type="button">
+            <div class="emoji">💜</div>
+            <h3>Blinddate mit einem Buch</h3>
+            <p>Ein unbekanntes Buch kennenlernen und schauen, ob es ein Match wird.</p>
+          </button>
+          <button class="fun-choice" id="openRally" type="button">
+            <div class="emoji">🧭</div>
+            <h3>Bibliotheksrallye</h3>
+            <p>Aufgaben und Entdeckungen rund um die Schulbibliothek.</p>
+          </button>
+        </div>
+      </div>
+
+      <div id="blindDateRoles" class="fun-sub">
+        <button class="back-fun" type="button" data-fun-back>← Zurück</button>
+        <div class="fun-card">
+          <h2>💜 Blinddate mit einem Buch</h2>
+          <p>Wer bist du?</p>
+          <div class="role-grid">
+            <button class="role-btn" id="blindStudent" type="button">
+              <strong>🧑‍🎓 Schüler*in</strong>
+              Blind Date starten
+            </button>
+            <button class="role-btn" id="blindTeacher" type="button">
+              <strong>👩‍🏫 Lehrkraft</strong>
+              Säckchen und Timer vorbereiten
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div id="rallySection" class="fun-sub">
+        <button class="back-fun" type="button" data-fun-back>← Zurück</button>
+        <div class="rally-placeholder">
+          <h2 style="margin-top:0">🧭 Bibliotheksrallye</h2>
+          <p>Hier können wir als Nächstes die Bibliotheksrallye einbauen.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="bookmatch-shell" id="bookmatchShell" aria-label="BOOKMATCH Blind Date">
     <div class="bm-wrap">
       <div id="bmStepStart">
         <div class="bm-brand">BOOKMATCH · Blind Date mit einem Buch</div>
         <h2 class="bm-title">Welches Buch-Date hast du?</h2>
-        <p class="bm-lead">Nimm dein Säckchen und gib nur die Nummer ein. Erst danach erfährst du, mit welchem Buch du dein Blind Date hast.</p>
+        <p class="bm-lead">Gib deine Nummer für dein Blinddate ein.</p>
         <div class="bm-card">
           <label class="bm-label" for="bmNumber">Nummer auf deinem Säckchen</label>
           <input class="bm-input" id="bmNumber" inputmode="numeric" pattern="[0-9]*" placeholder="z. B. 7" maxlength="2">
@@ -537,6 +1055,16 @@ body.results-mode .teacher-shell{display:none!important}
         </div>
       </div>
 
+      <div id="bmStepSubmit" class="bm-hidden">
+        <div class="bm-brand">Fast geschafft</div>
+        <h2 class="bm-reveal">Blinddate speichern</h2>
+        <div class="forms-next-step" role="note" aria-label="Wichtiger Hinweis zum Absenden">
+          <span class="arrow" aria-hidden="true">➡️</span>
+          <span>Auf <strong>„Blinddate absenden“</strong> drücken. Dann öffnet sich eine neue Seite. Dort ganz nach unten scrollen und auf <strong>„Absenden“</strong> drücken!</span>
+        </div>
+        <button class="bm-btn" id="bmFormsSubmit" type="button">Blinddate absenden →</button>
+      </div>
+
       <div id="bmStepDone" class="bm-hidden bm-done">
         <div class="emoji" id="bmDoneEmoji">💜</div>
         <h2 class="bm-reveal" id="bmDoneTitle">Danke für dein Date!</h2>
@@ -578,6 +1106,70 @@ body.results-mode .teacher-shell{display:none!important}
     </div>
   </section>
 
+
+  <section class="advisor-shell" id="advisorShell" aria-label="Welches Buch passt zu mir?">
+    <div class="advisor-wrap">
+      <div class="advisor-hero">
+        <h2>✨ Welches Buch passt zu mir?</h2>
+        <p>Du weißt noch nicht, was du lesen möchtest? Sag mir kurz dein Alter und worauf du Lust hast. Ich suche passende Bücher direkt aus unserer Schulbibliothek.</p>
+      </div>
+
+      <div class="advisor-box">
+        <div class="advisor-section" style="margin-top:0">
+          <label class="advisor-label" for="advisorFree">Was suchst du ungefähr?</label>
+          <input id="advisorFree" class="advisor-textinput" type="text"
+            placeholder="Zum Beispiel: etwas Spannendes mit Magie, nicht zu schwer …">
+        </div>
+
+        <div class="advisor-section">
+          <h3>Wie alt bist du ungefähr?</h3>
+          <div class="advisor-chips" id="advisorAge">
+            <button class="advisor-chip advisor-age" type="button" data-advisor-age="6-8">6–8 Jahre</button>
+            <button class="advisor-chip advisor-age" type="button" data-advisor-age="9-11">9–11 Jahre</button>
+            <button class="advisor-chip advisor-age" type="button" data-advisor-age="12-14">12–14 Jahre</button>
+            <button class="advisor-chip advisor-age" type="button" data-advisor-age="15-17">15–17 Jahre</button>
+          </div>
+        </div>
+
+        <div class="advisor-section">
+          <h3>Worauf hast du Lust? <span style="font-weight:500;color:#64748b">(mehrfach möglich)</span></h3>
+          <div class="advisor-chips" id="advisorMood">
+            <button class="advisor-chip" type="button" data-advisor="spannend">😱 spannend</button>
+            <button class="advisor-chip" type="button" data-advisor="lustig">😂 lustig</button>
+            <button class="advisor-chip" type="button" data-advisor="fantasy">🐉 Fantasy</button>
+            <button class="advisor-chip" type="button" data-advisor="tiere">🐾 Tiere</button>
+            <button class="advisor-chip" type="button" data-advisor="liebe">❤️ Liebe</button>
+            <button class="advisor-chip" type="button" data-advisor="abenteuer">🧭 Abenteuer</button>
+            <button class="advisor-chip" type="button" data-advisor="gruselig">👻 gruselig</button>
+            <button class="advisor-chip" type="button" data-advisor="manga">💥 Manga/Comic</button>
+            <button class="advisor-chip" type="button" data-advisor="wissen">🧠 Wissen</button>
+            <button class="advisor-chip" type="button" data-advisor="freundschaft">🤝 Freundschaft</button>
+          </div>
+        </div>
+
+        <div class="advisor-section">
+          <h3>Wie möchtest du lesen?</h3>
+          <div class="advisor-reading-grid" id="advisorReading">
+            <button class="advisor-chip reading-short" type="button" data-advisor-extra="kurze texte">eher kurz / wenig Text</button>
+            <button class="advisor-chip reading-easy" type="button" data-advisor-extra="leicht lesen einfach lesen">leicht zu lesen</button>
+            <button class="advisor-chip reading-pictures" type="button" data-advisor-extra="graphic novel comic manga">viele Bilder / Comic</button>
+            <button class="advisor-chip reading-deep" type="button" data-advisor-extra="roman geschichte eintauchen">richtig eintauchen</button>
+            <button class="advisor-chip reading-english" type="button" data-advisor-extra="englisch english">auf Englisch</button>
+          </div>
+        </div>
+
+        <div class="advisor-actions">
+          <button class="advisor-find" id="advisorFind" type="button">Passende Bücher finden ✨</button>
+          <button class="advisor-reset" id="advisorReset" type="button">Neu anfangen</button>
+        </div>
+
+        <div class="advisor-note">Die Vorschläge kommen direkt aus unserem Bibliothekskatalog.</div>
+      </div>
+
+      <div id="advisorResults" class="advisor-results"></div>
+    </div>
+  </section>
+
   <section id="content"></section>
 </main>
 
@@ -601,6 +1193,9 @@ const clearBtn = $("#clear");
 const bookmatchMode = $("#bookmatchMode");
 const teacherMode = $("#teacherMode");
 const resultsMode = $("#resultsMode");
+const recommendMode = $("#recommendMode");
+const funMode = $("#funMode");
+const advisorMode = $("#advisorMode");
 const teacherGrid = $("#teacherGrid");
 const teacherStatus = $("#teacherStatus");
 
@@ -637,6 +1232,310 @@ for(const b of BOOKS){
 
 // Thematische Suchbegriffe: Kinder und Jugendliche suchen oft nach Stimmung oder Alltagssprache
 // statt nach der exakten Katalogrubrik. Ein Oberbegriff darf deshalb mehrere passende Begriffe treffen.
+const CATEGORY_SIGNS = {
+  "Verschiedene Kulturen": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "01"
+  },
+  "Fantasy": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "02"
+  },
+  "Mehrteiler, Fantasy": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "03"
+  },
+  "Vampire": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "04"
+  },
+  "Krimi / Action": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "05"
+  },
+  "Hilde Domin": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "06"
+  },
+  "Gedichte": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "07"
+  },
+  "Irgendwas fürs Herz": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "08"
+  },
+  "Englische Bücher": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "09"
+  },
+  "Graphic Novel": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "10"
+  },
+  "Comic": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "10"
+  },
+  "Manga": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "11"
+  },
+  "Sachbücher": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "12"
+  },
+  "Klassiker": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "13"
+  },
+  "Biographien": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "14"
+  },
+  "Kunst": {
+    "color": "blue",
+    "label": "Blau",
+    "number": "15"
+  },
+  "Du magst den Film? Entdecke das Buch!": {
+    "color": "red",
+    "label": "Rot",
+    "number": "01"
+  },
+  "Jugendromane": {
+    "color": "red",
+    "label": "Rot",
+    "number": "02"
+  },
+  "Kinderromane": {
+    "color": "red",
+    "label": "Rot",
+    "number": "03"
+  },
+  "Einfach lesen": {
+    "color": "red",
+    "label": "Rot",
+    "number": "04"
+  },
+  "Queer-/LGBTQ+": {
+    "color": "red",
+    "label": "Rot",
+    "number": "05"
+  },
+  "Liebe Love Amore": {
+    "color": "red",
+    "label": "Rot",
+    "number": "06"
+  },
+  "Fußball": {
+    "color": "red",
+    "label": "Rot",
+    "number": "07"
+  },
+  "Pferde": {
+    "color": "red",
+    "label": "Rot",
+    "number": "08"
+  },
+  "Magisch": {
+    "color": "red",
+    "label": "Rot",
+    "number": "09"
+  },
+  "Hexen": {
+    "color": "red",
+    "label": "Rot",
+    "number": "10"
+  },
+  "Ritter": {
+    "color": "red",
+    "label": "Rot",
+    "number": "11"
+  },
+  "Zum Gruseln": {
+    "color": "red",
+    "label": "Rot",
+    "number": "12"
+  },
+  "Detektive": {
+    "color": "red",
+    "label": "Rot",
+    "number": "13"
+  },
+  "Dinosaurier": {
+    "color": "red",
+    "label": "Rot",
+    "number": "14"
+  },
+  "Ägypten": {
+    "color": "red",
+    "label": "Rot",
+    "number": "15"
+  },
+  "Piraten": {
+    "color": "red",
+    "label": "Rot",
+    "number": "16"
+  },
+  "Was ist was": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "01"
+  },
+  "LeseLöwen": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "02"
+  },
+  "Tiere oben": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "03"
+  },
+  "Licht an!": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "04"
+  },
+  "First English Books": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "05"
+  },
+  "Guinness World Records": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "06"
+  },
+  "Ich kann lesen": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "07"
+  },
+  "Asterix": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "08"
+  },
+  "Superhelden": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "09"
+  },
+  "Kinder entdecken": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "10"
+  },
+  "Bücher (Kinderregal)": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "11"
+  },
+  "Schauen und Wissen": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "12"
+  },
+  "Die Welt entdecken": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "13"
+  },
+  "Lexika": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "14"
+  },
+  "Tiere": {
+    "color": "yellow",
+    "label": "Gelb",
+    "number": "15"
+  },
+  "Klassenlektüren": {
+    "color": "white",
+    "label": "Weiß",
+    "number": "01"
+  },
+  "Unterrichtsmaterialien Lektürehilfen": {
+    "color": "white",
+    "label": "Weiß",
+    "number": "02"
+  },
+  "Kinderbücher": {
+    "color": "white",
+    "label": "Weiß",
+    "number": "03"
+  },
+  "Märchen": {
+    "color": "white",
+    "label": "Weiß",
+    "number": "04"
+  },
+  "Religionen": {
+    "color": "white",
+    "label": "Weiß",
+    "number": "05"
+  },
+  "Lektüren/ Lektüreschlüssel in A116": {
+    "color": "white",
+    "label": "Weiß",
+    "number": "A116"
+  },
+  "Lektüreschlüssel": {
+    "color": "white",
+    "label": "Weiß",
+    "number": "A116"
+  }
+};
+
+function shelfSignForCategory(category){
+  return CATEGORY_SIGNS[category] || null;
+}
+
+function shelfSignHTML(category){
+  const sign = shelfSignForCategory(category);
+  const cat = category || "Kategorie nicht angegeben";
+  if(!sign){
+    return `<div class="shelf-sign white">
+      <div class="shelf-sign-left">
+        <span class="shelf-sign-color">Regal</span>
+        <span class="shelf-sign-num">?</span>
+      </div>
+      <div class="shelf-sign-main">
+        <div class="shelf-sign-label">${escapeHtml(cat)}</div>
+        
+      </div>
+    </div>`;
+  }
+  return `<div class="shelf-sign ${escapeHtml(sign.color)}">
+    <div class="shelf-sign-left">
+      <span class="shelf-sign-color">${escapeHtml(sign.label)}</span>
+      <span class="shelf-sign-num">${escapeHtml(sign.number)}</span>
+    </div>
+    <div class="shelf-sign-main">
+      <div class="shelf-sign-label">${escapeHtml(cat)}</div>
+    </div>
+  </div>`;
+}
+
+
 const SEARCH_ALIASES = {
   "spannung": ["Spannung","spannend","Krimi","Action","Thriller","Detektiv","Detektive","Mystery","Ermittlung","Verbrechen","Mord","Geheimnis","Rätsel"],
   "spannend": ["Spannung","spannend","Krimi","Action","Thriller","Detektiv","Detektive","Mystery","Ermittlung","Verbrechen","Mord","Geheimnis","Rätsel"],
@@ -789,7 +1688,7 @@ function bookCard(b, q){
     <div class="meta">${lang}${series}${copies}</div>
     <div class="location">
       <small>${mode==="return" ? "Hierhin zurück" : "Standort / Kategorie"}</small>
-      <strong>${escapeHtml(b.category || "Kategorie nicht angegeben")}</strong>
+      ${shelfSignHTML(b.category)}
     </div>
     ${warning}
   </article>`;
@@ -801,11 +1700,12 @@ function renderStart(){
   const topCats = [...counts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,18);
   stats.innerHTML = `<span class="pill"><strong>${BOOKS.length}</strong> Bücher/Datensätze im Suchbestand</span>
                      <span class="pill"><strong>${counts.size}</strong> Kategorien</span>`;
+  if(mode==="return"){
+    content.innerHTML = "";
+    return;
+  }
   content.innerHTML = `<div class="start">
-    <h2>${mode==="return" ? "Buch zurückstellen" : "Was möchtest du lesen?"}</h2>
-    <p>${mode==="return"
-      ? "Suche nach Titel oder Autor. Bei jedem Treffer steht der Ablageort direkt unter dem Buch."
-      : "Die Suche berücksichtigt Titel, Autor, Sprache, Reihe, Kategorie und alle hinterlegten Suchbegriffe."}</p>
+    <h2>Was möchtest du lesen?</h2>
     <div class="categories">${topCats.map(([c,n]) =>
       `<button class="cat-chip" type="button" data-cat="${escapeHtml(c)}">${escapeHtml(c)} · ${n}</button>`
     ).join("")}</div>
@@ -917,7 +1817,7 @@ function renderTeacher(){
     row.className = "teacher-row";
     const assigned = findBookByKey(bmAssignments[n]);
     row.innerHTML = `
-      <div class="sack-no">Sack ${n}</div>
+      <div class="sack-no">Buch ${n}</div>
       <div class="teacher-search">
         <input class="teacher-book" data-sack="${n}" autocomplete="off"
           value="${assigned ? escapeHtml(assigned.title + (assigned.author ? " — " + assigned.author : "")) : ""}"
@@ -952,7 +1852,7 @@ function renderTeacher(){
       delete bmAssignments[n];
       saveBmAssignments();
       renderTeacher();
-      teacherStatus.textContent = `Sack ${n} ist wieder frei.`;
+      teacherStatus.textContent = `Buch ${n} ist wieder frei.`;
     });
   });
 }
@@ -1002,7 +1902,7 @@ $("#teacherClearAll").addEventListener("click",()=>{
 });
 
 function bmShow(stepId){
-  ["bmStepStart","bmStepTimer","bmStepRating","bmStepFollowup","bmStepEnd","bmStepDone"]
+  ["bmStepStart","bmStepTimer","bmStepRating","bmStepFollowup","bmStepEnd","bmStepSubmit","bmStepDone"]
     .forEach(id=>$("#"+id).classList.toggle("bm-hidden", id!==stepId));
 }
 function bmReset(){
@@ -1184,6 +2084,86 @@ $("#bmFollowNext").addEventListener("click",()=>{
   bmShow("bmStepEnd");
 });
 
+
+const BM_FORMS_ID = "9oZGFamh1EOnVZ_vZ6X-oekLVEizlxtHiVu22nHMOGxUMlFGQTM4QTdGSUVPRUdFS1VUVlZKSEhRSiQlQCN0PWcu";
+const BM_FORMS_FIELDS = {
+  book: "re686539b9b0341049fe8a7a0778ac238",
+  rating: "reaf41af52c1647f59c93fb8313d9a0f0",
+  positive: "rb0575cc692244b898ff75c1b79047e2e",
+  positiveText: "r27f51a356f4b4b80ad7db5c6290dc358",
+  audience: "r3d34b68ee9ce4b878aca0fd6a4244956",
+  decision: "r29635e2396104fde8aaa9b43aec10d90"
+};
+
+function formsSingleValue(value){
+  return value ? JSON.stringify(value) : "";
+}
+
+function bmRatingForForms(rating){
+  return {
+    match: "Das ist mein Match!",
+    twist: "Anders als gedacht",
+    maybe: "Vielleicht ein zweites Date",
+    no: "Kein Match"
+  }[rating] || "";
+}
+
+function bmPositiveForForms(detail){
+  const map = {
+    "spannend":"spannend",
+    "lustig":"lustig",
+    "berührend":"berührend",
+    "interessant":"interessant",
+    "leicht reinzukommen":"schnell drin",
+    "cool gemacht":"cool gemacht"
+  };
+  return map[detail] || "";
+}
+
+function bmAudienceForForms(detail){
+  const map = {
+    "gern lacht":"gern lacht",
+    "Spannung mag":"Spannung mag",
+    "Fantasy mag":"Fantasy mag",
+    "echte Geschichten mag":"echte Geschichten mag",
+    "Tiere mag":"Tiere mag",
+    "Comics oder Manga mag":"Comics oder Manga mag",
+    "kurze Texte mag":"kurze Texte mag",
+    "gern tief in Geschichten eintaucht":"gern tief in Geschichten eintaucht",
+    "gern Neues erfährt":"gern Neues erfährt",
+    "ungewöhnliche Geschichten mag":"ungewöhnliche Geschichten mag"
+  };
+  return map[detail] || "";
+}
+
+function bmDecisionForForms(decision){
+  return {
+    home:"Mit nach Hause",
+    again:"Noch ein Blind Date",
+    shelf:"Zurück ins Regal"
+  }[decision] || "";
+}
+
+function buildBlinddateFormsUrl(){
+  const params = new URLSearchParams();
+  params.set("id", BM_FORMS_ID);
+
+  const bookLabel = bmState.book
+    ? bmState.book.title + (bmState.book.author ? " — " + bmState.book.author : "")
+    : "";
+
+  params.set(BM_FORMS_FIELDS.book, bookLabel);
+  params.set(BM_FORMS_FIELDS.rating, formsSingleValue(bmRatingForForms(bmState.rating)));
+
+  const isMatch = bmState.rating === "match";
+  params.set(BM_FORMS_FIELDS.positive, formsSingleValue(isMatch ? bmPositiveForForms(bmState.detail) : ""));
+  params.set(BM_FORMS_FIELDS.positiveText, isMatch ? (bmState.positiveFree || "") : "");
+  params.set(BM_FORMS_FIELDS.audience, formsSingleValue(!isMatch ? bmAudienceForForms(bmState.detail) : ""));
+  params.set(BM_FORMS_FIELDS.decision, formsSingleValue(bmDecisionForForms(bmState.decision)));
+
+  return "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?" + params.toString();
+}
+
 function saveBmFeedback(){
   try{
     const arr = JSON.parse(localStorage.getItem(BM_FEEDBACK_KEY) || "[]");
@@ -1204,24 +2184,355 @@ function saveBmFeedback(){
 document.querySelectorAll("[data-decision]").forEach(btn=>{
   btn.addEventListener("click",()=>{
     bmState.decision = btn.dataset.decision;
-    saveBmFeedback();
-    if(bmState.decision==="again"){
-      $("#bmDoneEmoji").textContent="🔄";
-      $("#bmDoneTitle").textContent="Bereit fürs nächste Date?";
-      $("#bmDoneText").textContent="Nimm ein neues Säckchen und starte mit einer neuen Nummer.";
-    }else if(bmState.decision==="home"){
-      $("#bmDoneEmoji").textContent="💚";
-      $("#bmDoneTitle").textContent="It’s a Match!";
-      $("#bmDoneText").textContent="Dann darf euer Date weitergehen. Viel Spaß beim Weiterlesen!";
-    }else{
-      $("#bmDoneEmoji").textContent="🏠";
-      $("#bmDoneTitle").textContent="Danke fürs Ausprobieren!";
-      $("#bmDoneText").textContent="Nicht jedes Date muss ein Match sein. Das Buch darf zurück ins Regal.";
-    }
-    bmShow("bmStepDone");
+    document.querySelectorAll("[data-decision]").forEach(x=>x.classList.remove("selected"));
+    btn.classList.add("selected");
+    bmShow("bmStepSubmit");
   });
 });
+
+$("#bmFormsSubmit").addEventListener("click",()=>{
+  if(!bmState.book || !bmState.rating || !bmState.decision) return;
+
+  saveBmFeedback();
+  const formsUrl = buildBlinddateFormsUrl();
+  const opened = window.open(formsUrl, "_blank", "noopener");
+  if(!opened) window.location.href = formsUrl;
+
+  if(bmState.decision==="again"){
+    $("#bmDoneEmoji").textContent="🔄";
+    $("#bmDoneTitle").textContent="Bereit fürs nächste Date?";
+    $("#bmDoneText").textContent="Forms ist geöffnet. Dort bitte noch auf „Absenden“ drücken. Danach kannst du ein neues Säckchen nehmen.";
+  }else if(bmState.decision==="home"){
+    $("#bmDoneEmoji").textContent="💚";
+    $("#bmDoneTitle").textContent="It’s a Match!";
+    $("#bmDoneText").textContent="Forms ist geöffnet. Dort bitte noch auf „Absenden“ drücken. Viel Spaß beim Weiterlesen!";
+  }else{
+    $("#bmDoneEmoji").textContent="🏠";
+    $("#bmDoneTitle").textContent="Danke fürs Ausprobieren!";
+    $("#bmDoneText").textContent="Forms ist geöffnet. Dort bitte noch auf „Absenden“ drücken. Danach darf das Buch zurück ins Regal.";
+  }
+  bmShow("bmStepDone");
+});
 $("#bmRestart").addEventListener("click",bmReset);
+
+
+
+const REC_STORAGE_KEY = "schulbibliothek_empfehlungen_v1";
+const REC_FORMS_BASE = "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?id=9oZGFamh1EOnVZ_vZ6X-oYMiaj-L7JpFj70SQZtMadFUM0tWOVU3RFFBVDk4M1Q4REYxNFZBNUJUNi4u";
+const REC_FORMS_FIELDS = {
+  book: "rf1215a359d11474d99c1e92d8fe78bef",
+  positives: "r6e5f2ed5295445d187dcffcfdd502a22",
+  ages: "r55a88bd0b8c54f8298aa2d9f00504c72",
+  text: "r53e84caa6f1f43d3bcff99131fb0c21a"
+};
+
+function formsMultiValue(values){
+  // Microsoft Forms expects a JSON-array encoded as a JSON string
+  return JSON.stringify(JSON.stringify(values));
+}
+
+function buildRecommendationFormsUrl(book, positives, ages, text){
+  const params = new URLSearchParams();
+  params.set("id", "9oZGFamh1EOnVZ_vZ6X-oYMiaj-L7JpFj70SQZtMadFUM0tWOVU3RFFBVDk4M1Q4REYxNFZBNUJUNi4u");
+  params.set(REC_FORMS_FIELDS.book, book);
+  params.set(REC_FORMS_FIELDS.positives, formsMultiValue(positives));
+  params.set(REC_FORMS_FIELDS.ages, formsMultiValue(ages));
+  params.set(REC_FORMS_FIELDS.text, text || "");
+  return "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?" + params.toString();
+}
+let recSelectedBook = null;
+
+function loadRecommendations(){
+  try{
+    const a = JSON.parse(localStorage.getItem(REC_STORAGE_KEY) || "[]");
+    return Array.isArray(a) ? a : [];
+  }catch(_){ return []; }
+}
+function saveRecommendation(entry){
+  const a = loadRecommendations();
+  a.push(entry);
+  localStorage.setItem(REC_STORAGE_KEY, JSON.stringify(a.slice(-1000)));
+}
+
+function recReset(){
+  recSelectedBook = null;
+  $("#recBookSearch").value = "";
+  $("#recSuggestions").classList.add("bm-hidden");
+  $("#recSelected").classList.add("bm-hidden");
+  $("#recSelected").innerHTML = "";
+  $("#recText").value = "";
+  $("#recThanks").classList.add("bm-hidden");
+  document.querySelectorAll(".rec-chip.selected").forEach(x=>x.classList.remove("selected"));
+}
+
+function showRecSuggestions(){
+  const q = $("#recBookSearch").value.trim();
+  const box = $("#recSuggestions");
+  if(q.length < 2){ box.classList.add("bm-hidden"); box.innerHTML=""; return; }
+  const hits = [];
+  for(const b of BOOKS){
+    const s = scoreBook(b,q);
+    if(s >= 0) hits.push([s,b]);
+  }
+  hits.sort((a,b)=>b[0]-a[0] || a[1].title.localeCompare(b[1].title,"de"));
+  const shown = hits.slice(0,10);
+  if(!shown.length){ box.classList.add("bm-hidden"); return; }
+  box.innerHTML = shown.map(([,b])=>`
+    <div class="rec-suggestion" data-rec-index="${BOOKS.indexOf(b)}">
+      <strong>${escapeHtml(b.title)}</strong>
+      <small>${escapeHtml(b.author || "Autor/in nicht angegeben")} · ${escapeHtml(b.category || "")}</small>
+    </div>`).join("");
+  box.classList.remove("bm-hidden");
+  box.querySelectorAll("[data-rec-index]").forEach(item=>{
+    item.addEventListener("click",()=>{
+      const idx = Number(item.dataset.recIndex);
+      recSelectedBook = BOOKS[idx];
+      $("#recBookSearch").value = recSelectedBook.title + (recSelectedBook.author ? " — " + recSelectedBook.author : "");
+      $("#recSelected").innerHTML = `<strong>${escapeHtml(recSelectedBook.title)}</strong><br><span>${escapeHtml(recSelectedBook.author || "")}</span>`;
+      $("#recSelected").classList.remove("bm-hidden");
+      box.classList.add("bm-hidden");
+    });
+  });
+}
+
+$("#recBookSearch").addEventListener("input",showRecSuggestions);
+$("#recBookSearch").addEventListener("focus",showRecSuggestions);
+
+document.querySelectorAll(".rec-chip").forEach(btn=>{
+  btn.addEventListener("click",()=>btn.classList.toggle("selected"));
+});
+
+$("#recSubmit").addEventListener("click",()=>{
+  if(!recSelectedBook){
+    $("#recThanks").textContent = "Bitte wähle zuerst ein Buch aus dem Katalog aus.";
+    $("#recThanks").classList.remove("bm-hidden");
+    return;
+  }
+  const positives = [...document.querySelectorAll("[data-rec-positive].selected")].map(x=>x.dataset.recPositive);
+  const ages = [...document.querySelectorAll("[data-rec-age].selected")].map(x=>x.dataset.recAge);
+  const text = $("#recText").value.trim();
+
+  if(!positives.length){
+    $("#recThanks").textContent = "Bitte wähle mindestens eine positive Eigenschaft aus.";
+    $("#recThanks").classList.remove("bm-hidden");
+    return;
+  }
+
+  if(!ages.length){
+    $("#recThanks").textContent = "Bitte wähle mindestens eine Altersgruppe aus, für die das Buch gut passt.";
+    $("#recThanks").classList.remove("bm-hidden");
+    return;
+  }
+
+  saveRecommendation({
+    at:new Date().toISOString(),
+    bookIndex:BOOKS.indexOf(recSelectedBook),
+    title:recSelectedBook.title,
+    author:recSelectedBook.author || "",
+    positives,
+    ages,
+    text
+  });
+
+  const bookLabel = recSelectedBook.title + (recSelectedBook.author ? " — " + recSelectedBook.author : "");
+  const formsUrl = buildRecommendationFormsUrl(bookLabel, positives, ages, text);
+
+  $("#recThanks").textContent = "Deine Angaben sind vorbereitet. Gleich öffnet sich eine neue Seite. Dort ganz nach unten scrollen und auf „Absenden“ drücken!";
+  $("#recThanks").classList.remove("bm-hidden");
+
+  // Open pre-filled Microsoft Form
+  window.open(formsUrl, "_blank", "noopener");
+});
+
+function showFunHome(){
+  $("#funHome").style.display = "block";
+  $("#blindDateRoles").classList.remove("active");
+  $("#rallySection").classList.remove("active");
+}
+$("#openBlindDate").addEventListener("click",()=>{
+  $("#funHome").style.display = "none";
+  $("#blindDateRoles").classList.add("active");
+});
+$("#openRally").addEventListener("click",()=>{
+  $("#funHome").style.display = "none";
+  $("#rallySection").classList.add("active");
+});
+document.querySelectorAll("[data-fun-back]").forEach(btn=>btn.addEventListener("click",showFunHome));
+
+$("#blindStudent").addEventListener("click",()=>{
+  setMainMode("bookmatch");
+});
+$("#blindTeacher").addEventListener("click",()=>{
+  setMainMode("teacher");
+});
+
+
+function advisorReset(){
+  $("#advisorFree").value = "";
+  document.querySelectorAll(".advisor-chip.selected").forEach(x=>x.classList.remove("selected"));
+  $("#advisorResults").innerHTML = "";
+}
+
+document.querySelectorAll(".advisor-chip").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    if(btn.classList.contains("advisor-age")){
+      document.querySelectorAll(".advisor-age").forEach(x=>x.classList.remove("selected"));
+      btn.classList.add("selected");
+    }else{
+      btn.classList.toggle("selected");
+    }
+  });
+});
+
+function advisorTerms(){
+  const free = $("#advisorFree").value.trim();
+  const selected = [...document.querySelectorAll(".advisor-chip.selected:not(.advisor-age)")];
+  const terms = selected.map(btn=>btn.dataset.advisor || btn.dataset.advisorExtra || "").filter(Boolean);
+  return [free, ...terms].filter(Boolean);
+}
+
+function advisorAge(){
+  const selected = document.querySelector(".advisor-age.selected");
+  return selected ? selected.dataset.advisorAge : "";
+}
+
+function advisorAgeScore(book, age){
+  if(!age) return 0;
+  const cat = norm(book.category || "");
+  const all = book._all || "";
+
+  const younger = [
+    "kinderbücher","kinderbucher","kinderromane","leselöwen","leselowen",
+    "ich kann lesen","first english books","licht an","dinosaurier","piraten",
+    "ritter","hexen","tiere","märchen","marchen","kinder entdecken",
+    "schauen und wissen","die welt entdecken"
+  ];
+  const middle = [
+    "kinderromane","jugendromane","fantasy","detektive","fußball","fussball",
+    "pferde","magisch","zum gruseln","comic","graphic novel","manga",
+    "sachbücher","sachbucher"
+  ];
+  const older = [
+    "jugendromane","liebe","queer","lgbtq","krimi","action","vampire",
+    "klassiker","biographien","gedichte","verschiedene kulturen"
+  ];
+
+  let score = 0;
+  const hasAny = arr => arr.some(x => cat.includes(norm(x)) || all.includes(norm(x)));
+
+  if(age==="6-8"){
+    if(hasAny(younger)) score += 45;
+    if(hasAny(older)) score -= 25;
+  }else if(age==="9-11"){
+    if(hasAny(younger)) score += 18;
+    if(hasAny(middle)) score += 38;
+    if(hasAny(older)) score -= 8;
+  }else if(age==="12-14"){
+    if(hasAny(middle)) score += 32;
+    if(hasAny(older)) score += 28;
+    if(cat.includes("kinderbücher") || cat.includes("leselöwen")) score -= 18;
+  }else if(age==="15-17"){
+    if(hasAny(older)) score += 42;
+    if(cat.includes("jugendromane") || cat.includes("klassiker")) score += 18;
+    if(hasAny(younger)) score -= 28;
+  }
+  return score;
+}
+
+function advisorWhy(book, terms){
+  const normalized = terms.map(t=>norm(t)).filter(Boolean);
+  const all = book._all || "";
+  const matches = [];
+  const labels = [
+    ["spannend","spannend"],["lustig","lustig"],["fantasy","Fantasy"],
+    ["tiere","Tiere"],["liebe","Liebe"],["abenteuer","Abenteuer"],
+    ["gruselig","Grusel"],["manga","Manga/Comic"],["comic","Comic"],
+    ["wissen","Wissen"],["freundschaft","Freundschaft"],["englisch","Englisch"]
+  ];
+  for(const [needle,label] of labels){
+    if(normalized.some(t=>t.includes(needle)) && all.includes(norm(needle))) matches.push(label);
+  }
+  if(book.category) matches.push(book.category);
+  const unique = [...new Set(matches)].slice(0,3);
+  return unique.length ? `Passt zu: ${unique.join(" · ")}` : `Gefunden über deine Wünsche und die Katalogbegriffe.`;
+}
+
+function runAdvisor(){
+  const terms = advisorTerms();
+  const age = advisorAge();
+  const box = $("#advisorResults");
+
+  if(!age){
+    box.innerHTML = '<div class="advisor-empty">Sag mir bitte zuerst ungefähr, wie alt du bist.</div>';
+    return;
+  }
+
+  if(!terms.length){
+    box.innerHTML = '<div class="advisor-empty">Wähle mindestens einen Wunsch aus oder schreib kurz, worauf du Lust hast.</div>';
+    return;
+  }
+
+  const combined = terms.join(" ");
+  const scored = [];
+  for(const b of BOOKS){
+    let score = advisorAgeScore(b, age);
+
+    // use existing catalog search scoring for each individual wish
+    for(const t of terms){
+      const s = scoreBook(b,t);
+      if(s >= 0) score += Math.max(10,s);
+    }
+
+    // additionally reward partial keyword overlap from free text
+    const tokens = norm(combined).split(/\s+/).filter(t=>t.length>=3);
+    for(const t of tokens){
+      if(b._title.includes(t)) score += 18;
+      if(b._category.includes(t)) score += 14;
+      if(b._keywords.includes(t)) score += 9;
+      if(b._language.includes(t)) score += 6;
+    }
+
+    if(score > 0) scored.push([score,b]);
+  }
+
+  scored.sort((a,b)=>b[0]-a[0] || a[1].title.localeCompare(b[1].title,"de"));
+
+  // diversify: avoid too many same-category results where possible
+  const chosen = [];
+  const catCounts = new Map();
+  for(const [score,b] of scored){
+    const c = b.category || "";
+    const count = catCounts.get(c) || 0;
+    if(count >= 2 && chosen.length < 4) continue;
+    chosen.push([score,b]);
+    catCounts.set(c,count+1);
+    if(chosen.length >= 5) break;
+  }
+
+  if(!chosen.length){
+    box.innerHTML = '<div class="advisor-empty">Dazu habe ich gerade keinen guten Treffer gefunden. Probier weniger Wünsche oder andere Wörter.</div>';
+    return;
+  }
+
+  box.innerHTML = chosen.map(([,b],i)=>`
+    <article class="advisor-card">
+      <div style="font-size:.78rem;font-weight:900;color:#2563eb;margin-bottom:5px">VORSCHLAG ${i+1}</div>
+      <h3>${escapeHtml(b.title)}</h3>
+      <div class="author">${escapeHtml(b.author || "Autor/in nicht angegeben")}</div>
+      <div class="meta">
+        ${b.language ? `<span class="tag">${escapeHtml(b.language)}</span>` : ""}
+        ${b.series ? `<span class="tag">${escapeHtml(b.series)}</span>` : ""}
+      </div>
+      <div class="advisor-why">${escapeHtml(advisorWhy(b,terms))}</div>
+      ${shelfSignHTML(b.category)}
+    </article>`).join("");
+}
+
+$("#advisorFind").addEventListener("click",runAdvisor);
+$("#advisorReset").addEventListener("click",advisorReset);
+$("#advisorFree").addEventListener("keydown",e=>{
+  if((e.ctrlKey || e.metaKey) && e.key==="Enter") runAdvisor();
+});
 
 
 function loadBmFeedback(){
@@ -1366,11 +2677,17 @@ function setMainMode(next){
   document.body.classList.toggle("bookmatch-mode", next==="bookmatch");
   document.body.classList.toggle("teacher-mode", next==="teacher");
   document.body.classList.toggle("results-mode", next==="results");
+  document.body.classList.toggle("recommend-mode", next==="recommend");
+  document.body.classList.toggle("fun-mode", next==="fun");
+  document.body.classList.toggle("advisor-mode", next==="advisor");
   searchMode.classList.toggle("active", next==="search");
   returnMode.classList.toggle("active", next==="return");
-  bookmatchMode.classList.toggle("active", next==="bookmatch");
-  teacherMode.classList.toggle("active", next==="teacher");
-  resultsMode.classList.toggle("active", next==="results");
+  if(bookmatchMode) bookmatchMode.classList.toggle("active", next==="bookmatch");
+  if(teacherMode) teacherMode.classList.toggle("active", next==="teacher");
+  if(resultsMode) resultsMode.classList.toggle("active", next==="results");
+  recommendMode.classList.toggle("active", next==="recommend");
+  funMode.classList.toggle("active", next==="fun");
+  advisorMode.classList.toggle("active", next==="advisor");
 
   if(next==="bookmatch"){
     bmReset();
@@ -1397,6 +2714,18 @@ function setMainMode(next){
     renderBmResults();
     return;
   }
+  if(next==="recommend"){
+    recReset();
+    return;
+  }
+  if(next==="fun"){
+    showFunHome();
+    return;
+  }
+  if(next==="advisor"){
+    advisorReset();
+    return;
+  }
   setMode(next);
 }
 
@@ -1414,9 +2743,9 @@ document.querySelectorAll(".topic-btn").forEach(btn=>{
 });
 searchMode.addEventListener("click",()=>setMainMode("search"));
 returnMode.addEventListener("click",()=>setMainMode("return"));
-bookmatchMode.addEventListener("click",()=>setMainMode("bookmatch"));
-teacherMode.addEventListener("click",()=>setMainMode("teacher"));
-resultsMode.addEventListener("click",()=>setMainMode("results"));
+recommendMode.addEventListener("click",()=>setMainMode("recommend"));
+funMode.addEventListener("click",()=>setMainMode("fun"));
+advisorMode.addEventListener("click",()=>setMainMode("advisor"));
 
 renderStart();
 </script>
