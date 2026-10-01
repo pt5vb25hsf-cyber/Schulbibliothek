@@ -1,0 +1,288 @@
+name: Bibliothek - Bewertung verarbeiten
+
+on:
+  repository_dispatch:
+    types: [bibliothek_bewertung]
+
+permissions:
+  contents: write
+
+jobs:
+  process-rating:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository laden
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Bewertung speichern und Topliste aktualisieren
+        env:
+          PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Normalerweise klappt der erste Versuch.
+          # Die Wiederholung schützt nur davor, dass zwei Bewertungen
+          # nahezu gleichzeitig eintreffen.
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+
+            python - <<'PY'
+          import json
+          import os
+          import pathlib
+          import re
+          from collections import Counter
+
+          AGE_KEYS = ["6-8", "9-11", "12-14", "15-17"]
+
+          payload = json.loads(os.environ["PAYLOAD"])
+
+          def text(name):
+              value = payload.get(name, "")
+              return "" if value is None else str(value).strip()
+
+          def norm(value):
+              return re.sub(
+                  r"\s+",
+                  " ",
+                  str(value or "").strip().lower()
+              )
+
+          def as_list(value):
+              if value is None:
+                  return []
+
+              if isinstance(value, list):
+                  return [
+                      str(x).strip()
+                      for x in value
+                      if str(x).strip()
+                  ]
+
+              current = str(value).strip()
+              if not current:
+                  return []
+
+              # Forms/Power Automate kann Mehrfachauswahl
+              # als Array oder mehrfach codierten JSON-String liefern.
+              for _ in range(4):
+                  try:
+                      parsed = json.loads(current)
+                  except Exception:
+                      break
+
+                  if isinstance(parsed, list):
+                      return [
+                          str(x).strip()
+                          for x in parsed
+                          if str(x).strip()
+                      ]
+
+                  if isinstance(parsed, str):
+                      current = parsed
+                      continue
+
+                  break
+
+              return [
+                  p.strip(' "\'[]')
+                  for p in re.split(r"[;,]\s*", current)
+                  if p.strip(' "\'[]')
+              ]
+
+          response_id = text("response_id")
+          source = text("source")
+          title = text("title")
+          age = text("age")
+
+          if not response_id:
+              raise SystemExit("response_id fehlt.")
+          if not source:
+              raise SystemExit("source fehlt.")
+          if not title:
+              raise SystemExit("title/Buchtitel fehlt.")
+          if age not in AGE_KEYS:
+              raise SystemExit(
+                  f"Ungültige Altersgruppe: {age!r}"
+              )
+
+          safe_source = re.sub(
+              r"[^A-Za-z0-9._-]+",
+              "_",
+              source.lower()
+          )[:60]
+
+          safe_id = re.sub(
+              r"[^A-Za-z0-9._-]+",
+              "_",
+              response_id
+          )[:120]
+
+          raw_dir = pathlib.Path("data/bewertungen")
+          raw_dir.mkdir(parents=True, exist_ok=True)
+
+          raw_file = raw_dir / f"{safe_source}_{safe_id}.json"
+
+          published = text("published").lower() in {
+              "true", "1", "yes", "ja"
+          }
+
+          # Antwort-ID + Quelle bilden einen eindeutigen Schlüssel.
+          # Derselbe Forms-Datensatz wird deshalb nicht doppelt gezählt.
+          if not raw_file.exists():
+              record = {
+                  "response_id": response_id,
+                  "source": source,
+                  "title": title,
+                  "age": age,
+                  "rating": text("rating"),
+                  "traits": payload.get("traits", ""),
+                  "for_whom": payload.get("for_whom", ""),
+                  "decision": text("decision"),
+                  # Freitext erscheint nur öffentlich,
+                  # wenn "published" ausdrücklich Ja/true ist.
+                  "comment": text("comment") if published else "",
+                  "published": published
+              }
+
+              raw_file.write_text(
+                  json.dumps(
+                      record,
+                      ensure_ascii=False,
+                      indent=2
+                  ),
+                  encoding="utf-8"
+              )
+              print("Neue Rohbewertung:", raw_file)
+          else:
+              print("Bewertung bereits vorhanden:", raw_file)
+
+          # -------- Topliste aus ALLEN gespeicherten Bewertungen bauen --------
+          groups = {}
+
+          for file in sorted(raw_dir.glob("*.json")):
+              try:
+                  row = json.loads(
+                      file.read_text(encoding="utf-8")
+                  )
+              except Exception as exc:
+                  print(
+                      "Fehlerhafte Datendatei übersprungen:",
+                      file,
+                      exc
+                  )
+                  continue
+
+              row_age = str(row.get("age") or "").strip()
+              row_title = str(row.get("title") or "").strip()
+
+              if row_age not in AGE_KEYS or not row_title:
+                  continue
+
+              key = (row_age, norm(row_title))
+
+              if key not in groups:
+                  groups[key] = {
+                      "title": row_title,
+                      "recommendations": 0,
+                      "blinddates": 0,
+                      "matches": 0,
+                      "_traits": Counter(),
+                      "_comments": []
+                  }
+
+              g = groups[key]
+              row_source = norm(row.get("source"))
+
+              if row_source == "buchempfehlung":
+                  g["recommendations"] += 1
+
+              elif row_source == "blinddate":
+                  g["blinddates"] += 1
+
+                  if norm(row.get("rating")) in {
+                      "match",
+                      "das ist mein match",
+                      "das ist mein match!"
+                  }:
+                      g["matches"] += 1
+
+              for trait in as_list(row.get("traits")):
+                  if trait:
+                      g["_traits"][trait] += 1
+
+              if bool(row.get("published")):
+                  comment = str(
+                      row.get("comment") or ""
+                  ).strip()
+
+                  if (
+                      comment
+                      and comment not in g["_comments"]
+                  ):
+                      g["_comments"].append(comment)
+
+          result = {age_key: [] for age_key in AGE_KEYS}
+
+          for (row_age, _), g in groups.items():
+              result[row_age].append({
+                  "title": g["title"],
+                  "author": "",
+                  "category": "",
+                  "recommendations": g["recommendations"],
+                  "blinddates": g["blinddates"],
+                  "matches": g["matches"],
+                  "traits": [
+                      name
+                      for name, _ in g["_traits"].most_common(4)
+                  ],
+                  "comments": g["_comments"][:3]
+              })
+
+          # Transparente Rangfolge:
+          # 1 Empfehlung = 1 Punkt
+          # 1 Blinddate-Match = 1 Punkt
+          for age_key in AGE_KEYS:
+              result[age_key].sort(
+                  key=lambda x: (
+                      -(x["recommendations"] + x["matches"]),
+                      -x["recommendations"],
+                      -x["matches"],
+                      x["title"].lower()
+                  )
+              )
+
+          pathlib.Path("bewertungen.json").write_text(
+              json.dumps(
+                  result,
+                  ensure_ascii=False,
+                  indent=2
+              ),
+              encoding="utf-8"
+          )
+          PY
+
+            if [ -z "$(git status --porcelain)" ]; then
+              echo "Keine Änderung nötig."
+              exit 0
+            fi
+
+            git add data/bewertungen bewertungen.json
+            git commit -m "Bibliotheksbewertung und Topliste aktualisieren"
+
+            if git push origin HEAD:main; then
+              echo "Bewertung und Topliste erfolgreich veröffentlicht."
+              exit 0
+            fi
+
+            echo "Zwischenzeitliche Änderung erkannt. Neuer Versuch $attempt/5."
+            sleep $((attempt * 2))
+          done
+
+          echo "Aktualisierung nach mehreren Versuchen fehlgeschlagen."
+          exit 1
