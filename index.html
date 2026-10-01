@@ -818,6 +818,109 @@ body.advisor-mode .advisor-shell{display:block}
   .advisor-reading-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
+
+/* v28 – Demo: Community-Bewertungen im Buchberater */
+.advisor-community{
+  margin-top:10px;
+  border:1px solid #dbe4ee;
+  border-radius:13px;
+  background:#fbfdff;
+  overflow:hidden;
+}
+.advisor-community-head{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:center;
+  padding:9px 11px;
+  background:#f4f8fc;
+  border-bottom:1px solid #e5edf5;
+}
+.advisor-community-title{font-weight:900;font-size:.9rem;color:#334155}
+.advisor-community-demo{
+  font-size:.68rem;font-weight:900;letter-spacing:.04em;
+  text-transform:uppercase;color:#64748b;white-space:nowrap
+}
+.advisor-community-body{padding:10px 11px 11px}
+.advisor-community-stats{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.advisor-community-pill{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 8px;border-radius:999px;font-size:.78rem;font-weight:800;
+  background:#f1f5f9;color:#334155
+}
+.advisor-community-tags{font-size:.82rem;color:#475569;line-height:1.35}
+.advisor-community-quote{
+  margin-top:8px;padding:8px 10px;border-left:3px solid #cbd5e1;
+  background:#fff;border-radius:8px;color:#475569;font-size:.84rem;line-height:1.35
+}
+.advisor-community-note{margin-top:7px;font-size:.72rem;color:#94a3b8}
+
+
+.modebtn.topbooks.active{background:#8b5f7a;border-color:#8b5f7a;color:#fff}
+body.topbooks-mode header{background:linear-gradient(135deg,#5d4154,#8b5f7a)}
+body.topbooks-mode .search-panel,
+body.topbooks-mode #stats,
+body.topbooks-mode #content,
+body.topbooks-mode .bookmatch-shell,
+body.topbooks-mode .teacher-shell,
+body.topbooks-mode .results-shell,
+body.topbooks-mode .recommend-shell,
+body.topbooks-mode .fun-shell,
+body.topbooks-mode .advisor-shell{display:none!important}
+.topbooks-shell{display:none}
+body.topbooks-mode .topbooks-shell{display:block}
+.topbooks-wrap{max-width:1000px;margin:0 auto}
+.topbooks-hero{background:#fbf7fa;border:1px solid #e6d6df;border-radius:20px;padding:20px}
+.topbooks-hero h2{margin:0 0 6px}
+.topbooks-demo-note{margin-top:10px;padding:9px 11px;border-radius:10px;background:#f6eef3;color:#6f4a62;font-size:.84rem}
+.topbooks-ages{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.topbooks-age-btn{border:1px solid #ddcbd5;background:#fffafd;border-radius:999px;padding:9px 13px;font-weight:800;cursor:pointer}
+.topbooks-age-btn.active{background:#8b5f7a;color:#fff;border-color:#8b5f7a}
+.topbooks-list{display:grid;gap:12px}
+.topbook-card{background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:15px}
+.topbook-head{display:flex;gap:12px}
+.topbook-rank{width:42px;height:42px;border-radius:12px;background:#f4eaf0;color:#765169;display:flex;align-items:center;justify-content:center;font-weight:900}
+.topbook-main{flex:1}
+.topbook-main h3{margin:0 0 3px}
+.topbook-author{color:#64748b;font-size:.92rem}
+.topbook-stats{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.topbook-pill{background:#f8fafc;border:1px solid #e2e8f0;border-radius:999px;padding:6px 9px;font-size:.8rem;font-weight:800}
+.topbook-comment{margin-top:10px;padding:9px 11px;background:#f8fafc;border-radius:10px;color:#475569;font-size:.87rem}
+.topbook-card .shelf-sign{margin-top:11px;width:100%;min-height:62px;border-radius:13px}
+
+
+.bm-age-box{
+  margin:18px 0 6px;
+  padding:14px;
+  border:1px solid #3f3f46;
+  border-radius:15px;
+  background:#111113;
+}
+.bm-age-chips{margin-top:10px}
+
+
+/* v33 – Pflichtfeldprüfung vor Microsoft Forms */
+.required-missing{
+  outline:3px solid rgba(220,38,38,.22);
+  outline-offset:5px;
+  border-radius:14px;
+}
+.rec-thanks.validation-error{
+  background:#fff1f2;
+  border:1px solid #fecdd3;
+  color:#9f1239;
+  font-weight:800;
+}
+.bm-inline-error{
+  margin:12px 0 0;
+  padding:10px 12px;
+  border-radius:12px;
+  background:#2a1115;
+  border:1px solid #7f1d1d;
+  color:#fecaca;
+  font-weight:800;
+}
+
 </style>
 </head>
 <body>
@@ -833,6 +936,7 @@ body.advisor-mode .advisor-shell{display:block}
     <button class="modebtn return" id="returnMode" type="button">↩️ Buch zurückstellen</button>
     <button class="modebtn recommend" id="recommendMode" type="button">⭐ Buch empfehlen</button>
     <button class="modebtn advisor" id="advisorMode" type="button">✨ Welches Buch passt zu mir?</button>
+    <button class="modebtn topbooks" id="topBooksMode" type="button">🏆 Top bewertete Bücher</button>
     <button class="modebtn fun" id="funMode" type="button">🎲 Spiel und Spaß</button>
   </div>
 
@@ -900,6 +1004,16 @@ body.advisor-mode .advisor-shell{display:block}
             <button class="rec-chip" type="button" data-rec-age="eher für Kleinere">🧒 eher für Kleinere</button>
             <button class="rec-chip" type="button" data-rec-age="eher für Mittlere">🙂 eher für Mittlere</button>
             <button class="rec-chip" type="button" data-rec-age="eher für Größere">🧑 eher für Größere</button>
+          </div>
+        </div>
+
+        <div class="rec-section">
+          <h3>Wie alt bist du ungefähr? <span style="font-weight:500;color:#78716c">(Pflichtfeld)</span></h3>
+          <div class="rec-chips" id="recUserAgeChips">
+            <button class="rec-chip rec-user-age" type="button" data-rec-user-age="6-8">6–8 Jahre</button>
+            <button class="rec-chip rec-user-age" type="button" data-rec-user-age="9-11">9–11 Jahre</button>
+            <button class="rec-chip rec-user-age" type="button" data-rec-user-age="12-14">12–14 Jahre</button>
+            <button class="rec-chip rec-user-age" type="button" data-rec-user-age="15-17">15–17 Jahre</button>
           </div>
         </div>
 
@@ -987,7 +1101,7 @@ body.advisor-mode .advisor-shell{display:block}
         <div class="bm-timer" id="bmTimer">10:00</div>
         <p class="bm-task"><strong>Ihr habt jetzt so lange Zeit, bis der Timer abgelaufen ist, um euch kennenzulernen.</strong><br>
         Blättere, lies, schau dich um und finde heraus: Könnte aus euch ein Match werden?</p>
-        <p class="bm-note" id="bmTimerNote">Die Bewertung öffnet sich automatisch, wenn eure Zeit vorbei ist.</p><div class="timer-admin"><button id="bmSkipTimer" type="button">🔐 Timer überspringen (Lehrkraft)</button><p class="bm-note" style="margin-top:10px">Während der Timer läuft, bleibt BOOKMATCH gesperrt. Zum Verlassen ist das Lehrkräfte-Passwort nötig.</p></div>
+        <p class="bm-note" id="bmTimerNote">Die Bewertung öffnet sich automatisch, wenn eure Zeit vorbei ist.</p><div class="timer-admin"><button id="bmSkipTimer" type="button">🔐 Timer überspringen (Lehrkraft)</button></div>
       </div>
 
       <div id="bmStepRating" class="bm-hidden">
@@ -1042,6 +1156,7 @@ body.advisor-mode .advisor-shell{display:block}
             style="width:100%;resize:vertical;border:1px solid #52525b;background:#09090b;color:#fff;border-radius:14px;padding:12px 14px;font:inherit;line-height:1.45"></textarea>
         </div>
 
+        <div class="bm-inline-error bm-hidden" id="bmFollowError"></div>
         <button class="bm-btn" id="bmFollowNext" type="button">Weiter →</button>
       </div>
 
@@ -1049,7 +1164,7 @@ body.advisor-mode .advisor-shell{display:block}
         <div class="bm-brand">Und jetzt?</div>
         <h2 class="bm-reveal">Wie endet euer Date?</h2>
         <div class="bm-grid">
-          <button class="bm-choice" data-decision="home" type="button">💚 <strong>Mit nach Hause</strong><br><small>Ich lese weiter.</small></button>
+          <button class="bm-choice" data-decision="home" type="button">💚 <strong>Mit auf Station</strong><br><small>Ich lese weiter.</small></button>
           <button class="bm-choice" data-decision="again" type="button">🔄 <strong>Noch ein Blind Date</strong><br><small>Neues Säckchen, neues Glück.</small></button>
           <button class="bm-choice" data-decision="shelf" type="button">🏠 <strong>Zurück ins Regal</strong><br><small>Unser Date ist vorbei.</small></button>
         </div>
@@ -1058,6 +1173,18 @@ body.advisor-mode .advisor-shell{display:block}
       <div id="bmStepSubmit" class="bm-hidden">
         <div class="bm-brand">Fast geschafft</div>
         <h2 class="bm-reveal">Blinddate speichern</h2>
+
+        <div class="bm-age-box">
+          <div class="bm-label">Wie alt bist du ungefähr?</div>
+          <div class="bm-chips bm-age-chips" id="bmUserAgeChips">
+            <button class="bm-chip" data-bm-user-age="6-8" type="button">6–8 Jahre</button>
+            <button class="bm-chip" data-bm-user-age="9-11" type="button">9–11 Jahre</button>
+            <button class="bm-chip" data-bm-user-age="12-14" type="button">12–14 Jahre</button>
+            <button class="bm-chip" data-bm-user-age="15-17" type="button">15–17 Jahre</button>
+          </div>
+          <div class="bm-error bm-hidden" id="bmAgeError">Bitte wähle noch dein ungefähres Alter aus.</div>
+        </div>
+
         <div class="forms-next-step" role="note" aria-label="Wichtiger Hinweis zum Absenden">
           <span class="arrow" aria-hidden="true">➡️</span>
           <span>Auf <strong>„Blinddate absenden“</strong> drücken. Dann öffnet sich eine neue Seite. Dort ganz nach unten scrollen und auf <strong>„Absenden“</strong> drücken!</span>
@@ -1106,6 +1233,24 @@ body.advisor-mode .advisor-shell{display:block}
     </div>
   </section>
 
+
+
+  <section class="topbooks-shell" id="topBooksShell" aria-label="Top bewertete Bücher">
+    <div class="topbooks-wrap">
+      <div class="topbooks-hero">
+        <h2>🏆 Top bewertete Bücher</h2>
+        <p>Hier findest du Bücher, die andere Schülerinnen und Schüler besonders empfohlen oder beim Blinddate gut bewertet haben.</p>
+        <div class="topbooks-demo-note">Die Rangliste wird automatisch aus den veröffentlichten Bewertungen geladen.</div>
+      </div>
+      <div class="topbooks-ages">
+        <button class="topbooks-age-btn active" data-top-age="6-8" type="button">6–8 Jahre</button>
+        <button class="topbooks-age-btn" data-top-age="9-11" type="button">9–11 Jahre</button>
+        <button class="topbooks-age-btn" data-top-age="12-14" type="button">12–14 Jahre</button>
+        <button class="topbooks-age-btn" data-top-age="15-17" type="button">15–17 Jahre</button>
+      </div>
+      <div class="topbooks-list" id="topBooksList"></div>
+    </div>
+  </section>
 
   <section class="advisor-shell" id="advisorShell" aria-label="Welches Buch passt zu mir?">
     <div class="advisor-wrap">
@@ -1196,6 +1341,7 @@ const resultsMode = $("#resultsMode");
 const recommendMode = $("#recommendMode");
 const funMode = $("#funMode");
 const advisorMode = $("#advisorMode");
+const topBooksMode = $("#topBooksMode");
 const teacherGrid = $("#teacherGrid");
 const teacherStatus = $("#teacherStatus");
 
@@ -1773,7 +1919,7 @@ const BM_SETTINGS_KEY = "schulbibliothek_bookmatch_settings_v1";
 const BM_TEACHER_PASSWORD = "123Bücherei";
 let bmAssignments = loadBmAssignments();
 let bmSettings = loadBmSettings();
-let bmState = {sack:null, book:null, rating:null, detail:null, positiveFree:"", freeAudience:"", decision:null};
+let bmState = {sack:null, book:null, rating:null, detail:null, positiveFree:"", freeAudience:"", userAge:"", decision:null};
 let bmInterval = null;
 let bmTimerLocked = false;
 let teacherUnlocked = false;
@@ -1907,11 +2053,12 @@ function bmShow(stepId){
 }
 function bmReset(){
   if(bmInterval){ clearInterval(bmInterval); bmInterval=null; }
-  bmState = {sack:null, book:null, rating:null, detail:null, positiveFree:"", freeAudience:"", decision:null};
+  bmState = {sack:null, book:null, rating:null, detail:null, positiveFree:"", freeAudience:"", userAge:"", decision:null};
   $("#bmNumber").value = "";
   $("#bmError").classList.add("bm-hidden");
   const freeBox = $("#bmAudienceFree"); if(freeBox) freeBox.value = "";
   const positiveBox = $("#bmPositiveFree"); if(positiveBox) positiveBox.value = "";
+  const ageErr = $("#bmAgeError"); if(ageErr) ageErr.classList.add("bm-hidden");
   bmTimerLocked = false;
   document.querySelectorAll(".bm-chip.selected,.bm-choice.selected").forEach(x=>x.classList.remove("selected"));
   bmShow("bmStepStart");
@@ -1947,7 +2094,7 @@ function startTenMinuteTimer(){
     timer.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
   }
   const note = $("#bmTimerNote");
-  if(note) note.textContent = `Die Bewertung öffnet sich automatisch, wenn eure ${bmSettings.minutes} Minuten vorbei sind.`;
+  if(note) note.textContent = ``;
   draw();
   bmInterval = setInterval(()=>{
     remaining--;
@@ -2066,6 +2213,7 @@ document.querySelectorAll("[data-rating]").forEach(btn=>{
     bmState.freeAudience = "";
     const freeBox = $("#bmAudienceFree"); if(freeBox) freeBox.value = "";
     const positiveBox = $("#bmPositiveFree"); if(positiveBox) positiveBox.value = "";
+    const followErr = $("#bmFollowError"); if(followErr) followErr.classList.add("bm-hidden");
     bmShow("bmStepFollowup");
   });
 });
@@ -2074,24 +2222,50 @@ document.querySelectorAll("#bmStepFollowup .bm-chip").forEach(btn=>{
     document.querySelectorAll("#bmStepFollowup .bm-chip").forEach(x=>x.classList.remove("selected"));
     btn.classList.add("selected");
     bmState.detail = btn.dataset.positive || btn.dataset.audience || "";
+    const followErr = $("#bmFollowError"); if(followErr) followErr.classList.add("bm-hidden");
   });
 });
 $("#bmFollowNext").addEventListener("click",()=>{
   const freeBox = $("#bmAudienceFree");
   const positiveBox = $("#bmPositiveFree");
+  const followErr = $("#bmFollowError");
+
+  if(!bmState.detail){
+    if(followErr){
+      followErr.textContent = bmState.rating === "match"
+        ? "Bitte wähle aus, was dich an dem Buch überzeugt hat."
+        : "Bitte wähle aus, für wen dieses Buch etwas sein könnte.";
+      followErr.classList.remove("bm-hidden");
+      followErr.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+    return;
+  }
+
   bmState.freeAudience = freeBox ? freeBox.value.trim() : "";
   bmState.positiveFree = positiveBox ? positiveBox.value.trim() : "";
+  if(followErr) followErr.classList.add("bm-hidden");
   bmShow("bmStepEnd");
 });
 
 
+document.querySelectorAll("[data-bm-user-age]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll("[data-bm-user-age]").forEach(x=>x.classList.remove("selected"));
+    btn.classList.add("selected");
+    bmState.userAge = btn.dataset.bmUserAge || "";
+    const err = $("#bmAgeError"); if(err) err.classList.add("bm-hidden");
+  });
+});
+
 const BM_FORMS_ID = "9oZGFamh1EOnVZ_vZ6X-oekLVEizlxtHiVu22nHMOGxUMlFGQTM4QTdGSUVPRUdFS1VUVlZKSEhRSiQlQCN0PWcu";
 const BM_FORMS_FIELDS = {
   book: "re686539b9b0341049fe8a7a0778ac238",
-  rating: "reaf41af52c1647f59c93fb8313d9a0f0",
+  rating: "r819e2e1dd2b141789d3d95fd518e5e78",
   positive: "rb0575cc692244b898ff75c1b79047e2e",
   positiveText: "r27f51a356f4b4b80ad7db5c6290dc358",
   audience: "r3d34b68ee9ce4b878aca0fd6a4244956",
+  audienceFree: "r2273d07c11404637a7a074fd829495cd",
+  userAge: "r2821582922d74e9f9ab80e67f0e5a3cb",
   decision: "r29635e2396104fde8aaa9b43aec10d90"
 };
 
@@ -2159,9 +2333,11 @@ function buildBlinddateFormsUrl(){
   params.set(BM_FORMS_FIELDS.positive, formsSingleValue(isMatch ? bmPositiveForForms(bmState.detail) : ""));
   params.set(BM_FORMS_FIELDS.positiveText, isMatch ? (bmState.positiveFree || "") : "");
   params.set(BM_FORMS_FIELDS.audience, formsSingleValue(!isMatch ? bmAudienceForForms(bmState.detail) : ""));
+  params.set(BM_FORMS_FIELDS.audienceFree, !isMatch ? (bmState.freeAudience || "") : "");
+  params.set(BM_FORMS_FIELDS.userAge, formsSingleValue(bmState.userAge || ""));
   params.set(BM_FORMS_FIELDS.decision, formsSingleValue(bmDecisionForForms(bmState.decision)));
 
-  return "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?" + params.toString();
+  return "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?" + params.toString().replace(/\+/g, "%20");
 }
 
 function saveBmFeedback(){
@@ -2176,6 +2352,7 @@ function saveBmFeedback(){
       detail:bmState.detail,
       positiveFree:bmState.positiveFree,
       freeAudience:bmState.freeAudience,
+      userAge:bmState.userAge,
       decision:bmState.decision
     });
     localStorage.setItem(BM_FEEDBACK_KEY, JSON.stringify(arr.slice(-500)));
@@ -2191,7 +2368,30 @@ document.querySelectorAll("[data-decision]").forEach(btn=>{
 });
 
 $("#bmFormsSubmit").addEventListener("click",()=>{
-  if(!bmState.book || !bmState.rating || !bmState.decision) return;
+  if(!bmState.book || !bmState.rating || !bmState.detail || !bmState.decision){
+    window.alert("Es fehlt noch eine Pflichtangabe. Bitte gehe einen Schritt zurück und vervollständige dein Blinddate.");
+    return;
+  }
+
+  if(!bmState.userAge){
+    const err = $("#bmAgeError");
+    if(err){
+      err.classList.remove("bm-hidden");
+      err.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+    return;
+  }
+
+  const mappedRating = bmRatingForForms(bmState.rating);
+  const mappedDecision = bmDecisionForForms(bmState.decision);
+  const mappedDetail = bmState.rating === "match"
+    ? bmPositiveForForms(bmState.detail)
+    : bmAudienceForForms(bmState.detail);
+
+  if(!mappedRating || !mappedDecision || !mappedDetail){
+    window.alert("Eine Angabe konnte nicht für Microsoft Forms vorbereitet werden. Bitte starte das Blinddate noch einmal.");
+    return;
+  }
 
   saveBmFeedback();
   const formsUrl = buildBlinddateFormsUrl();
@@ -2223,7 +2423,8 @@ const REC_FORMS_FIELDS = {
   book: "rf1215a359d11474d99c1e92d8fe78bef",
   positives: "r6e5f2ed5295445d187dcffcfdd502a22",
   ages: "r55a88bd0b8c54f8298aa2d9f00504c72",
-  text: "r53e84caa6f1f43d3bcff99131fb0c21a"
+  text: "r53e84caa6f1f43d3bcff99131fb0c21a",
+  userAge: "rcf78810dd0664453b5294614ebfa4ada"
 };
 
 function formsMultiValue(values){
@@ -2231,14 +2432,15 @@ function formsMultiValue(values){
   return JSON.stringify(JSON.stringify(values));
 }
 
-function buildRecommendationFormsUrl(book, positives, ages, text){
+function buildRecommendationFormsUrl(book, positives, ages, text, userAge){
   const params = new URLSearchParams();
   params.set("id", "9oZGFamh1EOnVZ_vZ6X-oYMiaj-L7JpFj70SQZtMadFUM0tWOVU3RFFBVDk4M1Q4REYxNFZBNUJUNi4u");
   params.set(REC_FORMS_FIELDS.book, book);
   params.set(REC_FORMS_FIELDS.positives, formsMultiValue(positives));
   params.set(REC_FORMS_FIELDS.ages, formsMultiValue(ages));
   params.set(REC_FORMS_FIELDS.text, text || "");
-  return "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?" + params.toString();
+  params.set(REC_FORMS_FIELDS.userAge, formsSingleValue(userAge));
+  return "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?" + params.toString().replace(/\+/g, "%20");
 }
 let recSelectedBook = null;
 
@@ -2291,6 +2493,7 @@ function showRecSuggestions(){
       $("#recSelected").innerHTML = `<strong>${escapeHtml(recSelectedBook.title)}</strong><br><span>${escapeHtml(recSelectedBook.author || "")}</span>`;
       $("#recSelected").classList.remove("bm-hidden");
       box.classList.add("bm-hidden");
+      clearRecValidation();
     });
   });
 }
@@ -2299,28 +2502,79 @@ $("#recBookSearch").addEventListener("input",showRecSuggestions);
 $("#recBookSearch").addEventListener("focus",showRecSuggestions);
 
 document.querySelectorAll(".rec-chip").forEach(btn=>{
-  btn.addEventListener("click",()=>btn.classList.toggle("selected"));
+  btn.addEventListener("click",()=>{
+    if(btn.hasAttribute("data-rec-user-age")){
+      document.querySelectorAll("[data-rec-user-age]").forEach(x=>x.classList.remove("selected"));
+      btn.classList.add("selected");
+    }else{
+      btn.classList.toggle("selected");
+    }
+    document.querySelectorAll(".required-missing").forEach(x=>x.classList.remove("required-missing"));
+    const box = $("#recThanks");
+    if(box && box.classList.contains("validation-error")) box.classList.add("bm-hidden");
+  });
 });
 
+
+function bookLabelForValidation(book){
+  return !!(book && String(book.title || "").trim());
+}
+
+function clearRecValidation(){
+  const box = $("#recThanks");
+  if(box){
+    box.classList.add("bm-hidden");
+    box.classList.remove("validation-error");
+  }
+  document.querySelectorAll(".required-missing").forEach(x=>x.classList.remove("required-missing"));
+}
+
+function showRecValidation(message, target){
+  const box = $("#recThanks");
+  if(box){
+    box.textContent = message;
+    box.classList.remove("bm-hidden");
+    box.classList.add("validation-error");
+  }
+  if(target){
+    const el = document.querySelector(target);
+    if(el){
+      const section = el.closest(".rec-section") || el.closest(".rec-search-wrap") || el;
+      section.classList.add("required-missing");
+      section.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+  }
+}
+
 $("#recSubmit").addEventListener("click",()=>{
+  clearRecValidation();
   if(!recSelectedBook){
-    $("#recThanks").textContent = "Bitte wähle zuerst ein Buch aus dem Katalog aus.";
-    $("#recThanks").classList.remove("bm-hidden");
+    showRecValidation("Bitte wähle zuerst ein Buch aus dem Katalog aus.", "#recBookSearch");
     return;
   }
   const positives = [...document.querySelectorAll("[data-rec-positive].selected")].map(x=>x.dataset.recPositive);
   const ages = [...document.querySelectorAll("[data-rec-age].selected")].map(x=>x.dataset.recAge);
+  const userAgeBtn = document.querySelector("[data-rec-user-age].selected");
+  const userAge = userAgeBtn ? userAgeBtn.dataset.recUserAge : "";
   const text = $("#recText").value.trim();
 
   if(!positives.length){
-    $("#recThanks").textContent = "Bitte wähle mindestens eine positive Eigenschaft aus.";
-    $("#recThanks").classList.remove("bm-hidden");
+    showRecValidation("Bitte wähle mindestens eine positive Eigenschaft aus.", "#recPositiveChips");
     return;
   }
 
   if(!ages.length){
-    $("#recThanks").textContent = "Bitte wähle mindestens eine Altersgruppe aus, für die das Buch gut passt.";
-    $("#recThanks").classList.remove("bm-hidden");
+    showRecValidation("Bitte wähle mindestens eine Altersgruppe aus, für die das Buch gut passt.", "#recAgeChips");
+    return;
+  }
+
+  if(!userAge){
+    showRecValidation("Bitte wähle noch aus, wie alt du ungefähr bist.", "#recUserAgeChips");
+    return;
+  }
+
+  if(!bookLabelForValidation(recSelectedBook)){
+    showRecValidation("Das ausgewählte Buch konnte nicht für Microsoft Forms vorbereitet werden.", "#recBookSearch");
     return;
   }
 
@@ -2331,17 +2585,19 @@ $("#recSubmit").addEventListener("click",()=>{
     author:recSelectedBook.author || "",
     positives,
     ages,
+    userAge,
     text
   });
 
   const bookLabel = recSelectedBook.title + (recSelectedBook.author ? " — " + recSelectedBook.author : "");
-  const formsUrl = buildRecommendationFormsUrl(bookLabel, positives, ages, text);
+  const formsUrl = buildRecommendationFormsUrl(bookLabel, positives, ages, text, userAge);
 
   $("#recThanks").textContent = "Deine Angaben sind vorbereitet. Gleich öffnet sich eine neue Seite. Dort ganz nach unten scrollen und auf „Absenden“ drücken!";
   $("#recThanks").classList.remove("bm-hidden");
 
-  // Open pre-filled Microsoft Form
-  window.open(formsUrl, "_blank", "noopener");
+  // Open pre-filled Microsoft Form; fall back to same tab if pop-ups are blocked.
+  const opened = window.open(formsUrl, "_blank", "noopener");
+  if(!opened) window.location.href = formsUrl;
 });
 
 function showFunHome(){
@@ -2366,6 +2622,108 @@ $("#blindTeacher").addEventListener("click",()=>{
   setMainMode("teacher");
 });
 
+
+
+
+let TOPBOOKS_DATA = null;
+let TOPBOOKS_LOAD_ERROR = null;
+
+async function loadTopBooksData(){
+  try{
+    const res = await fetch("bewertungen.json", {cache:"no-store"});
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    TOPBOOKS_DATA = data && typeof data === "object" ? data : {};
+    TOPBOOKS_LOAD_ERROR = null;
+  }catch(err){
+    TOPBOOKS_DATA = {};
+    TOPBOOKS_LOAD_ERROR = err;
+  }
+}
+
+function normalizeTopbookRows(age){
+  const data = TOPBOOKS_DATA || {};
+  const rows = Array.isArray(data[age]) ? data[age] : [];
+  return rows.map(row=>({
+    title: row.title || "",
+    author: row.author || "",
+    recommendations: Number(row.recommendations || 0),
+    blinddates: Number(row.blinddates || row.dates || 0),
+    matches: Number(row.matches || 0),
+    traits: Array.isArray(row.traits) ? row.traits : [],
+    comments: Array.isArray(row.comments) ? row.comments : [],
+    category: row.category || ""
+  })).filter(r=>r.title);
+}
+
+function renderTopBooks(age="6-8"){
+  const box = $("#topBooksList");
+  if(!box) return;
+
+  if(TOPBOOKS_LOAD_ERROR){
+    box.innerHTML = `
+      <div class="advisor-empty">
+        <strong>Die Bewertungsdaten konnten gerade nicht geladen werden.</strong><br>
+        Sobald <code>bewertungen.json</code> im GitHub-Repository liegt, erscheinen die Ergebnisse hier automatisch.
+      </div>`;
+    return;
+  }
+
+  const rows = normalizeTopbookRows(age);
+  if(!rows.length){
+    box.innerHTML = `
+      <div class="advisor-empty">
+        Für diese Altersgruppe gibt es noch keine veröffentlichten Bewertungen.
+      </div>`;
+    return;
+  }
+
+  rows.sort((a,b)=>{
+    const aScore = a.recommendations + a.matches;
+    const bScore = b.recommendations + b.matches;
+    return bScore-aScore || b.recommendations-a.recommendations || a.title.localeCompare(b.title,"de");
+  });
+
+  box.innerHTML = rows.slice(0,20).map((r,i)=>{
+    const book = BOOKS.find(b=>norm(b.title)===norm(r.title))
+      || BOOKS.find(b=>norm(b.title).includes(norm(r.title)) || norm(r.title).includes(norm(b.title)));
+
+    const title = book ? book.title : r.title;
+    const author = book ? (book.author || r.author || "") : (r.author || "");
+    const category = book ? (book.category || r.category || "") : (r.category || "");
+    const shelf = category ? shelfSignHTML(category) : "";
+    const traitText = r.traits.length ? r.traits.slice(0,4).map(escapeHtml).join(" · ") : "";
+    const comment = r.comments.find(x=>String(x).trim()) || "";
+
+    return `
+      <article class="topbook-card">
+        <div class="topbook-head">
+          <div class="topbook-rank">${i+1}</div>
+          <div class="topbook-main">
+            <h3>${escapeHtml(title)}</h3>
+            ${author ? `<div class="topbook-author">${escapeHtml(author)}</div>` : ""}
+            <div class="topbook-stats">
+              ${r.recommendations ? `<span class="topbook-pill">⭐ ${r.recommendations} Empfehlungen</span>` : ""}
+              ${r.blinddates ? `<span class="topbook-pill">💚 ${r.matches}/${r.blinddates} Blinddate-Matches</span>` : ""}
+              ${traitText ? `<span class="topbook-pill">${traitText}</span>` : ""}
+            </div>
+            ${comment ? `<div class="topbook-comment">„${escapeHtml(comment)}“</div>` : ""}
+            ${shelf}
+          </div>
+        </div>
+      </article>`;
+  }).join("");
+}
+
+document.querySelectorAll(".topbooks-age-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".topbooks-age-btn").forEach(x=>x.classList.remove("active"));
+    btn.classList.add("active");
+    renderTopBooks(btn.dataset.topAge);
+  });
+});
+
+loadTopBooksData();
 
 function advisorReset(){
   $("#advisorFree").value = "";
@@ -2456,6 +2814,7 @@ function advisorWhy(book, terms){
   const unique = [...new Set(matches)].slice(0,3);
   return unique.length ? `Passt zu: ${unique.join(" · ")}` : `Gefunden über deine Wünsche und die Katalogbegriffe.`;
 }
+
 
 function runAdvisor(){
   const terms = advisorTerms();
@@ -2680,6 +3039,7 @@ function setMainMode(next){
   document.body.classList.toggle("recommend-mode", next==="recommend");
   document.body.classList.toggle("fun-mode", next==="fun");
   document.body.classList.toggle("advisor-mode", next==="advisor");
+  document.body.classList.toggle("topbooks-mode", next==="topbooks");
   searchMode.classList.toggle("active", next==="search");
   returnMode.classList.toggle("active", next==="return");
   if(bookmatchMode) bookmatchMode.classList.toggle("active", next==="bookmatch");
@@ -2688,6 +3048,7 @@ function setMainMode(next){
   recommendMode.classList.toggle("active", next==="recommend");
   funMode.classList.toggle("active", next==="fun");
   advisorMode.classList.toggle("active", next==="advisor");
+  topBooksMode.classList.toggle("active", next==="topbooks");
 
   if(next==="bookmatch"){
     bmReset();
@@ -2726,6 +3087,11 @@ function setMainMode(next){
     advisorReset();
     return;
   }
+  if(next==="topbooks"){
+    const age = document.querySelector(".topbooks-age-btn.active")?.dataset.topAge || "6-8";
+    loadTopBooksData().then(()=>renderTopBooks(age));
+    return;
+  }
   setMode(next);
 }
 
@@ -2746,6 +3112,7 @@ returnMode.addEventListener("click",()=>setMainMode("return"));
 recommendMode.addEventListener("click",()=>setMainMode("recommend"));
 funMode.addEventListener("click",()=>setMainMode("fun"));
 advisorMode.addEventListener("click",()=>setMainMode("advisor"));
+topBooksMode.addEventListener("click",()=>setMainMode("topbooks"));
 
 renderStart();
 </script>
