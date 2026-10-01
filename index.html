@@ -2629,16 +2629,36 @@ let TOPBOOKS_DATA = null;
 let TOPBOOKS_LOAD_ERROR = null;
 
 async function loadTopBooksData(){
-  try{
-    const res = await fetch("bewertungen.json", {cache:"no-store"});
-    if(!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
-    TOPBOOKS_DATA = data && typeof data === "object" ? data : {};
-    TOPBOOKS_LOAD_ERROR = null;
-  }catch(err){
-    TOPBOOKS_DATA = {};
-    TOPBOOKS_LOAD_ERROR = err;
+  const stamp = Date.now();
+  const sources = [
+    "bewertungen.json?v=" + stamp,
+    "https://pt5vb25hsf-cyber.github.io/Schulbibliothek/bewertungen.json?v=" + stamp,
+    "https://raw.githubusercontent.com/pt5vb25hsf-cyber/Schulbibliothek/main/bewertungen.json?v=" + stamp
+  ];
+
+  let lastError = null;
+
+  for(const url of sources){
+    try{
+      const res = await fetch(url, {cache:"no-store"});
+      if(!res.ok) throw new Error("HTTP " + res.status + " bei " + url);
+
+      const data = await res.json();
+      if(!data || typeof data !== "object"){
+        throw new Error("Ungültige Bewertungsdaten bei " + url);
+      }
+
+      TOPBOOKS_DATA = data;
+      TOPBOOKS_LOAD_ERROR = null;
+      return;
+    }catch(err){
+      lastError = err;
+      console.warn("Bewertungsdaten konnten nicht geladen werden:", url, err);
+    }
   }
+
+  TOPBOOKS_DATA = {};
+  TOPBOOKS_LOAD_ERROR = lastError || new Error("Bewertungsdaten nicht erreichbar.");
 }
 
 function normalizeTopbookRows(age){
@@ -2664,7 +2684,7 @@ function renderTopBooks(age="6-8"){
     box.innerHTML = `
       <div class="advisor-empty">
         <strong>Die Bewertungsdaten konnten gerade nicht geladen werden.</strong><br>
-        Sobald <code>bewertungen.json</code> im GitHub-Repository liegt, erscheinen die Ergebnisse hier automatisch.
+        Bitte die Seite kurz neu laden. Die Daten werden automatisch aus GitHub geladen.
       </div>`;
     return;
   }
