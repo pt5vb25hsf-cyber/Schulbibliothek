@@ -876,6 +876,7 @@ body.topbooks-mode .topbooks-shell{display:block}
 .topbooks-ages{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
 .topbooks-age-btn{border:1px solid #ddcbd5;background:#fffafd;border-radius:999px;padding:9px 13px;font-weight:800;cursor:pointer}
 .topbooks-age-btn.active{background:#8b5f7a;color:#fff;border-color:#8b5f7a}
+.topbooks-age-hint{margin-top:-7px;margin-bottom:14px;font-size:.92rem;color:#765f6e;font-weight:700}
 .topbooks-list{display:grid;gap:12px}
 .topbook-card{background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:15px}
 .topbook-head{display:flex;gap:12px}
@@ -1248,6 +1249,7 @@ body.topbooks-mode .topbooks-shell{display:block}
         <button class="topbooks-age-btn" data-top-age="12-14" type="button">12–14 Jahre</button>
         <button class="topbooks-age-btn" data-top-age="15-17" type="button">15–17 Jahre</button>
       </div>
+      <div class="topbooks-age-hint">Mehrfachauswahl möglich.</div>
       <div class="topbooks-list" id="topBooksList"></div>
     </div>
   </section>
@@ -2676,7 +2678,54 @@ function normalizeTopbookRows(age){
   })).filter(r=>r.title);
 }
 
-function renderTopBooks(age="6-8"){
+function getSelectedTopbookAges(){
+  return [...document.querySelectorAll(".topbooks-age-btn.active")]
+    .map(btn=>btn.dataset.topAge)
+    .filter(Boolean);
+}
+
+function mergeTopbookRows(ages){
+  const merged = new Map();
+
+  ages.forEach(age=>{
+    normalizeTopbookRows(age).forEach(row=>{
+      const key = norm(row.title);
+
+      if(!merged.has(key)){
+        merged.set(key,{
+          title: row.title,
+          author: row.author || "",
+          recommendations: 0,
+          blinddates: 0,
+          matches: 0,
+          traits: [],
+          comments: [],
+          category: row.category || ""
+        });
+      }
+
+      const target = merged.get(key);
+      target.recommendations += row.recommendations;
+      target.blinddates += row.blinddates;
+      target.matches += row.matches;
+
+      if(!target.author && row.author) target.author = row.author;
+      if(!target.category && row.category) target.category = row.category;
+
+      row.traits.forEach(t=>{
+        if(t && !target.traits.includes(t)) target.traits.push(t);
+      });
+
+      row.comments.forEach(c=>{
+        if(c && !target.comments.includes(c)) target.comments.push(c);
+      });
+    });
+  });
+
+  return [...merged.values()];
+}
+
+function renderTopBooks(ages=getSelectedTopbookAges()){
   const box = $("#topBooksList");
   if(!box) return;
 
@@ -2689,11 +2738,20 @@ function renderTopBooks(age="6-8"){
     return;
   }
 
-  const rows = normalizeTopbookRows(age);
+  if(!ages.length){
+    box.innerHTML = `
+      <div class="advisor-empty">
+        Bitte wähle mindestens eine Altersgruppe aus.
+      </div>`;
+    return;
+  }
+
+  const rows = mergeTopbookRows(ages);
+
   if(!rows.length){
     box.innerHTML = `
       <div class="advisor-empty">
-        Für diese Altersgruppe gibt es noch keine veröffentlichten Bewertungen.
+        Für die ausgewählten Altersgruppen gibt es noch keine veröffentlichten Bewertungen.
       </div>`;
     return;
   }
@@ -2701,7 +2759,10 @@ function renderTopBooks(age="6-8"){
   rows.sort((a,b)=>{
     const aScore = a.recommendations + a.matches;
     const bScore = b.recommendations + b.matches;
-    return bScore-aScore || b.recommendations-a.recommendations || a.title.localeCompare(b.title,"de");
+    return bScore-aScore
+      || b.recommendations-a.recommendations
+      || b.matches-a.matches
+      || a.title.localeCompare(b.title,"de");
   });
 
   box.innerHTML = rows.slice(0,20).map((r,i)=>{
@@ -2737,9 +2798,8 @@ function renderTopBooks(age="6-8"){
 
 document.querySelectorAll(".topbooks-age-btn").forEach(btn=>{
   btn.addEventListener("click",()=>{
-    document.querySelectorAll(".topbooks-age-btn").forEach(x=>x.classList.remove("active"));
-    btn.classList.add("active");
-    renderTopBooks(btn.dataset.topAge);
+    btn.classList.toggle("active");
+    renderTopBooks(getSelectedTopbookAges());
   });
 });
 
@@ -3108,8 +3168,7 @@ function setMainMode(next){
     return;
   }
   if(next==="topbooks"){
-    const age = document.querySelector(".topbooks-age-btn.active")?.dataset.topAge || "6-8";
-    loadTopBooksData().then(()=>renderTopBooks(age));
+    loadTopBooksData().then(()=>renderTopBooks(getSelectedTopbookAges()));
     return;
   }
   setMode(next);
