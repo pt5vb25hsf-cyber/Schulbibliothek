@@ -1223,6 +1223,12 @@ h1{
   margin:0;
   padding:0;
 }
+.task-title.emphasis-title{
+  font-size:1.28rem;
+  font-weight:950;
+  line-height:1.12;
+  letter-spacing:-.01em;
+}
 .task-tag{
   position:absolute;
   top:16px;
@@ -1239,7 +1245,7 @@ h1{
 }
 .task-card.mail-top-layout{
   justify-content:flex-start;
-  padding-top:66px;
+  padding-top:34px;
   padding-bottom:28px;
 }
 .task-card.mail-top-layout .task-head{
@@ -1251,6 +1257,37 @@ h1{
   margin:0;
   padding:0;
   line-height:1.2;
+}
+.task-card.catalog-top-layout{
+  justify-content:flex-start;
+  padding-top:34px;
+  padding-bottom:28px;
+}
+.task-card.catalog-top-layout .task-head{
+  display:block;
+  margin:0 0 16px 0;
+}
+.task-card.catalog-top-layout .task-title{
+  margin:0;
+  padding:0;
+  line-height:1.15;
+}
+.task-card.record-top-layout{
+  justify-content:flex-start;
+  padding-top:76px;
+  padding-bottom:28px;
+}
+.task-card.record-top-layout .task-head{
+  display:block;
+  min-height:0;
+  margin:0 0 10px 0;
+}
+.task-card.record-top-layout .task-title{
+  margin:0;
+  padding:0;
+}
+.task-card.funki-recommend-layout .task-head{
+  margin-bottom:30px;
 }
 .prompt{font-size:1rem;font-weight:700;line-height:1.4;margin:0 0 12px}
 .intro-hero{
@@ -1343,6 +1380,43 @@ textarea.field{resize:vertical;min-height:105px;line-height:1.45}
 .mail-hints{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px}
 .hint-chip{font-size:.78rem;border-radius:999px;background:#f7efdf;border:1px solid #e6d4b3;padding:6px 9px;color:#67513a}
 .reply{border:1.5px solid #e8d0a7;background:#fff8e9;border-radius:14px;padding:13px;line-height:1.48;font-size:.95rem}
+.email-card{
+  border:1.5px solid #d9dce3;
+  background:#fff;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 10px 24px rgba(32,42,58,.08);
+}
+.email-topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  background:#f5f7fa;
+  border-bottom:1px solid #e3e8ef;
+  font-size:.84rem;
+  color:#657082;
+  font-weight:700;
+}
+.email-meta{
+  padding:12px 14px 10px;
+  background:#fcfdff;
+  border-bottom:1px solid #eceff4;
+  display:grid;
+  gap:6px;
+  font-size:.92rem;
+}
+.email-meta div{display:flex;gap:8px;align-items:flex-start}
+.email-meta strong{min-width:62px;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em;color:#7a8594}
+.email-body{
+  padding:16px 16px 18px;
+  line-height:1.58;
+  font-size:.98rem;
+}
+.email-body p{margin:0 0 12px}
+.email-body p:last-child{margin-bottom:0}
+.email-signature{margin-top:16px;padding-top:12px;border-top:1px dashed #d8dfe8}
 .reply strong{display:block;margin-bottom:7px}
 .record-prompt{font-size:.97rem;font-weight:800;margin:10px 0 7px}
 .word-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
@@ -1358,6 +1432,39 @@ textarea.field{resize:vertical;min-height:105px;line-height:1.45}
 .complete .big{font-size:2.4rem;margin-bottom:5px}
 .complete h2{font-size:1.3rem;margin:0 0 7px}
 .complete p{margin:0;color:#5d6258;line-height:1.4}
+.final-complete{
+  width:100%;
+  padding:0 10px 36px;
+}
+.final-complete h2{
+  margin:0 0 14px;
+  line-height:1.18;
+}
+.final-icon{
+  display:inline-block;
+  font-size:.82em;
+  font-weight:400;
+  margin-left:4px;
+  vertical-align:.08em;
+}
+.final-copy{
+  width:100%;
+  max-width:35rem;
+  margin:0 auto 18px;
+  text-align:justify;
+  text-justify:inter-word;
+  hyphens:auto;
+}
+.final-copy p{
+  margin:0 0 10px;
+  line-height:1.42;
+}
+.final-actions{
+  width:100%;
+  justify-content:center;
+  margin-top:4px;
+  margin-bottom:8px;
+}
 .dialog{
   width:min(92vw,560px);border:0;border-radius:20px;padding:0;
   background:#fffaf0;box-shadow:0 25px 70px rgba(0,0,0,.32);color:var(--ink)
@@ -1689,6 +1796,9 @@ function render(){
   setCompleteLayout(false);
   const task=$(&quot;task&quot;);
   task.classList.toggle(&quot;mail-top-layout&quot;, step===4);
+  task.classList.toggle(&quot;catalog-top-layout&quot;, step===3);
+  task.classList.toggle(&quot;record-top-layout&quot;, step===5);
+  task.classList.toggle(&quot;funki-recommend-layout&quot;, step===8);
   if(step===0){
     setStory(&quot;Prolog&quot;,&quot;Funki und die acht Feuerfunken&quot;,
       &quot;Funki ist ein junger Drache und Professorin Flamme ist seine Lehrerin. Heute hat sie ihm etwas ganz Besonderes erlaubt: Zum ersten Mal darf Funki ganz allein in die Schulbibliothek. Bevor er loszieht, gibt sie ihm eine Aufgabe mit auf den Weg: In der Bibliothek warten acht Feuerfunken auf ihn. Jeder Funke erwacht, wenn Funki etwas Neues über Bücher und die Bibliothek entdeckt. Doch allein schafft er das nicht. Hilfst du ihm bei seiner Bibliotheksprüfung?&quot;,
@@ -1708,7 +1818,7 @@ function render(){
       1);
     if(stepDone){showComplete(&quot;Du hast ein Buch gefunden und Funki den ersten Feuerfunken gebracht.&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Buch finden&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Buch finden&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Gehe zum Tierregal. Nimm ein Tierbuch heraus, das dich neugierig macht. Gib hier den Titel ein.&lt;/p&gt;
       &lt;input class=&quot;field&quot; id=&quot;animal-query&quot; autocomplete=&quot;off&quot; spellcheck=&quot;false&quot; placeholder=&quot;Titel eingeben …&quot;&gt;
       &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn primary&quot; id=&quot;animal-check&quot; type=&quot;button&quot;&gt;Buch prüfen&lt;/button&gt;&lt;/div&gt;
@@ -1836,8 +1946,26 @@ function render(){
     if(stepDone &amp;&amp; mailSent){
       setCompleteLayout(true);
       task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;📨 Antwort von Professorin Flamme&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Drachenpost&lt;/span&gt;&lt;/div&gt;
-        &lt;div class=&quot;reply&quot;&gt;&lt;strong&gt;Liebe Funki-Helferinnen und -Helfer,&lt;/strong&gt;
-        wie gut, dass ihr mir geschrieben habt! Tatsächlich habe ich einen besonders neugierigen Feuerfunken gesehen. Er wollte unbedingt wissen, wer am schnellsten laufen kann, welches Tier besonders groß ist und welche unglaublichen Dinge Menschen schaffen können. Deshalb ist er zwischen Bücher geflogen, in denen es um &lt;strong&gt;Rekorde&lt;/strong&gt; geht. Schaut euch dort einmal genauer um.&lt;br&gt;&lt;br&gt;Viel Glück!&lt;br&gt;Eure Professorin Flamme 🔥&lt;/div&gt;
+        &lt;div class=&quot;email-card&quot;&gt;
+          &lt;div class=&quot;email-topbar&quot;&gt;
+            &lt;span&gt;Neue Nachricht&lt;/span&gt;
+            &lt;span&gt;Professorin Flamme&lt;/span&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;email-meta&quot;&gt;
+            &lt;div&gt;&lt;strong&gt;Von:&lt;/strong&gt;&lt;span&gt;Professorin Flamme&lt;/span&gt;&lt;/div&gt;
+            &lt;div&gt;&lt;strong&gt;An:&lt;/strong&gt;&lt;span&gt;Funki und seine Helferinnen und Helfer&lt;/span&gt;&lt;/div&gt;
+            &lt;div&gt;&lt;strong&gt;Betreff:&lt;/strong&gt;&lt;span&gt;Hinweis zum nächsten Feuerfunken&lt;/span&gt;&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;email-body&quot;&gt;
+            &lt;p&gt;Liebe Funki-Helferinnen und -Helfer,&lt;/p&gt;
+            &lt;p&gt;wie gut, dass ihr mir geschrieben habt!&lt;/p&gt;
+            &lt;p&gt;Tatsächlich habe ich einen besonders neugierigen Feuerfunken gesehen. Er wollte unbedingt wissen, wer am schnellsten laufen kann, welches Tier besonders groß ist und welche unglaublichen Dinge Menschen schaffen können.&lt;/p&gt;
+            &lt;p&gt;Deshalb ist er zwischen Bücher geflogen, in denen es um &lt;strong&gt;Rekorde&lt;/strong&gt; geht. Schaut euch dort einmal genauer um.&lt;/p&gt;
+            &lt;div class=&quot;email-signature&quot;&gt;
+              &lt;p&gt;Viel Glück!&lt;br&gt;Eure Professorin Flamme 🔥&lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
         &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn primary&quot; id=&quot;continue-btn&quot; type=&quot;button&quot;&gt;Antwort gelesen – weiter&lt;/button&gt;&lt;/div&gt;`;
       $(&quot;continue-btn&quot;).onclick=nextStep;return;
     }
@@ -1957,7 +2085,7 @@ function render(){
       5);
     if(stepDone){showComplete(&quot;Du hast einen Rekord entdeckt und Funki davon erzählt. Der fünfte Feuerfunke leuchtet! Schaue selbst im Buch nach!&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Suche ein Guinness-Buch der Weltrekorde&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Rekorde entdecken&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Rekorde entdecken&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Suche ein Guinness-Buch der Weltrekorde im Regal. Blättere darin und suche einen Rekord über eine Person oder ein Tier, der dich überrascht.&lt;/p&gt;
 
       &lt;button class=&quot;btn soft&quot; id=&quot;record-hint-1&quot; type=&quot;button&quot; style=&quot;font-size:.82rem;padding:8px 12px;margin:0 0 12px&quot;&gt;
@@ -2128,7 +2256,7 @@ function render(){
       7);
     if(stepDone){showComplete(&quot;Du hast ein Buch zum Film entdeckt. Der siebte Feuerfunke leuchtet – nur noch einer fehlt!&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Finde das Regal „Buch zum Film“&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Film entdecken&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Finde das Regal „Buch zum Film“&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Film entdecken&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Gehe zum Regal mit den Büchern, die auch verfilmt wurden. Welchen Film hast du schon gesehen oder würdest du gerne sehen? Wähle einen Film, zu dem es in unserer Bibliothek auch ein Buch gibt, und gib den Titel ein.&lt;/p&gt;
       &lt;input class=&quot;field&quot; id=&quot;film-query&quot; placeholder=&quot;Titel eingeben …&quot; autocomplete=&quot;off&quot; spellcheck=&quot;false&quot;&gt;
       &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn primary&quot; id=&quot;film-check&quot; type=&quot;button&quot;&gt;Titel prüfen&lt;/button&gt;&lt;/div&gt;
@@ -2165,7 +2293,7 @@ function render(){
       8);
     if(stepDone){showComplete(&quot;Du hast ein Buch für Funki ausgesucht. Jetzt leuchten alle acht Feuerfunken!&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Finde ein Buch für Funki&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Empfehlen&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Finde ein Buch für Funki&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Empfehlen&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Suche in der Bibliothek ein Buch aus, das du Funki empfehlen würdest. Nimm es in die Hand, schau dir das Cover an und blättere kurz hinein. Gib den Titel anschließend hier ein.&lt;/p&gt;
       &lt;input class=&quot;field&quot; id=&quot;funki-query&quot; placeholder=&quot;Buchtitel eingeben …&quot; autocomplete=&quot;off&quot; spellcheck=&quot;false&quot;&gt;
       &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn primary&quot; id=&quot;funki-check&quot; type=&quot;button&quot;&gt;Buch prüfen&lt;/button&gt;&lt;/div&gt;
@@ -2258,13 +2386,16 @@ function render(){
     setStory(&quot;Geschafft!&quot;,&quot;Funki hat seine acht Feuerfunken&quot;,
       &quot;Alle acht Feuerfunken schweben um Funki. Er holt tief Luft und pustet eine kleine goldene Drachenflamme. Die Leselichter in der Bibliothek gehen an! „Ich habe es geschafft!“, jubelt Funki. „Und ich weiß jetzt, wie man Bücher findet, Autoren entdeckt, den Katalog benutzt, in Büchern nachschlägt und neue Geschichten auswählt. Und ein Buch zum Lesen habe ich jetzt auch! Danke, dass du mir geholfen hast!“&quot;,
       8);
-    task.innerHTML=`&lt;div class=&quot;complete&quot;&gt;&lt;div class=&quot;big&quot;&gt;🐉✨&lt;/div&gt;&lt;h2&gt;Das Geschichtenfeuer leuchtet!&lt;/h2&gt;
-      &lt;p&gt;Du hast Funki durch alle acht Aufgaben geholfen.&lt;/p&gt;
-      &lt;p&gt;&lt;strong&gt;Herzlichen Glückwunsch!&lt;/strong&gt; Du hast gezeigt, dass du dich in unserer Bibliothek gut auskennst, Bücher findest und den Katalog nutzen kannst. Hier bekommst du deinen Bibliotheksführerschein.&lt;/p&gt;
-      &lt;div class=&quot;btn-row&quot;&gt;
+    task.innerHTML=`&lt;div class=&quot;complete final-complete&quot;&gt;
+      &lt;div class=&quot;final-copy&quot;&gt;
+        &lt;p&gt;Du hast Funki durch alle acht Aufgaben geholfen.&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;Herzlichen Glückwunsch!&lt;/strong&gt; Du hast gezeigt, dass du dich in unserer Bibliothek gut auskennst, Bücher findest und den Katalog nutzen kannst. Hier bekommst du deinen Bibliotheksführerschein.&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;btn-row final-actions&quot;&gt;
         &lt;a class=&quot;btn primary&quot; href=&quot;bibliotheksfuehrerschein_final_v31.pdf&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot; style=&quot;text-decoration:none&quot;&gt;Bibliotheksführerschein öffnen (PDF)&lt;/a&gt;
         &lt;button class=&quot;btn warm&quot; id=&quot;restart&quot; type=&quot;button&quot;&gt;Rallye noch einmal spielen&lt;/button&gt;
-      &lt;/div&gt;&lt;/div&gt;`;
+      &lt;/div&gt;
+    &lt;/div&gt;`;
     $(&quot;restart&quot;).onclick=()=&gt;{step=0;sparks=0;selectedAnimalBook=null;selectedCatalogBook=null;selectedFunkiBook=null;stepDone=false;mailSent=false;chosenFilm=null;chosenReason=null;render();};
     celebrate();
     return;
@@ -2311,6 +2442,9 @@ function showCatalogSelection(){
   const correctNumber=shelfMatch ? String(Number(shelfMatch[2])) : &quot;&quot;;
 
   target.innerHTML=`
+    &lt;div class=&quot;feedback good show&quot; style=&quot;margin-top:14px&quot;&gt;
+      👇 Der nächste Teil der Aufgabe ist weiter unten. Scrolle nach unten und trage dort Farbe und Zahl des Standorts ein.
+    &lt;/div&gt;
     &lt;button class=&quot;btn soft&quot; id=&quot;catalog-hint-toggle&quot; type=&quot;button&quot; style=&quot;font-size:.82rem;padding:8px 12px;margin-top:14px&quot;&gt;
       Tipp anzeigen
     &lt;/button&gt;
