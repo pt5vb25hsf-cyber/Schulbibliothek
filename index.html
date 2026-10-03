@@ -1289,6 +1289,23 @@ h1{
 .task-card.funki-recommend-layout .task-head{
   margin-bottom:30px;
 }
+.task-card.movie-layout .task-head{
+  margin-bottom:18px;
+}
+
+@media(max-width:700px){
+  .task-card.movie-layout .task-head{
+    padding-right:180px;
+    min-height:54px;
+    margin-bottom:22px;
+  }
+  .task-card.movie-layout .task-title{
+    display:block;
+    line-height:1.12;
+    word-break:normal;
+    overflow-wrap:break-word;
+  }
+}
 .prompt{font-size:1rem;font-weight:700;line-height:1.4;margin:0 0 12px}
 .intro-hero{
   min-height:250px;
@@ -1798,6 +1815,7 @@ function render(){
   task.classList.toggle(&quot;mail-top-layout&quot;, step===4);
   task.classList.toggle(&quot;catalog-top-layout&quot;, step===3);
   task.classList.toggle(&quot;record-top-layout&quot;, step===5);
+  task.classList.toggle(&quot;movie-layout&quot;, step===7);
   task.classList.toggle(&quot;funki-recommend-layout&quot;, step===8);
   if(step===0){
     setStory(&quot;Prolog&quot;,&quot;Funki und die acht Feuerfunken&quot;,
