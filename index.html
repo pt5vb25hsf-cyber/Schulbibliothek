@@ -1199,11 +1199,75 @@ h1{
   position:relative;z-index:1;margin:0;font-size:clamp(.98rem,1.25vw,1.12rem);
   line-height:1.48;font-weight:400;
 }
-.task-card{min-height:0;display:flex;flex-direction:column;overflow:auto;background:rgba(255,254,249,.98)}
-.task-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
-.task-title{font-size:1rem;font-weight:800}
-.task-tag{font-size:.73rem;font-weight:800;color:#87502b;background:#f8ecd4;border:1px solid #e8d2aa;border-radius:999px;padding:6px 9px;white-space:nowrap}
+.task-card{
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  overflow:auto;
+  background:rgba(255,254,249,.98);
+  position:relative;
+  justify-content:flex-start;
+  justify-content:safe center;
+  padding-top:72px;
+  padding-bottom:42px;
+}
+.task-head{
+  display:block;
+  margin:0 0 18px;
+  min-height:0;
+}
+.task-title{
+  font-size:1rem;
+  font-weight:800;
+  line-height:1.15;
+  margin:0;
+  padding:0;
+}
+.task-tag{
+  position:absolute;
+  top:16px;
+  right:18px;
+  z-index:6;
+  font-size:.73rem;
+  font-weight:800;
+  color:#87502b;
+  background:#f8ecd4;
+  border:1px solid #e8d2aa;
+  border-radius:999px;
+  padding:6px 9px;
+  white-space:nowrap
+}
+.task-card.mail-top-layout{
+  justify-content:flex-start;
+  padding-top:22px;
+  padding-bottom:28px;
+}
+.task-card.mail-top-layout .task-head{
+  margin-top:0;
+}
+.task-card.mail-top-layout .task-title{
+  margin-top:18px;
+}
 .prompt{font-size:1rem;font-weight:700;line-height:1.4;margin:0 0 12px}
+.intro-hero{
+  min-height:250px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:18px 8px 10px;
+}
+.intro-hero .intro-title{
+  font-size:1.28rem;
+  font-weight:900;
+  line-height:1.15;
+  margin:0 0 16px;
+}
+.intro-hero .prompt{
+  margin:0 0 18px;
+  max-width:26ch;
+}
 .hint{font-size:.88rem;line-height:1.42;color:var(--muted);margin:8px 0 0}
 .field{
   display:block;width:100%;border:1.5px solid #d5c5a7;border-radius:13px;
@@ -1250,7 +1314,7 @@ textarea.field{resize:vertical;min-height:105px;line-height:1.45}
 .teacher-dialog .btn-row{justify-content:flex-end}
 .teacher-error{display:none;color:#9a3f20;font-size:.78rem;font-weight:700;margin-top:7px}
 .teacher-error.show{display:block}
-.task-card{position:relative}
+
 .choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .choice{
   min-height:52px;border:1.5px solid #e0d2b8;border-radius:12px;
@@ -1608,7 +1672,7 @@ function setCompleteLayout(on){
   if(storyCard)storyCard.style.display=on?&quot;none&quot;:&quot;&quot;;
   if(panel)panel.style.gridTemplateRows=on?&quot;1fr&quot;:&quot;auto 1fr&quot;;
   const task=$(&quot;task&quot;);
-  if(task)task.style.justifyContent=on?&quot;center&quot;:&quot;flex-start&quot;;
+  if(task)task.style.justifyContent=on?&quot;center&quot;:&quot;&quot;;
 }
 function showComplete(message,callback=nextStep){
   setCompleteLayout(true);
@@ -1620,13 +1684,17 @@ function render(){
   drawSparks();
   setCompleteLayout(false);
   const task=$(&quot;task&quot;);
+  task.classList.toggle(&quot;mail-top-layout&quot;, step===4);
   if(step===0){
     setStory(&quot;Prolog&quot;,&quot;Funki und die acht Feuerfunken&quot;,
       &quot;Funki ist ein junger Drache und Professorin Flamme ist seine Lehrerin. Heute hat sie ihm etwas ganz Besonderes erlaubt: Zum ersten Mal darf Funki ganz allein in die Schulbibliothek. Bevor er loszieht, gibt sie ihm eine Aufgabe mit auf den Weg: In der Bibliothek warten acht Feuerfunken auf ihn. Jeder Funke erwacht, wenn Funki etwas Neues über Bücher und die Bibliothek entdeckt. Doch allein schafft er das nicht. Hilfst du ihm bei seiner Bibliotheksprüfung?&quot;,
       0);
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Bist du bereit?&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Ein Bilderbuch-Abenteuer&lt;/span&gt;&lt;/div&gt;
-      &lt;p class=&quot;prompt&quot;&gt;Acht Aufgaben warten auf dich und Funki.&lt;/p&gt;
-      &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn warm&quot; id=&quot;start-btn&quot; type=&quot;button&quot;&gt;Abenteuer starten&lt;/button&gt;&lt;/div&gt;`;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Ein Bilderbuch-Abenteuer&lt;/span&gt;&lt;/div&gt;
+      &lt;div class=&quot;intro-hero&quot;&gt;
+        &lt;div class=&quot;intro-title&quot;&gt;Bist du bereit?&lt;/div&gt;
+        &lt;p class=&quot;prompt&quot;&gt;Acht Aufgaben warten auf dich und Funki.&lt;/p&gt;
+        &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn warm&quot; id=&quot;start-btn&quot; type=&quot;button&quot;&gt;Abenteuer starten&lt;/button&gt;&lt;/div&gt;
+      &lt;/div&gt;`;
     $(&quot;start-btn&quot;).onclick=()=&gt;{step=1;render();};
     return;
   }
