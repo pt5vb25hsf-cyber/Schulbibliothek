@@ -1762,6 +1762,7 @@ function render(){
       &quot;Drei Feuerfunken schweben schon um Funki. Doch plötzlich endet die Spur. Funki sucht zwischen den Regalen und unter dem Tisch – nichts. Da fällt ihm seine Lehrerin Professorin Flamme ein. Sie hat für ihn vielleicht einen guten Rat. Hilf Funki, eine E-Mail an sie zu schreiben.&quot;,
       4);
     if(stepDone &amp;&amp; mailSent){
+      setCompleteLayout(true);
       task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;📨 Antwort von Professorin Flamme&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Drachenpost&lt;/span&gt;&lt;/div&gt;
         &lt;div class=&quot;reply&quot;&gt;&lt;strong&gt;Liebe Funki-Helferinnen und -Helfer,&lt;/strong&gt;
         wie gut, dass ihr mir geschrieben habt! Tatsächlich habe ich einen besonders neugierigen Feuerfunken gesehen. Er wollte unbedingt wissen, wer am schnellsten laufen kann, welches Tier besonders groß ist und welche unglaublichen Dinge Menschen schaffen können. Deshalb ist er zwischen Bücher geflogen, in denen es um &lt;strong&gt;Rekorde&lt;/strong&gt; geht. Schaut euch dort einmal genauer um.&lt;br&gt;&lt;br&gt;Viel Glück!&lt;br&gt;Eure Professorin Flamme 🔥&lt;/div&gt;
@@ -1770,8 +1771,13 @@ function render(){
     }
     if(stepDone){showComplete(&quot;Deine Nachricht ist abgeschickt. Professorin Flamme antwortet …&quot;,()=&gt;{mailSent=true;render();});return;}
     task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;✉️ Funkis Drachenpost&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Schreiben&lt;/span&gt;&lt;/div&gt;
-      &lt;p class=&quot;prompt&quot;&gt;Schreibe Professorin Flamme eine kurze Nachricht. Erzähle ihr, dass Funki seine Feuerfunken sucht und dass ihr schon drei gefunden habt. Frage sie, ob sie einen gesehen hat oder weiß, wo ihr als Nächstes suchen könnt.&lt;/p&gt;
-      &lt;div class=&quot;mail-hints&quot;&gt;&lt;span class=&quot;hint-chip&quot;&gt;Was sucht Funki?&lt;/span&gt;&lt;span class=&quot;hint-chip&quot;&gt;Was habt ihr schon geschafft?&lt;/span&gt;&lt;span class=&quot;hint-chip&quot;&gt;Worum bittet ihr?&lt;/span&gt;&lt;/div&gt;
+      &lt;p class=&quot;prompt&quot;&gt;Schreibe Professorin Flamme eine kurze Nachricht. Beginne mit „Hallo“. Schreibe, dass ihr einen Feuerfunken sucht, und fragt sie nach Hilfe. Unterschreibe am Ende mit Funki.&lt;/p&gt;
+      &lt;div class=&quot;mail-hints&quot;&gt;
+        &lt;span class=&quot;hint-chip&quot;&gt;Schreibt, dass ihr einen Feuerfunken sucht&lt;/span&gt;
+        &lt;span class=&quot;hint-chip&quot;&gt;Fragt nach Hilfe&lt;/span&gt;
+        &lt;span class=&quot;hint-chip&quot;&gt;Schreibt „Hallo“&lt;/span&gt;
+        &lt;span class=&quot;hint-chip&quot;&gt;Unterschreibt mit Funki&lt;/span&gt;
+      &lt;/div&gt;
       &lt;div class=&quot;hint&quot; style=&quot;margin:0 0 7px&quot;&gt;&lt;strong&gt;An:&lt;/strong&gt; Professorin Flamme &amp;nbsp; &lt;strong&gt;Betreff:&lt;/strong&gt; Funkis Feuerfunken&lt;/div&gt;
       &lt;textarea class=&quot;field&quot; id=&quot;mail-text&quot; placeholder=&quot;Hallo Professorin Flamme,&amp;#10;&amp;#10;...&quot;&gt;&lt;/textarea&gt;
       
@@ -1802,25 +1808,70 @@ function render(){
 
       return true;
     }
+    function mailNormWord(w){
+      return String(w||&quot;&quot;)
+        .toLocaleLowerCase(&quot;de-DE&quot;)
+        .normalize(&quot;NFD&quot;)
+        .replace(/[\u0300-\u036f]/g,&quot;&quot;)
+        .replace(/ß/g,&quot;ss&quot;)
+        .replace(/[^a-z]/g,&quot;&quot;);
+    }
 
+    function approxToken(tokens, targets, maxDist=2){
+      return tokens.some(t=&gt;{
+        const nt=mailNormWord(t);
+        if(!nt)return false;
+        return targets.some(target=&gt;{
+          const x=mailNormWord(target);
+          if(nt===x)return true;
+          if(nt.length&gt;=4 &amp;&amp; x.length&gt;=4 &amp;&amp; (nt.includes(x)||x.includes(nt)))return true;
+          const minLen=Math.min(nt.length,x.length);
+          const allowed=minLen&gt;=8?maxDist:(minLen&gt;=5?1:0);
+          return allowed&gt;0 &amp;&amp; editDistanceSimple(nt,x)&lt;=allowed;
+        });
+      });
+    }
     $(&quot;send-mail&quot;).onclick=()=&gt;{
       const v=$(&quot;mail-text&quot;).value.trim(),fb=$(&quot;mail-feedback&quot;);
-
-      // Satzzeichen sind ausdrücklich nicht nötig. Für einen kurzen Satz
-      // verlangen wir nur mehrere wortähnliche Bestandteile.
       const words=v.match(/[A-Za-zÄÖÜäöüßÉÈÊÁÀÂÍÌÎÓÒÔÚÙÛÇç][A-Za-zÄÖÜäöüßÉÈÊÁÀÂÍÌÎÓÒÔÚÙÛÇç&#x27;’\-]*/g)||[];
-      const suspicious=words.filter(w=&gt;w.length&gt;=4 &amp;&amp; !mailWordLooksPlausible(w));
       const plausible=words.filter(mailWordLooksPlausible);
+      const suspicious=words.filter(w=&gt;w.length&gt;=4 &amp;&amp; !mailWordLooksPlausible(w));
+      const tokens=plausible.map(mailNormWord).filter(Boolean);
 
-      if(words.length&lt;4 || plausible.length&lt;4){
-        fb.className=&quot;feedback bad show&quot;;
-        fb.textContent=&quot;Schreibe mindestens einen kurzen Satz mit richtigen Wörtern. Punkte und Kommas sind nicht wichtig.&quot;;
-        return;
-      }
+      // Sehr tolerant: kleine Rechtschreibfehler sind erlaubt.
+      const hasHallo=approxToken(tokens,[&quot;hallo&quot;],2);
+
+      const hasFireSpark=
+        approxToken(tokens,[&quot;feuerfunken&quot;,&quot;feuerfunke&quot;],2);
+
+      // Hilfe darf sehr unterschiedlich formuliert sein:
+      // Hilfe, helfen, Tipp, Rat, &quot;weißt du wo&quot;, &quot;hast du ihn gesehen&quot;,
+      // &quot;kannst du uns sagen&quot;, &quot;wo sollen wir suchen&quot; usw.
+      const hasHelp=
+        approxToken(tokens,[&quot;hilfe&quot;,&quot;hilf&quot;,&quot;helfen&quot;,&quot;tipp&quot;,&quot;tip&quot;,&quot;rat&quot;],2)
+        || approxToken(tokens,[&quot;weisst&quot;,&quot;weißt&quot;,&quot;wissen&quot;,&quot;sagen&quot;,&quot;gesehen&quot;,&quot;siehst&quot;,&quot;finden&quot;,&quot;suchen&quot;,&quot;wo&quot;,&quot;weiter&quot;],2)
+        || approxToken(tokens,[&quot;kannst&quot;,&quot;könntest&quot;,&quot;bitte&quot;,&quot;bitten&quot;],2);
+
+      // Funki soll wirklich unten als Unterschrift stehen.
+      // Dafür schauen wir nur auf die letzten drei plausiblen Wörter.
+      const lastWords=tokens.slice(-3);
+      const hasSignature=approxToken(lastWords,[&quot;funki&quot;],1);
 
       if(suspicious.length){
         fb.className=&quot;feedback bad show&quot;;
-        fb.textContent=&quot;Schau deine Nachricht noch einmal an. Da scheint eine zufällige Buchstabenfolge dabei zu sein.&quot;;
+        fb.textContent=&quot;Das reicht noch nicht. Schau noch einmal auf deine Wörter – eine Buchstabenfolge sieht zufällig aus.&quot;;
+        return;
+      }
+
+      const missing=[];
+      if(!hasHallo)missing.push(&quot;Schreibe am Anfang „Hallo“&quot;);
+      if(!hasFireSpark)missing.push(&quot;Schreibe, dass ihr einen Feuerfunken sucht&quot;);
+      if(!hasHelp)missing.push(&quot;Fragt Professorin Flamme nach Hilfe&quot;);
+      if(!hasSignature)missing.push(&quot;Unterschreibe am Ende mit Funki&quot;);
+
+      if(missing.length){
+        fb.className=&quot;feedback bad show&quot;;
+        fb.innerHTML=&quot;Das reicht noch nicht. &lt;strong&gt;&quot;+missing.join(&quot;. &quot;)+&quot;&lt;/strong&gt;.&quot;;
         return;
       }
 
@@ -1844,7 +1895,8 @@ function render(){
 
       &lt;label class=&quot;record-prompt&quot; for=&quot;record-answer&quot;&gt;Was hat die Person oder das Tier geschafft?&lt;/label&gt;
       &lt;textarea class=&quot;field&quot; id=&quot;record-answer&quot; placeholder=&quot;Schreibe kurz auf, was du entdeckt hast …&quot;&gt;&lt;/textarea&gt;
-      &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn warm&quot; id=&quot;record-done&quot; type=&quot;button&quot;&gt;Rekord entdeckt!&lt;/button&gt;&lt;/div&gt;`;
+      &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn warm&quot; id=&quot;record-done&quot; type=&quot;button&quot;&gt;Rekord entdeckt!&lt;/button&gt;&lt;/div&gt;
+      &lt;div class=&quot;feedback&quot; id=&quot;record-feedback&quot;&gt;&lt;/div&gt;`;
 
     $(&quot;record-hint-1&quot;).onclick=()=&gt;{
       $(&quot;record-hint-1&quot;).style.display=&quot;none&quot;;
@@ -1858,9 +1910,54 @@ function render(){
       };
     };
 
+    function recordWordLooksPlausible(token){
+      const word=String(token||&quot;&quot;)
+        .toLocaleLowerCase(&quot;de-DE&quot;)
+        .replace(/^[^a-zäöüßéèêáàâíìîóòôúùûç]+|[^a-zäöüßéèêáàâíìîóòôúùûç]+$/g,&quot;&quot;)
+        .replace(/[&#x27;’\-]/g,&quot;&quot;);
+
+      if(word.length&lt;2)return false;
+
+      // Offensichtliche Wiederholungen oder Tastaturfolgen abfangen.
+      if(word.length&gt;=5 &amp;&amp; new Set(word).size&lt;=2)return false;
+
+      const keyboardRows=[&quot;qwertzuiopü&quot;,&quot;asdfghjklöä&quot;,&quot;yxcvbnm&quot;];
+      if(word.length&gt;=4){
+        for(const row of keyboardRows){
+          const reverse=[...row].reverse().join(&quot;&quot;);
+          if(row.includes(word)||reverse.includes(word))return false;
+        }
+      }
+
+      // Lange Folgen ohne Vokal wie „jhgdhj“ sind sehr wahrscheinlich Quatsch.
+      // Kurze Wörter und normale Rechtschreibfehler bleiben erlaubt.
+      if(word.length&gt;=5 &amp;&amp; !/[aeiouyäöüéèêáàâíìîóòôúùû]/.test(word))return false;
+
+      return true;
+    }
+
     $(&quot;record-done&quot;).onclick=()=&gt;{
       const v=$(&quot;record-answer&quot;).value.trim();
-      if(v.length&lt;2){alert(&quot;Schreibe kurz auf, was die Person oder das Tier geschafft hat.&quot;);return;}
+      const fb=$(&quot;record-feedback&quot;);
+      const words=v.match(/[A-Za-zÄÖÜäöüßÉÈÊÁÀÂÍÌÎÓÒÔÚÙÛÇç][A-Za-zÄÖÜäöüßÉÈÊÁÀÂÍÌÎÓÒÔÚÙÛÇç&#x27;’\-]*/g)||[];
+      const plausible=words.filter(recordWordLooksPlausible);
+      const suspicious=words.filter(w=&gt;w.length&gt;=4 &amp;&amp; !recordWordLooksPlausible(w));
+      const hasNumber=/\d/.test(v);
+
+      if(suspicious.length){
+        fb.className=&quot;feedback bad show&quot;;
+        fb.textContent=&quot;Schau noch einmal auf deine Antwort. Da scheint eine zufällige Buchstabenfolge dabei zu sein.&quot;;
+        return;
+      }
+
+      // Mindestens zwei sinnvolle Wörter; bei einer Zahl reicht zusätzlich ein sinnvolles Wort,
+      // z. B. „100 Meter“.
+      if(plausible.length&lt;2 &amp;&amp; !(hasNumber &amp;&amp; plausible.length&gt;=1)){
+        fb.className=&quot;feedback bad show&quot;;
+        fb.textContent=&quot;Schreibe kurz mit richtigen Wörtern auf, was die Person oder das Tier geschafft hat.&quot;;
+        return;
+      }
+
       finishStep();
     };
     return;
@@ -2023,9 +2120,9 @@ function render(){
         &lt;div class=&quot;feedback&quot; id=&quot;funki-reason-feedback&quot;&gt;&lt;/div&gt;`;
 
       reason.querySelectorAll(&quot;[data-reason]&quot;).forEach(btn=&gt;btn.onclick=()=&gt;{
-        reason.querySelectorAll(&quot;[data-reason]&quot;).forEach(x=&gt;x.classList.remove(&quot;selected&quot;));
-        btn.classList.add(&quot;selected&quot;);
-        chosenReason=btn.dataset.reason;
+        btn.classList.toggle(&quot;selected&quot;);
+        const selected=[...reason.querySelectorAll(&quot;[data-reason].selected&quot;)].map(x=&gt;x.dataset.reason);
+        chosenReason=selected.join(&quot; | &quot;);
         const fb=$(&quot;funki-reason-feedback&quot;);
         fb.className=&quot;feedback&quot;;
         fb.textContent=&quot;&quot;;
@@ -2034,12 +2131,14 @@ function render(){
       $(&quot;funki-finish&quot;).onclick=()=&gt;{
         const extra=$(&quot;funki-reason-text&quot;).value.trim();
         const fb=$(&quot;funki-reason-feedback&quot;);
-        if(!chosenReason){
+        const selected=[...reason.querySelectorAll(&quot;[data-reason].selected&quot;)].map(x=&gt;x.dataset.reason);
+        if(!selected.length){
           fb.className=&quot;feedback bad show&quot;;
           fb.textContent=&quot;Wähle noch aus, warum das Buch gut für Funki ist.&quot;;
           return;
         }
-        if(extra) chosenReason += &quot; &quot; + extra;
+        chosenReason=selected.join(&quot; | &quot;);
+        if(extra) chosenReason += &quot; | &quot; + extra;
         finishStep();
       };
     }
@@ -2087,7 +2186,13 @@ function render(){
     setStory(&quot;Geschafft!&quot;,&quot;Funki hat seine acht Feuerfunken&quot;,
       &quot;Alle acht Feuerfunken schweben um Funki. Er holt tief Luft und pustet eine kleine goldene Drachenflamme. Die Leselichter in der Bibliothek gehen an! „Ich habe es geschafft!“, jubelt Funki. „Und ich weiß jetzt, wie man Bücher findet, Autoren entdeckt, den Katalog benutzt, in Büchern nachschlägt und neue Geschichten auswählt. Und ein Buch zum Lesen habe ich jetzt auch! Danke, dass du mir geholfen hast!“&quot;,
       8);
-    task.innerHTML=`&lt;div class=&quot;complete&quot;&gt;&lt;div class=&quot;big&quot;&gt;🐉✨&lt;/div&gt;&lt;h2&gt;Das Geschichtenfeuer leuchtet!&lt;/h2&gt;&lt;p&gt;Du hast Funki durch alle acht Aufgaben geholfen.&lt;/p&gt;&lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn warm&quot; id=&quot;restart&quot; type=&quot;button&quot;&gt;Rallye noch einmal spielen&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;`;
+    task.innerHTML=`&lt;div class=&quot;complete&quot;&gt;&lt;div class=&quot;big&quot;&gt;🐉✨&lt;/div&gt;&lt;h2&gt;Das Geschichtenfeuer leuchtet!&lt;/h2&gt;
+      &lt;p&gt;Du hast Funki durch alle acht Aufgaben geholfen.&lt;/p&gt;
+      &lt;p&gt;&lt;strong&gt;Herzlichen Glückwunsch!&lt;/strong&gt; Du hast gezeigt, dass du dich in unserer Bibliothek gut auskennst, Bücher findest und den Katalog nutzen kannst. Hier bekommst du deinen Bibliotheksführerschein.&lt;/p&gt;
+      &lt;div class=&quot;btn-row&quot;&gt;
+        &lt;a class=&quot;btn primary&quot; href=&quot;bibliotheksfuehrerschein_final_v31.pdf&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot; style=&quot;text-decoration:none&quot;&gt;Bibliotheksführerschein öffnen (PDF)&lt;/a&gt;
+        &lt;button class=&quot;btn warm&quot; id=&quot;restart&quot; type=&quot;button&quot;&gt;Rallye noch einmal spielen&lt;/button&gt;
+      &lt;/div&gt;&lt;/div&gt;`;
     $(&quot;restart&quot;).onclick=()=&gt;{step=0;sparks=0;selectedAnimalBook=null;selectedCatalogBook=null;selectedFunkiBook=null;stepDone=false;mailSent=false;chosenFilm=null;chosenReason=null;render();};
     celebrate();
     return;
@@ -2127,17 +2232,80 @@ function drawCatalogResults(query){
 function showCatalogSelection(){
   const target=$(&quot;catalog-selected&quot;);
   if(!target||!selectedCatalogBook)return;
-  const shelfChoices=allShelfChoices(selectedCatalogBook.shelf);
-  target.innerHTML=`&lt;p class=&quot;prompt&quot; style=&quot;margin-top:14px&quot;&gt;Merke dir, was im Katalog stand: In welches Regal gehört das Buch?&lt;/p&gt;
-    &lt;div class=&quot;choice-grid&quot;&gt;
-      ${shelfChoices.map(s=&gt;`&lt;button class=&quot;choice&quot; type=&quot;button&quot; data-shelf=&quot;${escapeHtml(s)}&quot;&gt;${escapeHtml(s)}&lt;/button&gt;`).join(&quot;&quot;)}
+
+  const shelf=String(selectedCatalogBook.shelf||&quot;&quot;).trim();
+  const shelfMatch=shelf.match(/^([A-Za-zÄÖÜäöüß]+)\s*0*(\d+)$/);
+  const correctColor=shelfMatch ? shelfMatch[1] : &quot;&quot;;
+  const correctNumber=shelfMatch ? String(Number(shelfMatch[2])) : &quot;&quot;;
+
+  target.innerHTML=`
+    &lt;button class=&quot;btn soft&quot; id=&quot;catalog-hint-toggle&quot; type=&quot;button&quot; style=&quot;font-size:.82rem;padding:8px 12px;margin-top:14px&quot;&gt;
+      Tipp anzeigen
+    &lt;/button&gt;
+    &lt;div id=&quot;catalog-memory-hint&quot; class=&quot;reply&quot; style=&quot;display:none;margin-top:10px&quot;&gt;
+      Wenn du im Katalog nachschaust, findest du den Standort. Merke ihn dir und trage ihn dann ein.
     &lt;/div&gt;
+
+    &lt;p class=&quot;prompt&quot; style=&quot;margin-top:16px&quot;&gt;In welches Regal gehört das Buch?&lt;/p&gt;
+    &lt;div class=&quot;word-grid&quot; style=&quot;grid-template-columns:repeat(2,minmax(0,1fr))&quot;&gt;
+      &lt;div class=&quot;word-card&quot;&gt;
+        &lt;label for=&quot;shelf-color&quot;&gt;&lt;strong&gt;Farbe&lt;/strong&gt;&lt;/label&gt;
+        &lt;input id=&quot;shelf-color&quot; autocomplete=&quot;off&quot; spellcheck=&quot;false&quot; placeholder=&quot;z. B. Blau&quot;&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;word-card&quot;&gt;
+        &lt;label for=&quot;shelf-number&quot;&gt;&lt;strong&gt;Zahl&lt;/strong&gt;&lt;/label&gt;
+        &lt;input id=&quot;shelf-number&quot; inputmode=&quot;numeric&quot; autocomplete=&quot;off&quot; placeholder=&quot;z. B. 08&quot;&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn primary&quot; id=&quot;shelf-check&quot; type=&quot;button&quot;&gt;Standort prüfen&lt;/button&gt;&lt;/div&gt;
     &lt;div class=&quot;feedback&quot; id=&quot;shelf-feedback&quot;&gt;&lt;/div&gt;`;
-  target.querySelectorAll(&quot;[data-shelf]&quot;).forEach(btn=&gt;btn.onclick=()=&gt;{
-    target.querySelectorAll(&quot;[data-shelf]&quot;).forEach(x=&gt;x.classList.remove(&quot;selected&quot;));btn.classList.add(&quot;selected&quot;);
+
+  $(&quot;catalog-hint-toggle&quot;).onclick=()=&gt;{
+    const hint=$(&quot;catalog-memory-hint&quot;);
+    const isOpen=hint.style.display!==&quot;none&quot;;
+    hint.style.display=isOpen?&quot;none&quot;:&quot;block&quot;;
+    $(&quot;catalog-hint-toggle&quot;).textContent=isOpen?&quot;Tipp anzeigen&quot;:&quot;Tipp schließen&quot;;
+  };
+
+  function normColor(v){
+    return String(v||&quot;&quot;)
+      .toLocaleLowerCase(&quot;de-DE&quot;)
+      .normalize(&quot;NFD&quot;)
+      .replace(/[\u0300-\u036f]/g,&quot;&quot;)
+      .replace(/ß/g,&quot;ss&quot;)
+      .replace(/[^a-z]/g,&quot;&quot;)
+      .trim();
+  }
+
+  function checkShelf(){
+    const color=$(&quot;shelf-color&quot;).value.trim();
+    const number=$(&quot;shelf-number&quot;).value.trim();
     const fb=$(&quot;shelf-feedback&quot;);
-    if(btn.dataset.shelf===selectedCatalogBook.shelf){fb.className=&quot;feedback good show&quot;;fb.textContent=&quot;Richtig! Du hast Farbe und Zahl des Regals gefunden.&quot;;finishStep();}
-    else{fb.className=&quot;feedback bad show&quot;;fb.textContent=&quot;Schau noch einmal genau auf Farbe und Zahl im Katalog.&quot;;}
+
+    if(!color || !number){
+      fb.className=&quot;feedback bad show&quot;;
+      fb.textContent=&quot;Trage bitte Farbe und Zahl ein.&quot;;
+      return;
+    }
+
+    const colorOk=normColor(color)===normColor(correctColor);
+    const numberOk=String(Number(number))===correctNumber;
+
+    if(colorOk &amp;&amp; numberOk){
+      fb.className=&quot;feedback good show&quot;;
+      fb.textContent=&quot;Richtig! Du hast dir den Standort gut gemerkt.&quot;;
+      finishStep();
+    }else{
+      fb.className=&quot;feedback bad show&quot;;
+      fb.textContent=&quot;Noch nicht ganz. Schau bei Bedarf noch einmal im Katalog nach und merke dir Farbe und Zahl.&quot;;
+    }
+  }
+
+  $(&quot;shelf-check&quot;).onclick=checkShelf;
+  [&quot;shelf-color&quot;,&quot;shelf-number&quot;].forEach(id=&gt;{
+    $(id).addEventListener(&quot;keydown&quot;,e=&gt;{
+      if(e.key===&quot;Enter&quot;){e.preventDefault();checkShelf();}
+    });
   });
 }
 $(&quot;catalog-query&quot;).addEventListener(&quot;input&quot;,e=&gt;drawCatalogResults(e.target.value));
