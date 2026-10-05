@@ -1460,6 +1460,7 @@ textarea.field{resize:vertical;min-height:105px;line-height:1.45}
   border-radius:16px;
   overflow:hidden;
   box-shadow:0 10px 24px rgba(32,42,58,.08);
+  flex-shrink:0;
 }
 .email-topbar{
   display:flex;
@@ -1646,6 +1647,176 @@ textarea.field{resize:vertical;min-height:105px;line-height:1.45}
   }
 }
 
+
+.task-card.mail-reply-layout{
+  justify-content:flex-start !important;
+  overflow-y:auto !important;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+  scroll-behavior:smooth;
+  padding-bottom:36px;
+}
+.task-card.mail-reply-layout .task-head,
+.task-card.mail-reply-layout .email-card,
+.task-card.mail-reply-layout .btn-row{
+  flex:0 0 auto;
+}
+@media(max-width:900px){
+  .task-card.mail-reply-layout{
+    overflow:visible !important;
+  }
+}
+
+
+/* „Deine Aufgabe“ bei den normalen Aufgaben optisch eine volle Zeile höher.
+   Der restliche Aufgabeninhalt bleibt an seiner Position, damit nichts überlappt. */
+.task-card.task-heading-up .task-head{
+  transform:translateY(-26px);
+}
+
+
+/* Reiter (ovales Feld) auf Aufgaben-Seiten höher ausrichten.
+   Desktop/Tablet: auf Höhe von „Deine Aufgabe“.
+   Handy: Reiter bewusst oberhalb der Überschrift, damit nichts überlappt. */
+.task-card.task-heading-up .task-tag{
+  top:46px;
+  transform:translateY(-26px);
+}
+
+/* Tablet / kleinere Fenster: weiterhin gleiche Höhe, aber etwas kompakter. */
+@media (min-width:701px) and (max-width:900px){
+  .task-card.task-heading-up .task-tag{
+    top:42px;
+    transform:translateY(-24px);
+  }
+  .task-card.task-heading-up .task-head{
+    transform:translateY(-22px);
+    padding-right:240px;
+    min-height:42px;
+  }
+}
+
+/* Handy: Reiter über „Deine Aufgabe“, dadurch keine horizontale Kollision. */
+@media (max-width:700px){
+  .task-card.task-heading-up{
+    padding-top:78px;
+  }
+  .task-card.task-heading-up .task-tag{
+    top:12px !important;
+    right:14px !important;
+    transform:none !important;
+    max-width:calc(100% - 28px);
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .task-card.task-heading-up .task-head{
+    transform:none !important;
+    padding-right:0 !important;
+    padding-top:0;
+    min-height:0 !important;
+    margin-top:0 !important;
+    margin-bottom:18px !important;
+  }
+  .task-card.task-heading-up .task-title{
+    width:100%;
+  }
+}
+
+
+/* Reiter wieder wie bei „Genau hinsehen“:
+   unabhängig vom Aufgabentext fest oben rechts im Aufgabenkästchen. */
+.task-card.task-heading-up .task-tag{
+  top:16px !important;
+  right:18px !important;
+  transform:none !important;
+}
+
+/* Tablet: gleiche feste Position oben rechts. */
+@media (min-width:701px) and (max-width:900px){
+  .task-card.task-heading-up .task-tag{
+    top:16px !important;
+    right:18px !important;
+    transform:none !important;
+  }
+}
+
+/* Handy: kompakter, aber ebenfalls fest oben rechts. */
+@media (max-width:700px){
+  .task-card.task-heading-up .task-tag{
+    top:12px !important;
+    right:14px !important;
+    transform:none !important;
+    max-width:calc(100% - 28px);
+  }
+}
+
+
+/* V66: Aufgaben-Kopf wie bei „Genau hinsehen“.
+   Wichtig: Überschrift nicht separat nach oben ziehen – dadurch bleiben
+   Überschrift und Aufgabentext als gemeinsamer Block ohne Überlappung. */
+.task-card.task-heading-up .task-head{
+  transform:none !important;
+  margin-bottom:18px !important;
+  min-height:0 !important;
+}
+.task-card.task-heading-up .task-tag{
+  top:16px !important;
+  right:18px !important;
+  transform:none !important;
+}
+
+/* Die komplette Aufgabe wird etwas höher ausbalanciert, statt nur die
+   Überschrift zu verschieben. So bleibt der Abstand zum Text erhalten. */
+@media (min-width:901px){
+  .task-card.task-heading-up{
+    padding-bottom:76px;
+  }
+  .task-card.task-heading-up .task-head{
+    padding-right:220px !important;
+  }
+}
+
+/* Tablet: Reiter fest oben rechts; „Deine Aufgabe“ darunter/links mit
+   ausreichend reserviertem Platz. */
+@media (min-width:701px) and (max-width:900px){
+  .task-card.task-heading-up{
+    padding-top:72px !important;
+    padding-bottom:56px !important;
+  }
+  .task-card.task-heading-up .task-tag{
+    top:16px !important;
+    right:18px !important;
+  }
+  .task-card.task-heading-up .task-head{
+    transform:none !important;
+    padding-right:235px !important;
+    min-height:46px !important;
+    margin-bottom:18px !important;
+  }
+}
+
+/* Handy: Reiter bleibt wie bei Bild 1 ganz oben rechts. Die Überschrift
+   beginnt darunter mit voller Breite – dadurch kann nichts kollidieren. */
+@media (max-width:700px){
+  .task-card.task-heading-up{
+    padding-top:78px !important;
+    padding-bottom:42px !important;
+  }
+  .task-card.task-heading-up .task-tag{
+    top:12px !important;
+    right:14px !important;
+    transform:none !important;
+    max-width:calc(100% - 28px);
+  }
+  .task-card.task-heading-up .task-head{
+    transform:none !important;
+    padding-right:0 !important;
+    min-height:0 !important;
+    margin:0 0 18px 0 !important;
+  }
+}
+
 &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -1792,7 +1963,7 @@ function catalogSearch(query, filterFn=null, limit=14){
   return pool.slice(0,limit);
 }
 function getAnimalBooks(){
-  return getCatalogBooks().filter(b=&gt;b.category===&quot;Tiere&quot;);
+  return getCatalogBooks().filter(b=&gt;b.category===&quot;Kinderbücher&quot;);
 }
 function getFilmBooks(){
   return getCatalogBooks().filter(b=&gt;b.category===FILM_CATEGORY);
@@ -1934,6 +2105,7 @@ function setCompleteLayout(on){
   if(storyCard)storyCard.style.display=on?&quot;none&quot;:&quot;&quot;;
   if(panel)panel.style.gridTemplateRows=on?&quot;1fr&quot;:&quot;auto 1fr&quot;;
   const task=$(&quot;task&quot;);
+  task.classList.remove(&quot;mail-reply-layout&quot;);
   if(task)task.style.justifyContent=on?&quot;center&quot;:&quot;&quot;;
 }
 function showComplete(message,callback=nextStep){
@@ -1952,6 +2124,7 @@ function render(){
   task.classList.toggle(&quot;kinderroman-layout&quot;, step===6);
   task.classList.toggle(&quot;movie-layout&quot;, step===7);
   task.classList.toggle(&quot;funki-recommend-layout&quot;, step===8);
+  task.classList.toggle(&quot;task-heading-up&quot;, [1,2,5,6,7,8].includes(step));
   if(step===0){
     setStory(&quot;Prolog&quot;,&quot;Flämmchen und die acht Feuerfunken&quot;,
       &quot;Flämmchen ist ein junger Drache und Professorin Funkel ist seine Lehrerin. Heute hat sie ihm etwas ganz Besonderes erlaubt: Zum ersten Mal darf Flämmchen ganz allein in die Schulbibliothek. Bevor er loszieht, gibt sie ihm eine Aufgabe mit auf den Weg: In der Bibliothek warten acht Feuerfunken auf ihn. Jeder Funke erwacht, wenn Flämmchen etwas Neues über Bücher und die Bibliothek entdeckt. Doch allein schafft er das nicht. Hilfst du ihm bei seiner Bibliotheksprüfung?&quot;,
@@ -1967,12 +2140,12 @@ function render(){
   }
   if(step===1){
     setStory(&quot;Feuerfunke 1&quot;,&quot;Ein Buch entdecken&quot;,
-      &quot;Flämmchen entdeckt eine glitzernde Spur. Sie führt zum Regal mit den Tierbüchern. „Vielleicht wartet dort mein erster Feuerfunke!“, denkt er.&quot;,
+      &quot;Flämmchen entdeckt eine glitzernde Spur. Sie führt zum weißen Regal mit den Kinderbüchern. „Vielleicht wartet dort mein erster Feuerfunke!“, denkt er.&quot;,
       1);
     if(stepDone){showComplete(&quot;Du hast ein Buch gefunden und Flämmchen den ersten Feuerfunken gebracht.&quot;);return;}
 
     task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Buch finden&lt;/span&gt;&lt;/div&gt;
-      &lt;p class=&quot;prompt&quot;&gt;Gehe zum Tierregal. Nimm ein Tierbuch heraus, das dich neugierig macht. Gib hier den Titel ein.&lt;/p&gt;
+      &lt;p class=&quot;prompt&quot;&gt;Gehe zum weißen Regal mit den Kinderbüchern und suche ein Buch heraus, das dich neugierig macht. Gib hier den Titel ein.&lt;/p&gt;
       &lt;input class=&quot;field&quot; id=&quot;animal-query&quot; autocomplete=&quot;off&quot; spellcheck=&quot;false&quot; placeholder=&quot;Titel eingeben …&quot;&gt;
       &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn primary&quot; id=&quot;animal-check&quot; type=&quot;button&quot;&gt;Buch prüfen&lt;/button&gt;&lt;/div&gt;
       &lt;div class=&quot;feedback&quot; id=&quot;animal-feedback&quot;&gt;&lt;/div&gt;
@@ -1986,14 +2159,14 @@ function render(){
         feedback.textContent=&quot;Schreibe zuerst den Titel deines Buches hinein.&quot;;
         return;
       }
-      // Gewünscht: Jedes im vollständigen Katalog vorhandene Buch zählt.
-      const match=bestTitleMatch(typed,getCatalogBooks(),.80);
+      // Es zählen nur Bücher aus dem weißen Regal bei den Kinderbüchern.
+      const match=bestTitleMatch(typed,getAnimalBooks(),.80);
       if(match){
         selectedAnimalBook=match.book;
         finishStep();
       }else{
         feedback.className=&quot;feedback bad show&quot;;
-        feedback.textContent=&quot;Diesen Titel finde ich noch nicht im Katalog. Prüfe die Schreibweise auf dem Buch.&quot;;
+        feedback.textContent=&quot;Diesen Titel finde ich noch nicht bei den Kinderbüchern im weißen Regal. Prüfe die Schreibweise auf dem Buch.&quot;;
       }
     }
     $(&quot;animal-check&quot;).onclick=checkBook;
@@ -2010,7 +2183,7 @@ function render(){
     const book=getCatalogBooks().find(b=&gt;catalogNorm(b.title)===catalogNorm(selectedTitle))
       || selectedAnimalBook
       || getAnimalBooks()[0]
-      || {title:&quot;dein Tierbuch&quot;,author:&quot;&quot;};
+      || {title:&quot;dein Buch&quot;,author:&quot;&quot;};
 
     setStory(&quot;Feuerfunke 2&quot;,&quot;Wer hat das Buch geschrieben?&quot;,
       &quot;Flämmchen betrachtet dein Buch ganz genau. „Auf einem Buch stehen ja ganz schön viele Wörter und Namen. Aber wer hat sich die Geschichte eigentlich ausgedacht?“&quot;,
@@ -2023,7 +2196,7 @@ function render(){
       // Richtige Antwort ist immer der Autor/die Autorin des zuvor ausgewählten Buches.
       // Die falschen Antworten kommen ebenfalls aus dem echten Katalog.
       const catalogAuthors=[...new Set(
-        getCatalogBooks()
+        getAnimalBooks()
           .map(b=&gt;String(b.author||&quot;&quot;).trim())
           .filter(Boolean)
       )].filter(x=&gt;catalogNorm(x)!==catalogNorm(author));
@@ -2035,7 +2208,7 @@ function render(){
 
       const choices=[author,...distractors].sort(()=&gt;Math.random()-.5);
 
-      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Schau in dein Buch&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Genau hinsehen&lt;/span&gt;&lt;/div&gt;
+      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Genau hinsehen&lt;/span&gt;&lt;/div&gt;
         &lt;p class=&quot;prompt&quot;&gt;Nimm dein Buch noch einmal in die Hand. Suche den Namen auf dem Cover oder auf den ersten Seiten. Wer hat dein Buch geschrieben?&lt;/p&gt;
         &lt;p class=&quot;hint&quot; style=&quot;margin-top:-4px&quot;&gt;&lt;strong&gt;Dein Buch:&lt;/strong&gt; ${escapeHtml(book.title)}&lt;/p&gt;
         &lt;div class=&quot;choice-grid&quot;&gt;${choices.map(x=&gt;`&lt;button class=&quot;choice&quot; type=&quot;button&quot; data-author=&quot;${escapeHtml(x)}&quot;&gt;${escapeHtml(x)}&lt;/button&gt;`).join(&quot;&quot;)}&lt;/div&gt;
@@ -2057,7 +2230,7 @@ function render(){
     }else{
       // Manche ältere Sachbücher haben im vorhandenen Katalog noch keinen
       // Autoreneintrag. Dann darf niemals ein leerer Antwortbutton erscheinen.
-      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Schau in dein Buch&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Genau hinsehen&lt;/span&gt;&lt;/div&gt;
+      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Genau hinsehen&lt;/span&gt;&lt;/div&gt;
         &lt;p class=&quot;prompt&quot;&gt;Nimm dein Buch noch einmal in die Hand. Suche den Namen auf dem Cover oder auf den ersten Seiten. Wer hat dein Buch geschrieben?&lt;/p&gt;
         &lt;p class=&quot;hint&quot; style=&quot;margin-top:-4px&quot;&gt;&lt;strong&gt;Dein Buch:&lt;/strong&gt; ${escapeHtml(book.title)}&lt;/p&gt;
         &lt;input class=&quot;field&quot; id=&quot;author-own&quot; autocomplete=&quot;off&quot; placeholder=&quot;Name eingeben …&quot;&gt;
@@ -2091,12 +2264,12 @@ function render(){
       task.innerHTML=`&lt;div class=&quot;feedback bad show&quot;&gt;Der Bibliothekskatalog konnte gerade nicht geladen werden.&lt;/div&gt;`;
       return;
     }
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Finde den Standort im Katalog&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Katalog benutzen&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Katalog benutzen&lt;/span&gt;&lt;/div&gt;
       &lt;div class=&quot;cover-wrap&quot;&gt;
         &lt;img class=&quot;book-photo&quot; src=&quot;${CATALOG_TARGET_COVER}&quot; alt=&quot;Buchcover für die Katalogsuche&quot;&gt;
         &lt;div class=&quot;cover-note&quot;&gt;&lt;strong&gt;Dieses Buch sucht Flämmchen.&lt;/strong&gt;&lt;br&gt;Finde im Katalog heraus, wo es hingehört.&lt;/div&gt;
       &lt;/div&gt;
-      &lt;p class=&quot;prompt&quot;&gt;Klicke auf „Im Katalog suchen“ und suche dort den Titel.&lt;/p&gt;
+      &lt;p class=&quot;prompt&quot;&gt;Merke dir den Titel des Buchs. Suche es &lt;strong&gt;nicht&lt;/strong&gt; im Regal, sondern klicke auf „Im Katalog suchen“ und gib dort den Titel ein. Die Farbe und die Zahl verraten dir den Standort. Merke dir beide!&lt;/p&gt;
       &lt;button class=&quot;btn primary&quot; id=&quot;open-catalog&quot; type=&quot;button&quot;&gt;🔎 Im Katalog suchen&lt;/button&gt;
       &lt;div id=&quot;catalog-selected&quot;&gt;&lt;/div&gt;`;
     $(&quot;open-catalog&quot;).onclick=openCatalog;
@@ -2109,7 +2282,9 @@ function render(){
       4);
     if(stepDone &amp;&amp; mailSent){
       setCompleteLayout(true);
-      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;📨 Antwort von Professorin Funkel&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Drachenpost&lt;/span&gt;&lt;/div&gt;
+      task.classList.add(&quot;mail-reply-layout&quot;);
+      task.style.justifyContent=&quot;flex-start&quot;;
+      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Drachenpost&lt;/span&gt;&lt;/div&gt;
         &lt;div class=&quot;email-card&quot;&gt;
           &lt;div class=&quot;email-topbar&quot;&gt;
             &lt;span&gt;Neue Nachricht&lt;/span&gt;
@@ -2131,10 +2306,12 @@ function render(){
           &lt;/div&gt;
         &lt;/div&gt;
         &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn primary&quot; id=&quot;continue-btn&quot; type=&quot;button&quot;&gt;Antwort gelesen – weiter&lt;/button&gt;&lt;/div&gt;`;
-      $(&quot;continue-btn&quot;).onclick=nextStep;return;
+      $(&quot;continue-btn&quot;).onclick=nextStep;
+      requestAnimationFrame(()=&gt;{ task.scrollTop=0; });
+      return;
     }
     if(stepDone){showComplete(&quot;Deine Nachricht ist abgeschickt. Professorin Funkel antwortet …&quot;,()=&gt;{mailSent=true;render();});return;}
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;✉️ Flämmchens Drachenpost&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Schreiben&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Schreiben&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Schreibe Professorin Funkel eine kurze Nachricht. Beginne mit „Hallo“. Schreibe, dass ihr einen Feuerfunken sucht, und fragt sie nach Hilfe. Unterschreibe am Ende mit Flämmchen.&lt;/p&gt;
       &lt;div class=&quot;mail-hints&quot;&gt;
         &lt;span class=&quot;hint-chip&quot;&gt;Schreibt, dass ihr einen Feuerfunken sucht&lt;/span&gt;
@@ -2219,7 +2396,7 @@ function render(){
       // Flämmchen soll wirklich unten als Unterschrift stehen.
       // Dafür schauen wir nur auf die letzten drei plausiblen Wörter.
       const lastWords=tokens.slice(-3);
-      const hasSignature=approxToken(lastWords,[&quot;funki&quot;],1);
+      const hasSignature=approxToken(lastWords,[&quot;flämmchen&quot;,&quot;flaemmchen&quot;,&quot;flammchen&quot;],2);
 
       if(suspicious.length){
         fb.className=&quot;feedback bad show&quot;;
@@ -2249,7 +2426,7 @@ function render(){
       5);
     if(stepDone){showComplete(&quot;Du hast einen Rekord entdeckt und Flämmchen davon erzählt. Der fünfte Feuerfunke leuchtet!&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Rekorde entdecken&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Rekorde entdecken&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Suche ein Guinness-Buch der Weltrekorde im Regal. Blättere darin und suche einen Rekord über eine Person oder ein Tier, der dich überrascht.&lt;/p&gt;
 
       &lt;button class=&quot;btn soft&quot; id=&quot;record-hint-1&quot; type=&quot;button&quot; style=&quot;font-size:.82rem;padding:8px 12px;margin:0 0 12px&quot;&gt;
@@ -2333,7 +2510,7 @@ function render(){
       6);
     if(stepDone){showComplete(&quot;Du hast entdeckt, wie die drei Kinderromane anfangen und enden. Der sechste Feuerfunke leuchtet!&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Auf ins Kinderroman-Regal&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Drei Bücher entdecken&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Drei Bücher entdecken&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Gehe zum Regal mit den Kinderromanen und nimm drei verschiedene Bücher heraus. Lies bei jedem Buch den ersten Satz und den allerletzten Satz der Geschichte. Schreibe danach nur das erste Wort des ersten Satzes und das letzte Wort des allerletzten Satzes auf.&lt;/p&gt;
       &lt;div class=&quot;word-grid&quot;&gt;
         ${[1,2,3].map(n=&gt;`&lt;div class=&quot;word-card&quot;&gt;&lt;strong&gt;Buch ${n}&lt;/strong&gt;&lt;label for=&quot;first-${n}&quot;&gt;Erstes Wort&lt;/label&gt;&lt;input id=&quot;first-${n}&quot; autocomplete=&quot;off&quot; spellcheck=&quot;true&quot; placeholder=&quot;Anfang&quot;&gt;&lt;label for=&quot;last-${n}&quot;&gt;Allerletztes Wort&lt;/label&gt;&lt;input id=&quot;last-${n}&quot; autocomplete=&quot;off&quot; spellcheck=&quot;true&quot; placeholder=&quot;Ende&quot;&gt;&lt;/div&gt;`).join(&quot;&quot;)}
@@ -2420,7 +2597,7 @@ function render(){
       7);
     if(stepDone){showComplete(&quot;Du hast ein Buch zum Film entdeckt. Der siebte Feuerfunke leuchtet – nur noch einer fehlt!&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Finde das Regal „Buch zum Film“&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Film entdecken&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Film entdecken&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Gehe zum Regal mit den Büchern, die auch verfilmt wurden. Welchen Film hast du schon gesehen oder würdest du gerne sehen? Wähle einen Film, zu dem es in unserer Bibliothek auch ein Buch gibt, und gib den Titel ein.&lt;/p&gt;
       &lt;details class=&quot;hint-box&quot; style=&quot;margin:10px 0 14px&quot;&gt;
         &lt;summary&gt;Falls du es nicht findest, klicke hier.&lt;/summary&gt;
@@ -2467,7 +2644,7 @@ function render(){
       8);
     if(stepDone){showComplete(&quot;Du hast ein Buch für Flämmchen ausgesucht. Jetzt leuchten alle acht Feuerfunken!&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Finde ein Buch für Flämmchen&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Empfehlen&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Empfehlen&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Suche in der Bibliothek ein Buch aus, das du Flämmchen empfehlen würdest. Nimm es in die Hand, schau dir das Cover an und blättere kurz hinein. Gib den Titel anschließend hier ein.&lt;/p&gt;
       &lt;input class=&quot;field&quot; id=&quot;funki-query&quot; placeholder=&quot;Buchtitel eingeben …&quot; autocomplete=&quot;off&quot; spellcheck=&quot;false&quot;&gt;
       &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn primary&quot; id=&quot;funki-check&quot; type=&quot;button&quot;&gt;Buch prüfen&lt;/button&gt;&lt;/div&gt;
@@ -3014,6 +3191,7 @@ textarea.field{resize:vertical;min-height:105px;line-height:1.45}
   border-radius:16px;
   overflow:hidden;
   box-shadow:0 10px 24px rgba(32,42,58,.08);
+  flex-shrink:0;
 }
 .email-topbar{
   display:flex;
@@ -3200,6 +3378,176 @@ textarea.field{resize:vertical;min-height:105px;line-height:1.45}
   }
 }
 
+
+.task-card.mail-reply-layout{
+  justify-content:flex-start !important;
+  overflow-y:auto !important;
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-y:contain;
+  scroll-behavior:smooth;
+  padding-bottom:36px;
+}
+.task-card.mail-reply-layout .task-head,
+.task-card.mail-reply-layout .email-card,
+.task-card.mail-reply-layout .btn-row{
+  flex:0 0 auto;
+}
+@media(max-width:900px){
+  .task-card.mail-reply-layout{
+    overflow:visible !important;
+  }
+}
+
+
+/* „Deine Aufgabe“ bei den normalen Aufgaben optisch eine volle Zeile höher.
+   Der restliche Aufgabeninhalt bleibt an seiner Position, damit nichts überlappt. */
+.task-card.task-heading-up .task-head{
+  transform:translateY(-26px);
+}
+
+
+/* Reiter (ovales Feld) auf Aufgaben-Seiten höher ausrichten.
+   Desktop/Tablet: auf Höhe von „Deine Aufgabe“.
+   Handy: Reiter bewusst oberhalb der Überschrift, damit nichts überlappt. */
+.task-card.task-heading-up .task-tag{
+  top:46px;
+  transform:translateY(-26px);
+}
+
+/* Tablet / kleinere Fenster: weiterhin gleiche Höhe, aber etwas kompakter. */
+@media (min-width:701px) and (max-width:900px){
+  .task-card.task-heading-up .task-tag{
+    top:42px;
+    transform:translateY(-24px);
+  }
+  .task-card.task-heading-up .task-head{
+    transform:translateY(-22px);
+    padding-right:240px;
+    min-height:42px;
+  }
+}
+
+/* Handy: Reiter über „Deine Aufgabe“, dadurch keine horizontale Kollision. */
+@media (max-width:700px){
+  .task-card.task-heading-up{
+    padding-top:78px;
+  }
+  .task-card.task-heading-up .task-tag{
+    top:12px !important;
+    right:14px !important;
+    transform:none !important;
+    max-width:calc(100% - 28px);
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .task-card.task-heading-up .task-head{
+    transform:none !important;
+    padding-right:0 !important;
+    padding-top:0;
+    min-height:0 !important;
+    margin-top:0 !important;
+    margin-bottom:18px !important;
+  }
+  .task-card.task-heading-up .task-title{
+    width:100%;
+  }
+}
+
+
+/* Reiter wieder wie bei „Genau hinsehen“:
+   unabhängig vom Aufgabentext fest oben rechts im Aufgabenkästchen. */
+.task-card.task-heading-up .task-tag{
+  top:16px !important;
+  right:18px !important;
+  transform:none !important;
+}
+
+/* Tablet: gleiche feste Position oben rechts. */
+@media (min-width:701px) and (max-width:900px){
+  .task-card.task-heading-up .task-tag{
+    top:16px !important;
+    right:18px !important;
+    transform:none !important;
+  }
+}
+
+/* Handy: kompakter, aber ebenfalls fest oben rechts. */
+@media (max-width:700px){
+  .task-card.task-heading-up .task-tag{
+    top:12px !important;
+    right:14px !important;
+    transform:none !important;
+    max-width:calc(100% - 28px);
+  }
+}
+
+
+/* V66: Aufgaben-Kopf wie bei „Genau hinsehen“.
+   Wichtig: Überschrift nicht separat nach oben ziehen – dadurch bleiben
+   Überschrift und Aufgabentext als gemeinsamer Block ohne Überlappung. */
+.task-card.task-heading-up .task-head{
+  transform:none !important;
+  margin-bottom:18px !important;
+  min-height:0 !important;
+}
+.task-card.task-heading-up .task-tag{
+  top:16px !important;
+  right:18px !important;
+  transform:none !important;
+}
+
+/* Die komplette Aufgabe wird etwas höher ausbalanciert, statt nur die
+   Überschrift zu verschieben. So bleibt der Abstand zum Text erhalten. */
+@media (min-width:901px){
+  .task-card.task-heading-up{
+    padding-bottom:76px;
+  }
+  .task-card.task-heading-up .task-head{
+    padding-right:220px !important;
+  }
+}
+
+/* Tablet: Reiter fest oben rechts; „Deine Aufgabe“ darunter/links mit
+   ausreichend reserviertem Platz. */
+@media (min-width:701px) and (max-width:900px){
+  .task-card.task-heading-up{
+    padding-top:72px !important;
+    padding-bottom:56px !important;
+  }
+  .task-card.task-heading-up .task-tag{
+    top:16px !important;
+    right:18px !important;
+  }
+  .task-card.task-heading-up .task-head{
+    transform:none !important;
+    padding-right:235px !important;
+    min-height:46px !important;
+    margin-bottom:18px !important;
+  }
+}
+
+/* Handy: Reiter bleibt wie bei Bild 1 ganz oben rechts. Die Überschrift
+   beginnt darunter mit voller Breite – dadurch kann nichts kollidieren. */
+@media (max-width:700px){
+  .task-card.task-heading-up{
+    padding-top:78px !important;
+    padding-bottom:42px !important;
+  }
+  .task-card.task-heading-up .task-tag{
+    top:12px !important;
+    right:14px !important;
+    transform:none !important;
+    max-width:calc(100% - 28px);
+  }
+  .task-card.task-heading-up .task-head{
+    transform:none !important;
+    padding-right:0 !important;
+    min-height:0 !important;
+    margin:0 0 18px 0 !important;
+  }
+}
+
 &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -3346,7 +3694,7 @@ function catalogSearch(query, filterFn=null, limit=14){
   return pool.slice(0,limit);
 }
 function getAnimalBooks(){
-  return getCatalogBooks().filter(b=&gt;b.category===&quot;Tiere&quot;);
+  return getCatalogBooks().filter(b=&gt;b.category===&quot;Kinderbücher&quot;);
 }
 function getFilmBooks(){
   return getCatalogBooks().filter(b=&gt;b.category===FILM_CATEGORY);
@@ -3490,6 +3838,7 @@ function setCompleteLayout(on){
   if(storyCard)storyCard.style.display=on?&quot;none&quot;:&quot;&quot;;
   if(panel)panel.style.gridTemplateRows=on?&quot;1fr&quot;:&quot;auto 1fr&quot;;
   const task=$(&quot;task&quot;);
+  task.classList.remove(&quot;mail-reply-layout&quot;);
   if(task)task.style.justifyContent=on?&quot;center&quot;:&quot;&quot;;
 }
 function showComplete(message,callback=nextStep){
@@ -3508,6 +3857,7 @@ function render(){
   task.classList.toggle(&quot;kinderroman-layout&quot;, step===6);
   task.classList.toggle(&quot;movie-layout&quot;, step===7);
   task.classList.toggle(&quot;funki-recommend-layout&quot;, step===8);
+  task.classList.toggle(&quot;task-heading-up&quot;, [1,2,5,6,7,8].includes(step));
   if(step===0){
     setStory(&quot;Prolog&quot;,&quot;Flämmchen und die fünf Feuerfunken&quot;,
       &quot;Flämmchen ist ein junger Drache und Professorin Funkel ist seine Lehrerin. Heute hat sie ihm etwas ganz Besonderes erlaubt: Zum ersten Mal darf Flämmchen ganz allein in die Schulbibliothek. Bevor er loszieht, gibt sie ihm eine Aufgabe mit auf den Weg: In der Bibliothek warten fünf Feuerfunken auf ihn. Jeder Funke erwacht, wenn Flämmchen etwas Neues über Bücher und die Bibliothek entdeckt. Doch allein schafft er das nicht. Hilfst du ihm bei seiner Bibliotheksprüfung?&quot;,
@@ -3523,12 +3873,12 @@ function render(){
   }
   if(step===1){
     setStory(&quot;Feuerfunke 1&quot;,&quot;Ein Buch entdecken&quot;,
-      &quot;Flämmchen entdeckt eine glitzernde Spur. Sie führt zum Regal mit den Tierbüchern. „Vielleicht wartet dort mein erster Feuerfunke!“, denkt er.&quot;,
+      &quot;Flämmchen entdeckt eine glitzernde Spur. Sie führt zum weißen Regal mit den Kinderbüchern. „Vielleicht wartet dort mein erster Feuerfunke!“, denkt er.&quot;,
       1);
     if(stepDone){showComplete(&quot;Du hast ein Buch gefunden und Flämmchen den ersten Feuerfunken gebracht.&quot;);return;}
 
     task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Buch finden&lt;/span&gt;&lt;/div&gt;
-      &lt;p class=&quot;prompt&quot;&gt;Gehe zum Tierregal. Nimm ein Tierbuch heraus, das dich neugierig macht. Gib hier den Titel ein.&lt;/p&gt;
+      &lt;p class=&quot;prompt&quot;&gt;Gehe zum weißen Regal mit den Kinderbüchern und suche ein Buch heraus, das dich neugierig macht. Gib hier den Titel ein.&lt;/p&gt;
       &lt;input class=&quot;field&quot; id=&quot;animal-query&quot; autocomplete=&quot;off&quot; spellcheck=&quot;false&quot; placeholder=&quot;Titel eingeben …&quot;&gt;
       &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn primary&quot; id=&quot;animal-check&quot; type=&quot;button&quot;&gt;Buch prüfen&lt;/button&gt;&lt;/div&gt;
       &lt;div class=&quot;feedback&quot; id=&quot;animal-feedback&quot;&gt;&lt;/div&gt;
@@ -3542,14 +3892,14 @@ function render(){
         feedback.textContent=&quot;Schreibe zuerst den Titel deines Buches hinein.&quot;;
         return;
       }
-      // Gewünscht: Jedes im vollständigen Katalog vorhandene Buch zählt.
-      const match=bestTitleMatch(typed,getCatalogBooks(),.80);
+      // Es zählen nur Bücher aus dem weißen Regal bei den Kinderbüchern.
+      const match=bestTitleMatch(typed,getAnimalBooks(),.80);
       if(match){
         selectedAnimalBook=match.book;
         finishStep();
       }else{
         feedback.className=&quot;feedback bad show&quot;;
-        feedback.textContent=&quot;Diesen Titel finde ich noch nicht im Katalog. Prüfe die Schreibweise auf dem Buch.&quot;;
+        feedback.textContent=&quot;Diesen Titel finde ich noch nicht bei den Kinderbüchern im weißen Regal. Prüfe die Schreibweise auf dem Buch.&quot;;
       }
     }
     $(&quot;animal-check&quot;).onclick=checkBook;
@@ -3566,7 +3916,7 @@ function render(){
     const book=getCatalogBooks().find(b=&gt;catalogNorm(b.title)===catalogNorm(selectedTitle))
       || selectedAnimalBook
       || getAnimalBooks()[0]
-      || {title:&quot;dein Tierbuch&quot;,author:&quot;&quot;};
+      || {title:&quot;dein Buch&quot;,author:&quot;&quot;};
 
     setStory(&quot;Feuerfunke 2&quot;,&quot;Wer hat das Buch geschrieben?&quot;,
       &quot;Flämmchen betrachtet dein Buch ganz genau. „Auf einem Buch stehen ja ganz schön viele Wörter und Namen. Aber wer hat sich die Geschichte eigentlich ausgedacht?“&quot;,
@@ -3579,7 +3929,7 @@ function render(){
       // Richtige Antwort ist immer der Autor/die Autorin des zuvor ausgewählten Buches.
       // Die falschen Antworten kommen ebenfalls aus dem echten Katalog.
       const catalogAuthors=[...new Set(
-        getCatalogBooks()
+        getAnimalBooks()
           .map(b=&gt;String(b.author||&quot;&quot;).trim())
           .filter(Boolean)
       )].filter(x=&gt;catalogNorm(x)!==catalogNorm(author));
@@ -3591,7 +3941,7 @@ function render(){
 
       const choices=[author,...distractors].sort(()=&gt;Math.random()-.5);
 
-      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Schau in dein Buch&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Genau hinsehen&lt;/span&gt;&lt;/div&gt;
+      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Genau hinsehen&lt;/span&gt;&lt;/div&gt;
         &lt;p class=&quot;prompt&quot;&gt;Nimm dein Buch noch einmal in die Hand. Suche den Namen auf dem Cover oder auf den ersten Seiten. Wer hat dein Buch geschrieben?&lt;/p&gt;
         &lt;p class=&quot;hint&quot; style=&quot;margin-top:-4px&quot;&gt;&lt;strong&gt;Dein Buch:&lt;/strong&gt; ${escapeHtml(book.title)}&lt;/p&gt;
         &lt;div class=&quot;choice-grid&quot;&gt;${choices.map(x=&gt;`&lt;button class=&quot;choice&quot; type=&quot;button&quot; data-author=&quot;${escapeHtml(x)}&quot;&gt;${escapeHtml(x)}&lt;/button&gt;`).join(&quot;&quot;)}&lt;/div&gt;
@@ -3613,7 +3963,7 @@ function render(){
     }else{
       // Manche ältere Sachbücher haben im vorhandenen Katalog noch keinen
       // Autoreneintrag. Dann darf niemals ein leerer Antwortbutton erscheinen.
-      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Schau in dein Buch&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Genau hinsehen&lt;/span&gt;&lt;/div&gt;
+      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Genau hinsehen&lt;/span&gt;&lt;/div&gt;
         &lt;p class=&quot;prompt&quot;&gt;Nimm dein Buch noch einmal in die Hand. Suche den Namen auf dem Cover oder auf den ersten Seiten. Wer hat dein Buch geschrieben?&lt;/p&gt;
         &lt;p class=&quot;hint&quot; style=&quot;margin-top:-4px&quot;&gt;&lt;strong&gt;Dein Buch:&lt;/strong&gt; ${escapeHtml(book.title)}&lt;/p&gt;
         &lt;input class=&quot;field&quot; id=&quot;author-own&quot; autocomplete=&quot;off&quot; placeholder=&quot;Name eingeben …&quot;&gt;
@@ -3647,12 +3997,12 @@ function render(){
       task.innerHTML=`&lt;div class=&quot;feedback bad show&quot;&gt;Der Bibliothekskatalog konnte gerade nicht geladen werden.&lt;/div&gt;`;
       return;
     }
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Finde den Standort im Katalog&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Katalog benutzen&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Katalog benutzen&lt;/span&gt;&lt;/div&gt;
       &lt;div class=&quot;cover-wrap&quot;&gt;
         &lt;img class=&quot;book-photo&quot; src=&quot;${CATALOG_TARGET_COVER}&quot; alt=&quot;Buchcover für die Katalogsuche&quot;&gt;
         &lt;div class=&quot;cover-note&quot;&gt;&lt;strong&gt;Dieses Buch sucht Flämmchen.&lt;/strong&gt;&lt;br&gt;Finde im Katalog heraus, wo es hingehört.&lt;/div&gt;
       &lt;/div&gt;
-      &lt;p class=&quot;prompt&quot;&gt;Klicke auf „Im Katalog suchen“ und suche dort den Titel.&lt;/p&gt;
+      &lt;p class=&quot;prompt&quot;&gt;Merke dir den Titel des Buchs. Suche es &lt;strong&gt;nicht&lt;/strong&gt; im Regal, sondern klicke auf „Im Katalog suchen“ und gib dort den Titel ein. Die Farbe und die Zahl verraten dir den Standort. Merke dir beide!&lt;/p&gt;
       &lt;button class=&quot;btn primary&quot; id=&quot;open-catalog&quot; type=&quot;button&quot;&gt;🔎 Im Katalog suchen&lt;/button&gt;
       &lt;div id=&quot;catalog-selected&quot;&gt;&lt;/div&gt;`;
     $(&quot;open-catalog&quot;).onclick=openCatalog;
@@ -3665,7 +4015,9 @@ function render(){
       4);
     if(stepDone &amp;&amp; mailSent){
       setCompleteLayout(true);
-      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;📨 Antwort von Professorin Funkel&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Drachenpost&lt;/span&gt;&lt;/div&gt;
+      task.classList.add(&quot;mail-reply-layout&quot;);
+      task.style.justifyContent=&quot;flex-start&quot;;
+      task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Drachenpost&lt;/span&gt;&lt;/div&gt;
         &lt;div class=&quot;email-card&quot;&gt;
           &lt;div class=&quot;email-topbar&quot;&gt;
             &lt;span&gt;Neue Nachricht&lt;/span&gt;
@@ -3687,10 +4039,12 @@ function render(){
           &lt;/div&gt;
         &lt;/div&gt;
         &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn primary&quot; id=&quot;continue-btn&quot; type=&quot;button&quot;&gt;Antwort gelesen – weiter&lt;/button&gt;&lt;/div&gt;`;
-      $(&quot;continue-btn&quot;).onclick=nextStep;return;
+      $(&quot;continue-btn&quot;).onclick=nextStep;
+      requestAnimationFrame(()=&gt;{ task.scrollTop=0; });
+      return;
     }
     if(stepDone){showComplete(&quot;Deine Nachricht ist abgeschickt. Professorin Funkel antwortet …&quot;,()=&gt;{mailSent=true;render();});return;}
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;✉️ Flämmchens Drachenpost&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Schreiben&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Schreiben&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Schreibe Professorin Funkel eine kurze Nachricht. Beginne mit „Hallo“. Schreibe, dass ihr einen Feuerfunken sucht, und fragt sie nach Hilfe. Unterschreibe am Ende mit Flämmchen.&lt;/p&gt;
       &lt;div class=&quot;mail-hints&quot;&gt;
         &lt;span class=&quot;hint-chip&quot;&gt;Schreibt, dass ihr einen Feuerfunken sucht&lt;/span&gt;
@@ -3775,7 +4129,7 @@ function render(){
       // Flämmchen soll wirklich unten als Unterschrift stehen.
       // Dafür schauen wir nur auf die letzten drei plausiblen Wörter.
       const lastWords=tokens.slice(-3);
-      const hasSignature=approxToken(lastWords,[&quot;funki&quot;],1);
+      const hasSignature=approxToken(lastWords,[&quot;flämmchen&quot;,&quot;flaemmchen&quot;,&quot;flammchen&quot;],2);
 
       if(suspicious.length){
         fb.className=&quot;feedback bad show&quot;;
@@ -3805,7 +4159,7 @@ function render(){
       5);
     if(stepDone){showComplete(&quot;Du hast einen Rekord entdeckt und Flämmchen davon erzählt. Der dritte Feuerfunke leuchtet!&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Rekorde entdecken&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Rekorde entdecken&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Suche ein Guinness-Buch der Weltrekorde im Regal. Blättere darin und suche einen Rekord über eine Person oder ein Tier, der dich überrascht.&lt;/p&gt;
 
       &lt;button class=&quot;btn soft&quot; id=&quot;record-hint-1&quot; type=&quot;button&quot; style=&quot;font-size:.82rem;padding:8px 12px;margin:0 0 12px&quot;&gt;
@@ -3889,7 +4243,7 @@ function render(){
       6);
     if(stepDone){showComplete(&quot;Du hast entdeckt, wie die drei Kinderromane anfangen und enden. Der sechste Feuerfunke leuchtet!&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title&quot;&gt;Auf ins Kinderroman-Regal&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Drei Bücher entdecken&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Drei Bücher entdecken&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Gehe zum Regal mit den Kinderromanen und nimm drei verschiedene Bücher heraus. Lies bei jedem Buch den ersten Satz und den allerletzten Satz der Geschichte. Schreibe danach nur das erste Wort des ersten Satzes und das letzte Wort des allerletzten Satzes auf.&lt;/p&gt;
       &lt;div class=&quot;word-grid&quot;&gt;
         ${[1,2,3].map(n=&gt;`&lt;div class=&quot;word-card&quot;&gt;&lt;strong&gt;Buch ${n}&lt;/strong&gt;&lt;label for=&quot;first-${n}&quot;&gt;Erstes Wort&lt;/label&gt;&lt;input id=&quot;first-${n}&quot; autocomplete=&quot;off&quot; spellcheck=&quot;true&quot; placeholder=&quot;Anfang&quot;&gt;&lt;label for=&quot;last-${n}&quot;&gt;Allerletztes Wort&lt;/label&gt;&lt;input id=&quot;last-${n}&quot; autocomplete=&quot;off&quot; spellcheck=&quot;true&quot; placeholder=&quot;Ende&quot;&gt;&lt;/div&gt;`).join(&quot;&quot;)}
@@ -3976,7 +4330,7 @@ function render(){
       7);
     if(stepDone){showComplete(&quot;Du hast ein Buch zum Film entdeckt. Der vierte Feuerfunke leuchtet – nur noch einer fehlt!&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Finde das Regal „Buch zum Film“&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Film entdecken&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Film entdecken&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Gehe zum Regal mit den Büchern, die auch verfilmt wurden. Welchen Film hast du schon gesehen oder würdest du gerne sehen? Wähle einen Film, zu dem es in unserer Bibliothek auch ein Buch gibt, und gib den Titel ein.&lt;/p&gt;
       &lt;details class=&quot;hint-box&quot; style=&quot;margin:10px 0 14px&quot;&gt;
         &lt;summary&gt;Falls du es nicht findest, klicke hier.&lt;/summary&gt;
@@ -4023,7 +4377,7 @@ function render(){
       8);
     if(stepDone){showComplete(&quot;Du hast ein Buch für Flämmchen ausgesucht. Jetzt leuchten alle fünf Feuerfunken!&quot;);return;}
 
-    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Finde ein Buch für Flämmchen&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Empfehlen&lt;/span&gt;&lt;/div&gt;
+    task.innerHTML=`&lt;div class=&quot;task-head&quot;&gt;&lt;div class=&quot;task-title emphasis-title&quot;&gt;Deine Aufgabe&lt;/div&gt;&lt;span class=&quot;task-tag&quot;&gt;Empfehlen&lt;/span&gt;&lt;/div&gt;
       &lt;p class=&quot;prompt&quot;&gt;Suche in der Bibliothek ein Buch aus, das du Flämmchen empfehlen würdest. Nimm es in die Hand, schau dir das Cover an und blättere kurz hinein. Gib den Titel anschließend hier ein.&lt;/p&gt;
       &lt;input class=&quot;field&quot; id=&quot;funki-query&quot; placeholder=&quot;Buchtitel eingeben …&quot; autocomplete=&quot;off&quot; spellcheck=&quot;false&quot;&gt;
       &lt;div class=&quot;btn-row&quot;&gt;&lt;button class=&quot;btn primary&quot; id=&quot;funki-check&quot; type=&quot;button&quot;&gt;Buch prüfen&lt;/button&gt;&lt;/div&gt;
