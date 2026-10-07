@@ -5899,8 +5899,8 @@ setTimeout(addTeacherSkip,0);
     <div class="teacher-wrap">
       <div class="teacher-intro">
         <h2 style="margin-top:0">👩‍🏫 Blind Date vorbereiten</h2>
-        <p>Lege bis zu elf Bücher in die Säckchen <strong>1–11</strong>. Suche hier jeweils den Titel und ordne ihn der Sacknummer zu. Mehr musst du nicht aktivieren.</p>
-        <p style="margin-bottom:0;color:#64748b">Die Zuordnung wird auf diesem Gerät im Browser gespeichert. Für die Schülerinnen und Schüler reicht anschließend die Nummer auf dem Säckchen.</p><div class="teacher-settings"><label for="bmMinutesSetting">⏱️ Dauer eines Buch-Dates</label><div class="teacher-settings-row"><input id="bmMinutesSetting" type="number" min="2" max="15" step="1" value="10"><span>Minuten (2–15)</span></div></div>
+        <p>Lege bis zu elf Bücher in die Säckchen <strong>1–11</strong>. Suche hier jeweils den Titel und ordne ihn der richtigen Nummer zu.</p>
+        <div class="teacher-settings"><label for="bmMinutesSetting">⏱️ Dauer eines Buch-Dates</label><div class="teacher-settings-row"><input id="bmMinutesSetting" type="number" min="2" max="15" step="1" value="10"><span>Minuten (2–15)</span></div></div>
       </div>
       <div class="teacher-grid" id="teacherGrid"></div>
       <div class="teacher-actions">
@@ -7336,7 +7336,7 @@ function applySharedGameSetup(){
     bmAssignments = cleaned;
     saveBmAssignments();
     const count = Object.keys(cleaned).length;
-    notice.textContent = `✅ Blinddate vorbereitet! ${count} Säckchen${count===1?" wurde":" wurden"} auf diesem iPad übernommen. Jetzt „Spiel und Spaß“ → „Blinddate“ → „Schüler*in“ öffnen.`;
+    notice.textContent = `✅ Blinddate vorbereitet! Jetzt „Spiel und Spaß“ → „Blinddate“ → „Schüler*in“ öffnen.`;
   }else{
     sdAssignments = cleaned;
     saveSdAssignments();
