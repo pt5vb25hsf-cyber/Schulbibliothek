@@ -2675,6 +2675,13 @@ textarea.field{resize:vertical;min-height:105px;line-height:1.45}
   }
 }
 
+
+/* V83 – nur „Deine Aufgabe“ in der Guinness-Aufgabe ca. eine halbe Zeile höher */
+.task-card.record-top-layout .task-title.emphasis-title{
+  position:relative !important;
+  top:-0.48em !important;
+}
+
 &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -4678,6 +4685,13 @@ textarea.field{resize:vertical;min-height:105px;line-height:1.45}
   }
 }
 
+
+/* V83 – nur „Deine Aufgabe“ in der Guinness-Aufgabe ca. eine halbe Zeile höher */
+.task-card.record-top-layout .task-title.emphasis-title{
+  position:relative !important;
+  top:-0.48em !important;
+}
+
 &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -5903,7 +5917,7 @@ setTimeout(addTeacherSkip,0);
           <input id="blindShareLink" class="share-link-input" readonly aria-label="Blinddate-Übernahmelink">
           <button id="copyBlindShareLink" type="button">Link kopieren</button>
         </div>
-        <p class="share-small">Der QR-Code funktioniert mit der veröffentlichten Bibliotheksseite. Beim lokalen Öffnen der HTML-Datei bitte stattdessen erst die Seite auf GitHub Pages veröffentlichen.</p>
+        <p class="share-small">Der QR-Code öffnet immer die veröffentlichte Bibliotheksseite auf GitHub Pages und überträgt dort die vorbereiteten Buchnummern.</p>
       </div>
     </div>
   </section>
@@ -6001,7 +6015,7 @@ setTimeout(addTeacherSkip,0);
           <input id="speedShareLink" class="share-link-input" readonly aria-label="Speeddating-Übernahmelink">
           <button id="copySpeedShareLink" type="button">Link kopieren</button>
         </div>
-        <p class="share-small">Der QR-Code funktioniert mit der veröffentlichten Bibliotheksseite. Beim lokalen Öffnen der HTML-Datei bitte stattdessen erst die Seite auf GitHub Pages veröffentlichen.</p>
+        <p class="share-small">Der QR-Code öffnet immer die veröffentlichte Bibliotheksseite auf GitHub Pages und überträgt dort die vorbereiteten Buchnummern.</p>
       </div>
     </div>
   </section>
@@ -7224,8 +7238,17 @@ function decodeGameSetup(raw){
     return JSON.parse(decodeURIComponent(escape(atob(s))));
   }catch(_){ return null; }
 }
+const PUBLIC_LIBRARY_URL = "https://pt5vb25hsf-cyber.github.io/Schulbibliothek/";
+
 function currentBaseUrl(){
   const u = new URL(window.location.href);
+
+  // Für QR-Codes immer die veröffentlichte Bibliotheksseite verwenden,
+  // auch wenn die Lehrkraft die HTML-Datei lokal oder in GitHub selbst öffnet.
+  if(u.protocol === "file:" || u.hostname === "github.com"){
+    return PUBLIC_LIBRARY_URL;
+  }
+
   u.search = "";
   u.hash = "";
   return u.toString();
@@ -7269,11 +7292,6 @@ function renderSharePanel(type){
     status.textContent = "Bitte ordne zuerst mindestens ein Buch zu.";
     return;
   }
-  if(location.protocol === "file:"){
-    status.textContent = "Bitte veröffentliche diese Datei zuerst auf GitHub Pages. Erst dort kann ein QR-Code für andere iPads erzeugt werden.";
-    return;
-  }
-
   const link = makeGameSetupLink(type, assignments);
   linkInput.value = link;
   renderQrInto(qrHost, link);
