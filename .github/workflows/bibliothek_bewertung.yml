@@ -140,6 +140,7 @@ jobs:
                   "source": source,
                   "title": title,
                   "age": age,
+                  "created_at": text("created_at"),
                   "rating": text("rating"),
                   "traits": payload.get("traits", ""),
                   "for_whom": payload.get("for_whom", ""),
@@ -193,6 +194,7 @@ jobs:
                       "blinddates": 0,
                       "matches": 0,
                       "_traits": Counter(),
+                      "_months": Counter(),
                       "_comments": []
                   }
 
@@ -201,7 +203,13 @@ jobs:
 
               if row_source == "buchempfehlung":
                   g["recommendations"] += 1
+                  
+                  created_at = str(row.get("created_at") or "").strip()
+                  month = created_at[:7]
 
+                  if re.fullmatch(r"\d{4}-(0[1-9]|1[0-2])", month):
+                      g["_months"][month] += 1
+                  
               elif row_source == "blinddate":
                   g["blinddates"] += 1
 
@@ -235,6 +243,7 @@ jobs:
                   "author": "",
                   "category": "",
                   "recommendations": g["recommendations"],
+                  "months": dict(sorted(g["_months"].items())),
                   "blinddates": g["blinddates"],
                   "matches": g["matches"],
                   "traits": [
