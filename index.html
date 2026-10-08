@@ -6726,7 +6726,41 @@ let bmSettings = loadBmSettings();
 let bmState = {sack:null, book:null, rating:null, detail:null, positiveFree:"", freeAudience:"", userAge:"", decision:null};
 let bmInterval = null;
 let bmTimerLocked = false;
+let bmTimerEndsAt = null;
 let teacherUnlocked = false;
+
+// Bildschirm nur während eines laufenden Blinddate-/Speeddating-Timers wach halten.
+let gameScreenWakeLock = null;
+let gameScreenWakeLockRequest = null;
+async function acquireGameScreenWakeLock(){
+  if(!navigator.wakeLock || document.visibilityState !== "visible" ||
+     !(bmTimerLocked || sdTimerLocked) || gameScreenWakeLock || gameScreenWakeLockRequest) return;
+  const request = navigator.wakeLock.request("screen");
+  gameScreenWakeLockRequest = request;
+  try{
+    const lock = await request;
+    if(document.visibilityState !== "visible" || !(bmTimerLocked || sdTimerLocked)){
+      await lock.release();
+      return;
+    }
+    gameScreenWakeLock = lock;
+    lock.addEventListener("release",()=>{
+      if(gameScreenWakeLock === lock) gameScreenWakeLock = null;
+    });
+  }catch(_){ /* Falls iPad/Safari Wake Lock nicht erlaubt, läuft die Zeit trotzdem korrekt. */ }
+  finally{ if(gameScreenWakeLockRequest === request) gameScreenWakeLockRequest = null; }
+}
+function syncGameScreenWakeLock(){
+  if(document.visibilityState !== "visible" || !(bmTimerLocked || sdTimerLocked)){
+    if(gameScreenWakeLock){
+      const lock = gameScreenWakeLock;
+      gameScreenWakeLock = null;
+      lock.release().catch(()=>{});
+    }
+    return;
+  }
+  acquireGameScreenWakeLock();
+}
 
 function loadBmSettings(){
   try{
@@ -6859,6 +6893,7 @@ function bmShow(stepId){
 }
 function bmReset(){
   if(bmInterval){ clearInterval(bmInterval); bmInterval=null; }
+  bmTimerEndsAt = null;
   bmState = {sack:null, book:null, rating:null, detail:null, positiveFree:"", freeAudience:"", userAge:"", decision:null};
   $("#bmNumber").value = "";
   $("#bmError").classList.add("bm-hidden");
@@ -6866,6 +6901,7 @@ function bmReset(){
   const positiveBox = $("#bmPositiveFree"); if(positiveBox) positiveBox.value = "";
   const ageErr = $("#bmAgeError"); if(ageErr) ageErr.classList.add("bm-hidden");
   bmTimerLocked = false;
+  syncGameScreenWakeLock();
   document.querySelectorAll(".bm-chip.selected,.bm-choice.selected").forEach(x=>x.classList.remove("selected"));
   bmShow("bmStepStart");
 }
@@ -6890,32 +6926,35 @@ function startBlindDate(){
   bmShow("bmStepTimer");
   startTenMinuteTimer();
 }
+function updateBlindDateTimer(){
+  if(!bmTimerLocked || bmTimerEndsAt === null) return;
+  const remaining = Math.max(0, Math.ceil((bmTimerEndsAt - Date.now()) / 1000));
+  const m = Math.floor(remaining/60);
+  const s = remaining%60;
+  $("#bmTimer").textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  if(remaining === 0){
+    if(bmInterval){ clearInterval(bmInterval); bmInterval=null; }
+    bmTimerEndsAt = null;
+    bmTimerLocked = false;
+    syncGameScreenWakeLock();
+    bmShow("bmStepRating");
+  }
+}
 function startTenMinuteTimer(){
   if(bmInterval) clearInterval(bmInterval);
-  let remaining = bmSettings.minutes*60;
-  const timer = $("#bmTimer");
-  function draw(){
-    const m = Math.floor(remaining/60);
-    const s = remaining%60;
-    timer.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-  }
+  bmTimerEndsAt = Date.now() + bmSettings.minutes * 60000;
   const note = $("#bmTimerNote");
   if(note) note.textContent = ``;
-  draw();
-  bmInterval = setInterval(()=>{
-    remaining--;
-    draw();
-    if(remaining <= 0){
-      clearInterval(bmInterval); bmInterval=null;
-      bmTimerLocked = false;
-      bmShow("bmStepRating");
-    }
-  },1000);
+  updateBlindDateTimer();
+  bmInterval = setInterval(updateBlindDateTimer, 250);
+  syncGameScreenWakeLock();
 }
 $("#bmSkipTimer").addEventListener("click",()=>{
   if(!requireTeacherPassword("Passwort eingeben, um den Timer zu überspringen:")) return;
   if(bmInterval){ clearInterval(bmInterval); bmInterval=null; }
+  bmTimerEndsAt = null;
   bmTimerLocked = false;
+  syncGameScreenWakeLock();
   $("#bmTimer").textContent = "00:00";
   bmShow("bmStepRating");
 });
@@ -7263,7 +7302,9 @@ function makeGameSetupLink(type, assignments){
     }
   });
   const u = new URL(currentBaseUrl());
-  u.searchParams.set("spiel", encodeGameSetup({v:1,type,assignments:clean}));
+  const payload = {v:1,type,assignments:clean};
+  if(type === "blinddate") payload.minutes = bmSettings.minutes;
+  u.searchParams.set("spiel", encodeGameSetup(payload));
   return u.toString();
 }
 function renderQrInto(host, link){
@@ -7335,6 +7376,10 @@ function applySharedGameSetup(){
   if(payload.type === "blinddate"){
     bmAssignments = cleaned;
     saveBmAssignments();
+    if(Number.isInteger(payload.minutes) && payload.minutes >= 2 && payload.minutes <= 15){
+      bmSettings.minutes = payload.minutes;
+      saveBmSettings();
+    }
     const count = Object.keys(cleaned).length;
     notice.textContent = `✅ Blinddate vorbereitet! Jetzt „Spiel und Spaß“ → „Blinddate“ → „Schüler*in“ öffnen.`;
   }else{
@@ -7360,6 +7405,7 @@ let sdCurrentNumber = null;
 let sdNextNumber = null;
 let sdInterval = null;
 let sdTimerLocked = false;
+let sdTimerEndsAt = null;
 let sdAudioCtx = null;
 let speedTeacherUnlocked = false;
 
@@ -7497,7 +7543,9 @@ function sdShow(stepId){
 }
 function sdReset(){
   if(sdInterval){ clearInterval(sdInterval); sdInterval=null; }
+  sdTimerEndsAt = null;
   sdTimerLocked = false;
+  syncGameScreenWakeLock();
   clearSdSession();
   $("#sdNumber").value = "";
   $("#sdError").classList.add("bm-hidden");
@@ -7559,28 +7607,29 @@ function startSpeedRound(number, isNewSession=false){
   sdShow("sdStepTimer");
   startSpeedTimer();
 }
+function updateSpeedTimer(){
+  if(!sdTimerLocked || sdTimerEndsAt === null) return;
+  const remaining = Math.max(0, Math.ceil((sdTimerEndsAt - Date.now()) / 1000));
+  const m = Math.floor(remaining/60);
+  const s = remaining%60;
+  $("#sdTimer").textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  if(remaining === 0){
+    if(sdInterval){ clearInterval(sdInterval); sdInterval=null; }
+    sdTimerEndsAt = null;
+    sdTimerLocked = false;
+    playSpeedBell();
+    // Wake Lock erst nach dem Glockensignal freigeben.
+    setTimeout(syncGameScreenWakeLock, 1900);
+    setTimeout(()=>sdShow("sdStepRating"),550);
+  }
+}
 function startSpeedTimer(){
   if(sdInterval) clearInterval(sdInterval);
-  let remaining = 60;
-  const timer = $("#sdTimer");
-  function draw(){
-    const m = Math.floor(remaining/60);
-    const s = remaining%60;
-    timer.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-  }
-  draw();
+  sdTimerEndsAt = Date.now() + 60000;
   sdTimerLocked = true;
-  sdInterval = setInterval(()=>{
-    remaining--;
-    draw();
-    if(remaining <= 0){
-      clearInterval(sdInterval);
-      sdInterval = null;
-      sdTimerLocked = false;
-      playSpeedBell();
-      setTimeout(()=>sdShow("sdStepRating"),550);
-    }
-  },1000);
+  updateSpeedTimer();
+  sdInterval = setInterval(updateSpeedTimer, 250);
+  syncGameScreenWakeLock();
 }
 function startSpeedFromInput(){
   const raw = $("#sdNumber").value.trim();
@@ -7657,7 +7706,9 @@ function requestSpeedEnd(){
     clearInterval(sdInterval);
     sdInterval = null;
   }
+  sdTimerEndsAt = null;
   sdTimerLocked = false;
+  syncGameScreenWakeLock();
   renderSpeedSummary();
   return true;
 }
@@ -8537,14 +8588,18 @@ function setMainMode(next){
       return;
     }
     if(sdInterval){ clearInterval(sdInterval); sdInterval=null; }
+    sdTimerEndsAt = null;
     sdTimerLocked = false;
+    syncGameScreenWakeLock();
   }
   if(bmTimerLocked && next !== "bookmatch"){
     if(!requireTeacherPassword("Das Blind Date läuft noch. Lehrkräfte-Passwort eingeben, um die Seite zu verlassen:")){
       return;
     }
     if(bmInterval){ clearInterval(bmInterval); bmInterval=null; }
+    bmTimerEndsAt = null;
     bmTimerLocked = false;
+    syncGameScreenWakeLock();
   }
   mode = next;
   document.body.classList.toggle("bookmatch-mode", next==="bookmatch");
@@ -8634,6 +8689,15 @@ function setMainMode(next){
   }
   setMode();
 }
+
+function refreshActiveGameTimers(){
+  updateBlindDateTimer();
+  updateSpeedTimer();
+  syncGameScreenWakeLock();
+}
+document.addEventListener("visibilitychange", refreshActiveGameTimers);
+window.addEventListener("pageshow", refreshActiveGameTimers);
+window.addEventListener("focus", refreshActiveGameTimers);
 
 search.addEventListener("input",runSearch);
 search.addEventListener("keydown",e=>{
