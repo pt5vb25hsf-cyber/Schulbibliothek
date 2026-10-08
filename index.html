@@ -924,6 +924,36 @@ body.topbooks-mode .topbooks-shell{display:block}
 }
 
 
+/* Monatshits / Empfehlungsansichten: nur für „Top bewertete Bücher“. */
+.topbooks-tabs{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0 14px}
+.topbooks-tab{border:1px solid #ddcbd5;background:#fffafd;color:#5d4154;border-radius:13px;padding:12px 15px;font:inherit;font-weight:800;cursor:pointer}
+.topbooks-tab.active{background:#8b5f7a;border-color:#8b5f7a;color:#fff}
+.topbooks-tab:focus-visible,.topbooks-age-btn:focus-visible,.topbooks-more-btn:focus-visible,.topbook-details summary:focus-visible{outline:3px solid #8b5f7a;outline-offset:3px}
+.topbooks-month-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;padding:14px 16px;border:1px solid #e6d6df;border-radius:14px;background:#fbf7fa}
+#topBooksMonthControls[hidden]{display:none!important}
+.topbooks-month-controls label{font-weight:800;color:#5d4154}
+.topbooks-month-controls select{font:inherit;font-weight:750;padding:9px 11px;border:1px solid #ddcbd5;border-radius:10px;background:#fff;color:#33202c;max-width:100%}
+.topbooks-month-note{flex-basis:100%;font-size:.82rem;color:#765f6e;line-height:1.4}
+.topbooks-summary{font-weight:800;color:#5d4154;margin:4px 0 12px}
+.topbooks-more{margin-top:16px;text-align:center}
+.topbooks-more-btn{padding:12px 20px;border:1px solid #8b5f7a;border-radius:13px;background:#fffafd;color:#5d4154;font:inherit;font-weight:850;cursor:pointer;min-height:48px}
+.topbooks-more-btn:hover{background:#f4eaf0}
+.topbook-card{padding:15px 17px}
+.topbook-compact{display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.topbook-compact .topbook-rank{min-height:52px;flex:0 0 40px}
+.topbook-compact-title{min-width:0;flex:1 1 180px}
+.topbook-compact-title h3{margin:2px 0 4px;font-size:1.12rem;line-height:1.35;overflow-wrap:anywhere}
+.topbook-count{flex:0 0 auto;white-space:nowrap;padding:9px 12px;border:1px solid #e7dbe3;border-radius:12px;background:#fbf7fa;color:#5d4154;font-weight:900}
+.topbook-details{margin-top:12px;border-top:1px solid #eee5ea;padding-top:10px}
+.topbook-details summary{cursor:pointer;font-weight:800;color:#765169;padding:6px 0;user-select:none}
+.topbook-details[open] summary{margin-bottom:10px}
+.topbook-details-content{display:grid;gap:8px}
+.topbook-details .topbook-stats{margin-top:0}
+.topbook-details .topbook-comment{margin-top:0}
+.topbook-detail-note{font-size:.84rem;color:#64748b}
+@media(max-width:640px){.topbooks-tabs{display:grid;grid-template-columns:1fr}.topbooks-tab{text-align:left}.topbook-count{margin-left:52px}.topbooks-month-controls{align-items:flex-start;flex-direction:column}}
+
+
 .bm-age-box{
   margin:18px 0 6px;
   padding:14px;
@@ -1240,6 +1270,21 @@ body.forms-overlay-open{
 }
 
 
+
+/* Spielregeln bei Blinddate und Speeddating erst auf Wunsch anzeigen. */
+.game-rules-details{margin-top:18px}
+.game-rules-button{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  width:100%;padding:12px 15px;border:1px solid #c4b5fd;
+  border-radius:13px;background:#f5f3ff;color:#5b21b6;
+  font:inherit;font-weight:800;cursor:pointer;list-style:none
+}
+.game-rules-button::-webkit-details-marker{display:none}
+.game-rules-button::after{content:"▾";font-size:1.2rem}
+.game-rules-details[open] .game-rules-button::after{content:"▴"}
+.game-rules-button:focus-visible{outline:3px solid #a78bfa;outline-offset:3px}
+.game-rules-details .blind-rules{margin:12px 0 0}
+
 /* v77 – Speeddating mit Büchern */
 @media(min-width:901px){
   .fun-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -1392,6 +1437,8 @@ body.speedteacher-mode .results-shell{display:none!important}
   text-align:center;
   margin:18px 0;
 }
+.bm-summary-stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+.bm-summary-list .sd-summary-book{text-align:left;min-width:0;overflow-wrap:anywhere}
 .sd-ring{
   animation:sdRingFlash .24s ease-in-out 6 alternate;
 }
@@ -1413,6 +1460,7 @@ body.speedteacher-mode .results-shell{display:none!important}
     text-align:left;
   }
 }
+@media(max-width:800px){.bm-summary-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 
 /* v80 – Blinddate/Speeddating auf Schüler-iPads übertragen */
@@ -1631,25 +1679,8 @@ body.speedteacher-mode .results-shell{display:none!important}
         <div class="fun-card">
           <h2>💜 Blinddate mit einem Buch</h2>
 
-          <div class="blind-rules" aria-label="Spielregeln für das Blind Date mit einem Buch">
-            <h3>💜 So funktioniert euer Blind Date mit einem Buch</h3>
-            <div class="blind-rules-grid">
-              <div class="blind-rule-step">
-                <strong>👩‍🏫 1. Zuerst bereitet die Lehrkraft das Spiel vor</strong>
-                <p>Verstecke in jedem Säckchen ein Buch. Öffne <b>„Lehrkraft“</b>, ordne jedem Säckchen den passenden Buchtitel zu und stelle die Dauer des Blind Dates ein. Danach auf <b>„Spiel für Schüler bereitstellen“</b> tippen und den QR-Code zeigen.</p>
-              </div>
-              <div class="blind-rule-step">
-                <strong>💌 2. Danach starten die Schüler*innen</strong>
-                <p>Scanne zuerst den QR-Code der Lehrkraft. Such dir anschließend eines der vorbereiteten Säckchen aus – <b>noch nicht spicken!</b> Öffne <b>„Schüler*in“</b>, gib deine Säckchennummer ein und starte dein Buch-Date.</p>
-              </div>
-              <div class="blind-rule-step">
-                <strong>💜 Hat es gefunkt?</strong>
-                <p>Nach Ablauf der Zeit entscheidest du: Würdest du mit diesem Buch weiterlesen? Bewerte dein Blind Date und finde heraus, ob aus der ersten Begegnung ein echtes <b>Buch-Match</b> wird.</p>
-              </div>
-            </div>
-          </div>
-
           <p class="blind-role-question">Zuerst vorbereitet die Lehrkraft das Spiel. Schüler*innen starten erst nach dem QR-Code.</p>
+          <p>⏱️ Vor dem Spiel am iPad einstellen: <strong>Einstellungen → Anzeige &amp; Helligkeit → Automatische Sperre → 15 Minuten.</strong></p>
           <div class="role-grid">
             <button class="role-btn" id="blindTeacher" type="button">
               <strong>👩‍🏫 Lehrkraft</strong>
@@ -1660,6 +1691,27 @@ body.speedteacher-mode .results-shell{display:none!important}
               2. Nach dem QR-Code: Blind Date starten
             </button>
           </div>
+
+          <details class="game-rules-details">
+            <summary class="game-rules-button">📖 Spielregeln</summary>
+            <div class="blind-rules" aria-label="Spielregeln für das Blind Date mit einem Buch">
+              <h3>💜 So funktioniert euer Blind Date mit einem Buch</h3>
+              <div class="blind-rules-grid">
+                <div class="blind-rule-step">
+                  <strong>👩‍🏫 1. Zuerst bereitet die Lehrkraft das Spiel vor</strong>
+                  <p>Verstecke in jedem Säckchen ein Buch. Öffne <b>„Lehrkraft“</b>, ordne jedem Säckchen den passenden Buchtitel zu und stelle die Dauer des Blind Dates ein. Danach auf <b>„Spiel für Schüler bereitstellen“</b> tippen und den QR-Code zeigen.</p>
+                </div>
+                <div class="blind-rule-step">
+                  <strong>💌 2. Danach starten die Schüler*innen</strong>
+                  <p>Scanne zuerst den QR-Code der Lehrkraft. Such dir anschließend eines der vorbereiteten Säckchen aus – <b>noch nicht spicken!</b> Öffne <b>„Schüler*in“</b>, gib deine Säckchennummer ein und starte dein Buch-Date.</p>
+                </div>
+                <div class="blind-rule-step">
+                  <strong>💜 Hat es gefunkt?</strong>
+                  <p>Nach Ablauf der Zeit entscheidest du: Würdest du mit diesem Buch weiterlesen? Bewerte dein Blind Date und finde heraus, ob aus der ersten Begegnung ein echtes <b>Buch-Match</b> wird.</p>
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
@@ -1668,24 +1720,6 @@ body.speedteacher-mode .results-shell{display:none!important}
         <button class="back-fun" type="button" data-fun-back>← Zurück</button>
         <div class="fun-card">
           <h2>⚡ Speeddating mit Büchern</h2>
-
-          <div class="blind-rules speed-rules" aria-label="Spielregeln für das Speeddating mit Büchern">
-            <h3>⚡ So funktioniert euer Speeddating mit Büchern</h3>
-            <div class="blind-rules-grid">
-              <div class="blind-rule-step">
-                <strong>👩‍🏫 1. Zuerst bereitet die Lehrkraft das Speeddating vor</strong>
-                <p>Wähle die Bücher aus und klebe auf jedes Buch einen Post-it mit einer Nummer. Öffne <b>„Lehrkraft“</b> und ordne jeder Nummer den passenden Buchtitel zu. Danach auf <b>„Spiel für Schüler bereitstellen“</b> tippen und den QR-Code zeigen.</p>
-              </div>
-              <div class="blind-rule-step">
-                <strong>⏱️ 2. Danach starten die Schüler*innen</strong>
-                <p>Scanne zuerst den QR-Code der Lehrkraft. Nimm dann das Buch mit deiner Nummer, öffne <b>„Schüler*in“</b> und gib die Nummer ein. Jetzt hast du genau <b>eine Minute</b> für dein Buch-Date – bis es klingelt. 🔔</p>
-              </div>
-              <div class="blind-rule-step">
-                <strong>💜 Hat es gefunkt?</strong>
-                <p>Entscheide dich spontan für <b>Match</b>, <b>Vielleicht ein Match</b> oder <b>Kein Match</b>. Danach sagt dir die Seite automatisch, welche Buchnummer dein nächstes Date ist.</p>
-              </div>
-            </div>
-          </div>
 
           <p class="blind-role-question">Zuerst vorbereitet die Lehrkraft das Spiel. Schüler*innen starten erst nach dem QR-Code.</p>
           <div class="role-grid">
@@ -1698,6 +1732,27 @@ body.speedteacher-mode .results-shell{display:none!important}
               2. Nach dem QR-Code: Speeddating starten
             </button>
           </div>
+
+          <details class="game-rules-details">
+            <summary class="game-rules-button">📖 Spielregeln</summary>
+            <div class="blind-rules speed-rules" aria-label="Spielregeln für das Speeddating mit Büchern">
+              <h3>⚡ So funktioniert euer Speeddating mit Büchern</h3>
+              <div class="blind-rules-grid">
+                <div class="blind-rule-step">
+                  <strong>👩‍🏫 1. Zuerst bereitet die Lehrkraft das Speeddating vor</strong>
+                  <p>Wähle die Bücher aus und klebe auf jedes Buch einen Post-it mit einer Nummer. Öffne <b>„Lehrkraft“</b> und ordne jeder Nummer den passenden Buchtitel zu. Danach auf <b>„Spiel für Schüler bereitstellen“</b> tippen und den QR-Code zeigen.</p>
+                </div>
+                <div class="blind-rule-step">
+                  <strong>⏱️ 2. Danach starten die Schüler*innen</strong>
+                  <p>Scanne zuerst den QR-Code der Lehrkraft. Nimm dann das Buch mit deiner Nummer, öffne <b>„Schüler*in“</b> und gib die Nummer ein. Jetzt hast du genau <b>eine Minute</b> für dein Buch-Date – bis es klingelt. 🔔</p>
+                </div>
+                <div class="blind-rule-step">
+                  <strong>💜 Hat es gefunkt?</strong>
+                  <p>Entscheide dich spontan für <b>Match</b>, <b>Vielleicht ein Match</b> oder <b>Kein Match</b>. Danach sagt dir die Seite automatisch, welche Buchnummer dein nächstes Date ist.</p>
+                </div>
+              </div>
+            </div>
+          </details>
         </div>
       </div>
 
@@ -5812,7 +5867,7 @@ setTimeout(addTeacherSkip,0);
       <div id="bmStepFollowup" class="bm-hidden">
         <div class="bm-brand" id="bmFollowBrand">BOOKMATCH</div>
         <h2 class="bm-reveal" id="bmFollowTitle"></h2>
-        
+        <p class="bm-task" id="bmFollowText"></p>
 
         <div id="bmPositiveOptions" class="bm-chips bm-hidden">
           <button class="bm-chip" data-positive="spannend" type="button">😱 spannend</button>
@@ -5868,29 +5923,20 @@ setTimeout(addTeacherSkip,0);
         <div class="bm-brand">Fast geschafft</div>
         <h2 class="bm-reveal">Blinddate speichern</h2>
 
-        <div class="bm-age-box">
-          <div class="bm-label">Wie alt bist du ungefähr?</div>
-          <div class="bm-chips bm-age-chips" id="bmUserAgeChips">
-            <button class="bm-chip" data-bm-user-age="6-8" type="button">6–8 Jahre</button>
-            <button class="bm-chip" data-bm-user-age="9-11" type="button">9–11 Jahre</button>
-            <button class="bm-chip" data-bm-user-age="12-14" type="button">12–14 Jahre</button>
-            <button class="bm-chip" data-bm-user-age="15-17" type="button">15–17 Jahre</button>
-          </div>
-          <div class="bm-error bm-hidden" id="bmAgeError">Bitte wähle noch dein ungefähres Alter aus.</div>
-        </div>
-
-        <div class="forms-next-step" role="note" aria-label="Wichtiger Hinweis zum Absenden">
-          <span class="arrow" aria-hidden="true">➡️</span>
-          <span>Auf <strong>„Blinddate absenden“</strong> drücken. Dann öffnet sich eine neue Seite. Dort ganz nach unten scrollen und auf <strong>„Absenden“</strong> drücken!</span>
-        </div>
-        <button class="bm-btn" id="bmFormsSubmit" type="button">Blinddate absenden →</button>
+        <p class="bm-note">Deine Bewertung wird gespeichert. Anschließend siehst du die Ergebnisse deiner Blinddates auf diesem iPad.</p>
+        <button class="bm-btn" id="bmResultsSubmit" type="button">Ergebnisse anzeigen →</button>
       </div>
 
       <div id="bmStepDone" class="bm-hidden bm-done">
         <div class="emoji" id="bmDoneEmoji">💜</div>
         <h2 class="bm-reveal" id="bmDoneTitle">Danke für dein Date!</h2>
-        
-        <button class="bm-btn secondary" id="bmRestart" type="button">Zurück zum Start</button>
+        <p class="bm-task" id="bmDoneText"></p>
+        <h3 style="margin:22px 0 4px">📊 Deine Blinddate-Ergebnisse</h3>
+        <div class="sd-summary-stats bm-summary-stats" id="bmSummaryStats"></div>
+        <div class="sd-summary-list bm-summary-list" id="bmSummaryList"></div>
+        <button class="bm-btn secondary" id="bmRestart" type="button">🔄 Neues Date</button>
+        <button class="bm-btn green" id="bmFoundMatch" type="button">💚 Ich habe mein Match gefunden, ich lese weiter</button>
+        <p class="bm-note" role="note" style="text-align:center">🔒 Nach dem Spiel: <strong>Einstellungen → Anzeige &amp; Helligkeit → Automatische Sperre</strong> wieder auf die vorherige Zeit stellen (z. B. 2 Minuten).</p>
       </div>
     </div>
   </section>
@@ -5987,6 +6033,7 @@ setTimeout(addTeacherSkip,0);
         <p class="sd-summary-finish">Deine Favoriten warten auf dich. Schau dir deine Matches und Vielleicht-Matches jetzt noch einmal in Ruhe an. 📚💜</p>
         <button class="bm-btn sd-main-btn" id="sdRestartBtn" type="button">⚡ Neue Runde starten</button>
         <button class="bm-btn secondary" id="sdSummaryBack" type="button">Zurück zu Spiel &amp; Spaß</button>
+        <p class="bm-note" role="note" style="text-align:center">🔒 Nach dem Spiel: <strong>Einstellungen → Anzeige &amp; Helligkeit → Automatische Sperre</strong> wieder auf die vorherige Zeit stellen (z. B. 2 Minuten).</p>
       </div>
 
     </div>
@@ -6042,8 +6089,18 @@ setTimeout(addTeacherSkip,0);
     <div class="topbooks-wrap">
       <div class="topbooks-hero">
         <h2>🏆 Top bewertete Bücher</h2>
-        <p>Hier findest du Bücher, die andere Schülerinnen und Schüler besonders empfohlen oder beim Blinddate gut bewertet haben.</p>
-        <div class="topbooks-demo-note">Die Rangliste wird automatisch aus den veröffentlichten Bewertungen geladen.</div>
+        <p>Entdecke die Buchempfehlungen aus unserer Schulbibliothek. Hier zählen nur Buchempfehlungen – keine Blinddate-Ergebnisse.</p>
+        <div class="topbooks-demo-note">Die Empfehlungen werden automatisch aus den veröffentlichten Bewertungen geladen.</div>
+      </div>
+      <div class="topbooks-tabs" role="group" aria-label="Auswertung auswählen">
+        <button class="topbooks-tab active" data-top-view="month" type="button" aria-pressed="true">🌟 Monatshits</button>
+        <button class="topbooks-tab" data-top-view="all" type="button" aria-pressed="false">📚 Alle Empfehlungen</button>
+        <button class="topbooks-tab" data-top-view="favorites" type="button" aria-pressed="false">🏆 Dauerbrenner</button>
+      </div>
+      <div class="topbooks-month-controls" id="topBooksMonthControls">
+        <label for="topBooksMonth">Monat auswählen:</label>
+        <select id="topBooksMonth" aria-label="Monat auswählen"></select>
+        <span class="topbooks-month-note">Ältere Empfehlungen ohne Monatsdatum bleiben unter „Alle Empfehlungen“ erhalten.</span>
       </div>
       <div class="topbooks-ages">
         <button class="topbooks-age-btn active" data-top-age="6-8" type="button">6–8 Jahre</button>
@@ -6052,7 +6109,9 @@ setTimeout(addTeacherSkip,0);
         <button class="topbooks-age-btn" data-top-age="15-17" type="button">15–17 Jahre</button>
       </div>
       <div class="topbooks-age-hint">Mehrfachauswahl möglich.</div>
+      <div class="topbooks-summary" id="topBooksSummary" aria-live="polite"></div>
       <div class="topbooks-list" id="topBooksList"></div>
+      <div class="topbooks-more" id="topBooksMore"></div>
     </div>
   </section>
 
@@ -6719,14 +6778,27 @@ function setMode(){
 // ---------- BOOKMATCH Blind Date ----------
 const BM_STORAGE_KEY = "schulbibliothek_bookmatch_sacks_v1";
 const BM_FEEDBACK_KEY = "schulbibliothek_bookmatch_feedback_v1";
+const BM_SESSION_RESULTS_KEY = "schulbibliothek_blinddate_session_results_v1";
+function loadBmSessionResults(){
+  try{
+    const rows = JSON.parse(sessionStorage.getItem(BM_SESSION_RESULTS_KEY) || "[]");
+    return Array.isArray(rows) ? rows : [];
+  }catch(_){ return []; }
+}
+let bmSessionResults = loadBmSessionResults();
+function clearBmSessionResults(){
+  bmSessionResults = [];
+  try{ sessionStorage.removeItem(BM_SESSION_RESULTS_KEY); }catch(_){}
+}
 const BM_SETTINGS_KEY = "schulbibliothek_bookmatch_settings_v1";
 const BM_TEACHER_PASSWORD = "123Bücherei";
 let bmAssignments = loadBmAssignments();
 let bmSettings = loadBmSettings();
-let bmState = {sack:null, book:null, rating:null, detail:null, positiveFree:"", freeAudience:"", userAge:"", decision:null};
+let bmState = {sack:null, book:null, rating:null, detail:null, positiveFree:"", freeAudience:"", decision:null};
 let bmInterval = null;
 let bmTimerLocked = false;
 let bmTimerEndsAt = null;
+let bmAudioCtx = null;
 let teacherUnlocked = false;
 
 // Bildschirm nur während eines laufenden Blinddate-/Speeddating-Timers wach halten.
@@ -6868,7 +6940,7 @@ function showTeacherSuggestions(inp){
       const b = BOOKS[idx];
       inp.value = b.title + (b.author ? " — " + b.author : "");
       box.classList.add("bm-hidden");
-      teacherStatus.textContent = `Sack ${sack}: „${b.title}“ gespeichert.`;
+      teacherStatus.textContent = `Säckchen ${sack}: „${b.title}“ gespeichert.`;
     });
   });
 }
@@ -6894,12 +6966,12 @@ function bmShow(stepId){
 function bmReset(){
   if(bmInterval){ clearInterval(bmInterval); bmInterval=null; }
   bmTimerEndsAt = null;
-  bmState = {sack:null, book:null, rating:null, detail:null, positiveFree:"", freeAudience:"", userAge:"", decision:null};
+  bmState = {sack:null, book:null, rating:null, detail:null, positiveFree:"", freeAudience:"", decision:null};
   $("#bmNumber").value = "";
   $("#bmError").classList.add("bm-hidden");
   const freeBox = $("#bmAudienceFree"); if(freeBox) freeBox.value = "";
   const positiveBox = $("#bmPositiveFree"); if(positiveBox) positiveBox.value = "";
-  const ageErr = $("#bmAgeError"); if(ageErr) ageErr.classList.add("bm-hidden");
+  $("#bmFoundMatch").classList.remove("bm-hidden");
   bmTimerLocked = false;
   syncGameScreenWakeLock();
   document.querySelectorAll(".bm-chip.selected,.bm-choice.selected").forEach(x=>x.classList.remove("selected"));
@@ -6910,16 +6982,17 @@ function startBlindDate(){
   const n = Number(raw);
   const err = $("#bmError");
   if(!Number.isInteger(n) || n<1 || n>11){
-    err.textContent = "Bitte gib eine Sacknummer von 1 bis 11 ein.";
+    err.textContent = "Bitte gib eine Säckchennummer von 1 bis 11 ein.";
     err.classList.remove("bm-hidden"); return;
   }
   const book = findBookByKey(bmAssignments[n]);
   if(!book){
-    err.textContent = `Für Sack ${n} ist noch kein Buch hinterlegt. Frag bitte kurz eine Lehrkraft.`;
+    err.textContent = `Für Säckchen ${n} ist noch kein Buch hinterlegt. Frag bitte kurz eine Lehrkraft.`;
     err.classList.remove("bm-hidden"); return;
   }
   err.classList.add("bm-hidden");
   bmState.sack = n; bmState.book = book;
+  ensureBmAudio(); // Audiowiedergabe auf iPad direkt durch den Start-Klick aktivieren.
   bmTimerLocked = true;
   $("#bmBookTitle").textContent = book.title;
   $("#bmBookAuthor").textContent = book.author || "Autor/in nicht angegeben";
@@ -6936,7 +7009,9 @@ function updateBlindDateTimer(){
     if(bmInterval){ clearInterval(bmInterval); bmInterval=null; }
     bmTimerEndsAt = null;
     bmTimerLocked = false;
-    syncGameScreenWakeLock();
+    playBlindDateBell();
+    // Bildschirm erst nach dem Klingeln wieder automatisch sperren lassen.
+    setTimeout(syncGameScreenWakeLock, 1900);
     bmShow("bmStepRating");
   }
 }
@@ -6987,6 +7062,25 @@ function softBell(ctx, freq, start, duration=0.7, gain=0.10){
   tone(ctx, freq*2, start, duration*0.65, gain*0.32, "sine");
   tone(ctx, freq*3, start, duration*0.45, gain*0.12, "sine");
 }
+// Glockenton nur beim regulären Ablauf des Blinddate-Timers.
+function ensureBmAudio(){
+  if(!bmAudioCtx) bmAudioCtx = createAudioContext();
+  if(bmAudioCtx && (bmAudioCtx.state === "suspended" || bmAudioCtx.state === "interrupted")){
+    bmAudioCtx.resume().catch(()=>{});
+  }
+}
+function playBlindDateBell(){
+  ensureBmAudio();
+  const ctx = bmAudioCtx;
+  if(!ctx) return;
+  const t = ctx.currentTime + 0.03;
+  // Drei deutlich hörbare Doppel-Glockenschläge.
+  [0, .55, 1.10].forEach(offset=>{
+    softBell(ctx, 880, t+offset, .43, .18);
+    softBell(ctx, 659.25, t+offset+.15, .43, .14);
+  });
+}
+
 function playMatchFanfare(){
   const ctx = createAudioContext();
   if(!ctx) return;
@@ -7093,96 +7187,39 @@ $("#bmFollowNext").addEventListener("click",()=>{
 });
 
 
-document.querySelectorAll("[data-bm-user-age]").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll("[data-bm-user-age]").forEach(x=>x.classList.remove("selected"));
-    btn.classList.add("selected");
-    bmState.userAge = btn.dataset.bmUserAge || "";
-    const err = $("#bmAgeError"); if(err) err.classList.add("bm-hidden");
-  });
-});
-
-const BM_FORMS_ID = "9oZGFamh1EOnVZ_vZ6X-oekLVEizlxtHiVu22nHMOGxUMlFGQTM4QTdGSUVPRUdFS1VUVlZKSEhRSiQlQCN0PWcu";
-const BM_FORMS_FIELDS = {
-  book: "re686539b9b0341049fe8a7a0778ac238",
-  rating: "r819e2e1dd2b141789d3d95fd518e5e78",
-  positive: "rb0575cc692244b898ff75c1b79047e2e",
-  positiveText: "r27f51a356f4b4b80ad7db5c6290dc358",
-  audience: "r3d34b68ee9ce4b878aca0fd6a4244956",
-  audienceFree: "r2273d07c11404637a7a074fd829495cd",
-  userAge: "r2821582922d74e9f9ab80e67f0e5a3cb",
-  decision: "r29635e2396104fde8aaa9b43aec10d90"
-};
-
+// Forms single-choice encoding is still needed for the separate book-recommendation form.
 function formsSingleValue(value){
   return value ? JSON.stringify(value) : "";
 }
 
-function bmRatingForForms(rating){
-  return {
-    match: "Das ist mein Match!",
-    twist: "Anders als gedacht",
-    maybe: "Vielleicht ein zweites Date",
-    no: "Kein Match"
-  }[rating] || "";
+function addBmSessionResult(){
+  bmSessionResults.push({
+    sack: bmState.sack,
+    title: bmState.book?.title || "Buch",
+    author: bmState.book?.author || "",
+    rating: bmState.rating
+  });
+  try{ sessionStorage.setItem(BM_SESSION_RESULTS_KEY, JSON.stringify(bmSessionResults)); }catch(_){}
 }
-
-function bmPositiveForForms(detail){
-  const map = {
-    "spannend":"spannend",
-    "lustig":"lustig",
-    "berührend":"berührend",
-    "interessant":"interessant",
-    "leicht reinzukommen":"schnell drin",
-    "cool gemacht":"cool gemacht"
-  };
-  return map[detail] || "";
-}
-
-function bmAudienceForForms(detail){
-  const map = {
-    "gern lacht":"gern lacht",
-    "Spannung mag":"Spannung mag",
-    "Fantasy mag":"Fantasy mag",
-    "echte Geschichten mag":"echte Geschichten mag",
-    "Tiere mag":"Tiere mag",
-    "Comics oder Manga mag":"Comics oder Manga mag",
-    "kurze Texte mag":"kurze Texte mag",
-    "gern tief in Geschichten eintaucht":"gern tief in Geschichten eintaucht",
-    "gern Neues erfährt":"gern Neues erfährt",
-    "ungewöhnliche Geschichten mag":"ungewöhnliche Geschichten mag"
-  };
-  return map[detail] || "";
-}
-
-function bmDecisionForForms(decision){
-  return {
-    home:"Mit nach Hause",
-    again:"Noch ein Blind Date",
-    shelf:"Zurück ins Regal"
-  }[decision] || "";
-}
-
-function buildBlinddateFormsUrl(){
-  const params = new URLSearchParams();
-  params.set("id", BM_FORMS_ID);
-
-  const bookLabel = bmState.book
-    ? bmState.book.title + (bmState.book.author ? " — " + bmState.book.author : "")
-    : "";
-
-  params.set(BM_FORMS_FIELDS.book, bookLabel);
-  params.set(BM_FORMS_FIELDS.rating, formsSingleValue(bmRatingForForms(bmState.rating)));
-
-  const isMatch = bmState.rating === "match";
-  params.set(BM_FORMS_FIELDS.positive, formsSingleValue(isMatch ? bmPositiveForForms(bmState.detail) : ""));
-  params.set(BM_FORMS_FIELDS.positiveText, isMatch ? (bmState.positiveFree || "") : "");
-  params.set(BM_FORMS_FIELDS.audience, formsSingleValue(!isMatch ? bmAudienceForForms(bmState.detail) : ""));
-  params.set(BM_FORMS_FIELDS.audienceFree, !isMatch ? (bmState.freeAudience || "") : "");
-  params.set(BM_FORMS_FIELDS.userAge, formsSingleValue(bmState.userAge || ""));
-  params.set(BM_FORMS_FIELDS.decision, formsSingleValue(bmDecisionForForms(bmState.decision)));
-
-  return "https://forms.cloud.microsoft/Pages/ResponsePage.aspx?" + params.toString().replace(/\+/g, "%20");
+function renderBmSessionSummary(){
+  const counts = {match:0,twist:0,maybe:0,no:0};
+  bmSessionResults.forEach(r=>{ if(Object.hasOwn(counts,r.rating)) counts[r.rating]++; });
+  $("#bmSummaryStats").innerHTML = `
+    <div class="sd-summary-stat"><strong>${counts.match}</strong><span>💚 Match${counts.match===1?"":"es"}</span></div>
+    <div class="sd-summary-stat"><strong>${counts.twist}</strong><span>🔥 Anders als gedacht</span></div>
+    <div class="sd-summary-stat"><strong>${counts.maybe}</strong><span>👀 Vielleicht</span></div>
+    <div class="sd-summary-stat"><strong>${counts.no}</strong><span>❌ Kein Match</span></div>`;
+  $("#bmSummaryList").innerHTML = bmSessionResults.length
+    ? bmSessionResults.map(r=>`
+      <div class="sd-summary-row">
+        <div class="sd-summary-number">Nr. ${Number(r.sack) || "–"}</div>
+        <div class="sd-summary-book">
+          <strong>${escapeHtml(r.title)}</strong>
+          <small>${escapeHtml(r.author || "Autor/in nicht angegeben")}</small>
+        </div>
+        <div class="sd-summary-rating">${ratingLabel(r.rating)}</div>
+      </div>`).join("")
+    : `<div class="bm-card">Noch keine Buch-Dates bewertet.</div>`;
 }
 
 function saveBmFeedback(){
@@ -7197,7 +7234,6 @@ function saveBmFeedback(){
       detail:bmState.detail,
       positiveFree:bmState.positiveFree,
       freeAudience:bmState.freeAudience,
-      userAge:bmState.userAge,
       decision:bmState.decision
     });
     localStorage.setItem(BM_FEEDBACK_KEY, JSON.stringify(arr.slice(-500)));
@@ -7212,53 +7248,37 @@ document.querySelectorAll("[data-decision]").forEach(btn=>{
   });
 });
 
-$("#bmFormsSubmit").addEventListener("click",()=>{
+$("#bmResultsSubmit").addEventListener("click",()=>{
   if(!bmState.book || !bmState.rating || !bmState.detail || !bmState.decision){
     window.alert("Es fehlt noch eine Pflichtangabe. Bitte gehe einen Schritt zurück und vervollständige dein Blinddate.");
     return;
   }
-
-  if(!bmState.userAge){
-    const err = $("#bmAgeError");
-    if(err){
-      err.classList.remove("bm-hidden");
-      err.scrollIntoView({behavior:"smooth", block:"center"});
-    }
-    return;
-  }
-
-  const mappedRating = bmRatingForForms(bmState.rating);
-  const mappedDecision = bmDecisionForForms(bmState.decision);
-  const mappedDetail = bmState.rating === "match"
-    ? bmPositiveForForms(bmState.detail)
-    : bmAudienceForForms(bmState.detail);
-
-  if(!mappedRating || !mappedDecision || !mappedDetail){
-    window.alert("Eine Angabe konnte nicht für Microsoft Forms vorbereitet werden. Bitte starte das Blinddate noch einmal.");
-    return;
-  }
-
-  saveBmFeedback();
-  const formsUrl = buildBlinddateFormsUrl();
-  const opened = window.open(formsUrl, "_blank", "noopener");
-  if(!opened) window.location.href = formsUrl;
+  saveBmFeedback(); // Bestehende lokale Ergebnisliste bleibt erhalten.
+  addBmSessionResult();
+  renderBmSessionSummary();
 
   if(bmState.decision==="again"){
     $("#bmDoneEmoji").textContent="🔄";
     $("#bmDoneTitle").textContent="Bereit fürs nächste Date?";
-    $("#bmDoneText").textContent="Forms ist geöffnet. Dort bitte noch auf „Absenden“ drücken. Danach kannst du ein neues Säckchen nehmen.";
+    $("#bmDoneText").textContent="Dein Date ist gespeichert. Schau dir deine Ergebnisse an und probiere ein neues Säckchen aus!";
   }else if(bmState.decision==="home"){
     $("#bmDoneEmoji").textContent="💚";
     $("#bmDoneTitle").textContent="It’s a Match!";
-    $("#bmDoneText").textContent="Forms ist geöffnet. Dort bitte noch auf „Absenden“ drücken. Viel Spaß beim Weiterlesen!";
+    $("#bmDoneText").textContent="Dein Date ist gespeichert. Viel Spaß beim Weiterlesen!";
   }else{
     $("#bmDoneEmoji").textContent="🏠";
     $("#bmDoneTitle").textContent="Danke fürs Ausprobieren!";
-    $("#bmDoneText").textContent="Forms ist geöffnet. Dort bitte noch auf „Absenden“ drücken. Danach darf das Buch zurück ins Regal.";
+    $("#bmDoneText").textContent="Dein Date ist gespeichert. Das Buch darf zurück ins Regal.";
   }
   bmShow("bmStepDone");
 });
 $("#bmRestart").addEventListener("click",bmReset);
+$("#bmFoundMatch").addEventListener("click",()=>{
+  $("#bmDoneEmoji").textContent = "💚";
+  $("#bmDoneTitle").textContent = "Du hast dein Match gefunden!";
+  $("#bmDoneText").textContent = "Viel Spaß beim Weiterlesen!";
+  $("#bmFoundMatch").classList.add("bm-hidden");
+});
 
 
 
@@ -8070,19 +8090,29 @@ async function loadTopBooksData(){
   TOPBOOKS_LOAD_ERROR = lastError || new Error("Bewertungsdaten nicht erreichbar.");
 }
 
+/* Ansichten der Top-Bücher-Seite; die übrigen Bereiche bleiben unverändert. */
+const TOPBOOKS_PAGE_SIZE = 10;
+let TOPBOOKS_VIEW = "month";
+let TOPBOOKS_SHOW_ALL = false;
+// Der aktuelle Kalendermonat ist der Ausgangspunkt, nicht ein zufällig bewerteter Monat.
+let TOPBOOKS_MONTH = new Date().toLocaleDateString("sv-SE", {year:"numeric",month:"2-digit"}).slice(0,7);
+
 function normalizeTopbookRows(age){
   const data = TOPBOOKS_DATA || {};
   const rows = Array.isArray(data[age]) ? data[age] : [];
   return rows.map(row=>({
     title: row.title || "",
     author: row.author || "",
-    recommendations: Number(row.recommendations || 0),
-    blinddates: Number(row.blinddates || row.dates || 0),
-    matches: Number(row.matches || 0),
+    recommendations: Math.max(0,Number(row.recommendations || 0) || 0),
+    // Das neu eingeführte Feld ist ein Objekt wie {"2026-10": 2}.
+    months: (row.months && typeof row.months==="object" && !Array.isArray(row.months)) ? row.months : {},
+    // In alten aggregierten Datensätzen können noch Blinddate-Einträge enthalten sein.
+    // Sie werden weder gerankt noch im Zähler berücksichtigt.
+    blinddates: Math.max(0,Number(row.blinddates || row.dates || 0) || 0),
     traits: Array.isArray(row.traits) ? row.traits : [],
     comments: Array.isArray(row.comments) ? row.comments : [],
     category: row.category || ""
-  })).filter(r=>r.title);
+  })).filter(r=>r.title && r.recommendations>0);
 }
 
 function getSelectedTopbookAges(){
@@ -8093,130 +8123,180 @@ function getSelectedTopbookAges(){
 
 function mergeTopbookRows(ages){
   const merged = new Map();
-
   ages.forEach(age=>{
     normalizeTopbookRows(age).forEach(row=>{
       const key = norm(row.title);
-
       if(!merged.has(key)){
         merged.set(key,{
-          title: row.title,
-          author: row.author || "",
-          recommendations: 0,
-          blinddates: 0,
-          matches: 0,
-          traits: [],
-          comments: [],
-          category: row.category || ""
+          title: row.title,author: row.author || "",category:row.category || "",
+          recommendations: 0,months:{},traits:[],comments:[],hasMixedSources:false
         });
       }
-
-      const target = merged.get(key);
+      const target=merged.get(key);
       target.recommendations += row.recommendations;
-      target.blinddates += row.blinddates;
-      target.matches += row.matches;
-
-      if(!target.author && row.author) target.author = row.author;
-      if(!target.category && row.category) target.category = row.category;
-
-      row.traits.forEach(t=>{
-        if(t && !target.traits.includes(t)) target.traits.push(t);
+      Object.entries(row.months).forEach(([month,count])=>{
+        const n=Number(count);
+        if(/^\d{4}-(0[1-9]|1[0-2])$/.test(month) && Number.isFinite(n) && n>0){
+          target.months[month]=(target.months[month] || 0)+n;
+        }
       });
-
-      row.comments.forEach(c=>{
-        if(c && !target.comments.includes(c)) target.comments.push(c);
-      });
+      if(!target.author && row.author) target.author=row.author;
+      if(!target.category && row.category) target.category=row.category;
+      // Aggregierte Alt-Dateien trennen Texte von Blinddates nicht sicher.
+      // Um sie nicht versehentlich als Empfehlungen auszugeben, Texte nur
+      // aus Datensätzen übernehmen, die keine Blinddates enthalten.
+      if(row.blinddates>0) target.hasMixedSources=true;
+      row.traits.forEach(t=>{if(t && !target.traits.includes(t)) target.traits.push(t);});
+      row.comments.forEach(c=>{if(c && !target.comments.includes(c)) target.comments.push(c);});
     });
   });
-
   return [...merged.values()];
 }
 
+function formatTopbookMonth(month){
+  if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) return month;
+  const [year,number]=month.split("-").map(Number);
+  return new Intl.DateTimeFormat("de-DE",{month:"long",year:"numeric"}).format(new Date(year,number-1,1));
+}
+
+function updateTopbookMonths(){
+  const select=$("#topBooksMonth");
+  if(!select) return;
+  const months=new Set([new Date().toLocaleDateString("sv-SE",{year:"numeric",month:"2-digit"}).slice(0,7)]);
+  Object.values(TOPBOOKS_DATA || {}).forEach(rows=>{
+    if(!Array.isArray(rows)) return;
+    rows.forEach(row=>{
+      if(Number(row.recommendations || 0)<=0) return;
+      Object.keys(row.months || {}).forEach(month=>{
+        if(/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) months.add(month);
+      });
+    });
+  });
+  if(!months.has(TOPBOOKS_MONTH)) TOPBOOKS_MONTH=[...months].sort().reverse()[0];
+  select.innerHTML=[...months].sort().reverse().map(m=>`<option value="${m}">${formatTopbookMonth(m)}</option>`).join("");
+  select.value=TOPBOOKS_MONTH;
+}
+
 function renderTopBooks(ages=getSelectedTopbookAges()){
-  const box = $("#topBooksList");
-  if(!box) return;
+  const box=$("#topBooksList");
+  const summary=$("#topBooksSummary");
+  const more=$("#topBooksMore");
+  if(!box || !summary || !more) return;
+  more.innerHTML="";
+  $("#topBooksMonthControls").hidden=TOPBOOKS_VIEW!=="month";
 
-  if(TOPBOOKS_LOAD_ERROR){
-    box.innerHTML = `
-      <div class="advisor-empty">
-        <strong>Die Bewertungsdaten konnten gerade nicht geladen werden.</strong><br>
-        Bitte die Seite kurz neu laden. Die Daten werden automatisch aus GitHub geladen.
-      </div>`;
-    return;
-  }
-
-  if(!ages.length){
-    box.innerHTML = `
-      <div class="advisor-empty">
-        Bitte wähle mindestens eine Altersgruppe aus.
-      </div>`;
-    return;
-  }
-
-  const rows = mergeTopbookRows(ages);
-
-  if(!rows.length){
-    box.innerHTML = `
-      <div class="advisor-empty">
-        Für die ausgewählten Altersgruppen gibt es noch keine veröffentlichten Bewertungen.
-      </div>`;
-    return;
-  }
-
-  rows.sort((a,b)=>{
-    const aScore = a.recommendations + a.matches;
-    const bScore = b.recommendations + b.matches;
-    return bScore-aScore
-      || b.recommendations-a.recommendations
-      || b.matches-a.matches
-      || a.title.localeCompare(b.title,"de");
+  document.querySelectorAll(".topbooks-tab").forEach(btn=>{
+    const selected=btn.dataset.topView===TOPBOOKS_VIEW;
+    btn.classList.toggle("active",selected);
+    btn.setAttribute("aria-pressed",String(selected));
   });
 
-  box.innerHTML = rows.slice(0,20).map((r,i)=>{
-    const book = BOOKS.find(b=>norm(b.title)===norm(r.title))
+  if(TOPBOOKS_LOAD_ERROR){
+    summary.textContent="";
+    box.innerHTML=`<div class="advisor-empty"><strong>Die Bewertungsdaten konnten gerade nicht geladen werden.</strong><br>Bitte die Seite kurz neu laden. Die Daten werden automatisch aus GitHub geladen.</div>`;
+    return;
+  }
+  if(!ages.length){
+    summary.textContent="";
+    box.innerHTML='<div class="advisor-empty">Bitte wähle mindestens eine Altersgruppe aus.</div>';
+    return;
+  }
+
+  const all=mergeTopbookRows(ages);
+  let rows=all;
+  if(TOPBOOKS_VIEW==="month"){
+    rows=all.filter(r=>(r.months[TOPBOOKS_MONTH] || 0)>0);
+  }else if(TOPBOOKS_VIEW==="favorites"){
+    rows=all.filter(r=>r.recommendations>=3);
+  }
+  rows.sort((a,b)=>{
+    const score=r=>TOPBOOKS_VIEW==="month" ? (r.months[TOPBOOKS_MONTH] || 0) : r.recommendations;
+    return score(b)-score(a) || b.recommendations-a.recommendations || a.title.localeCompare(b.title,"de");
+  });
+
+  const intro=TOPBOOKS_VIEW==="month" ? `Monatshits · ${formatTopbookMonth(TOPBOOKS_MONTH)}`
+    : TOPBOOKS_VIEW==="favorites" ? "Dauerbrenner · mindestens 3 Empfehlungen insgesamt"
+    : "Alle Empfehlungen · auch ältere ohne Monatsdatum";
+  summary.textContent=`${intro} · ${rows.length} ${rows.length===1?"Buch":"Bücher"}`;
+
+  if(!rows.length){
+    box.innerHTML=TOPBOOKS_VIEW==="month"
+      ? '<div class="advisor-empty">Für diesen Monat und die ausgewählten Altersgruppen gibt es noch keine Buchempfehlungen. Probiere einen anderen Monat oder „Alle Empfehlungen“.</div>'
+      : TOPBOOKS_VIEW==="favorites"
+      ? '<div class="advisor-empty">Noch kein Dauerbrenner: Hier erscheinen Bücher mit mindestens drei Buchempfehlungen.</div>'
+      : '<div class="advisor-empty">Für die ausgewählten Altersgruppen gibt es noch keine Buchempfehlungen.</div>';
+    return;
+  }
+
+  const visible=TOPBOOKS_SHOW_ALL ? rows : rows.slice(0,TOPBOOKS_PAGE_SIZE);
+  box.innerHTML=visible.map((r,i)=>{
+    const book=BOOKS.find(b=>norm(b.title)===norm(r.title))
       || BOOKS.find(b=>norm(b.title).includes(norm(r.title)) || norm(r.title).includes(norm(b.title)));
-
-    const title = book ? book.title : r.title;
-    const author = book ? (book.author || r.author || "") : (r.author || "");
-    const category = book ? (book.category || r.category || "") : (r.category || "");
-    const shelf = category ? shelfSignHTML(category) : "";
-    const traitText = r.traits.length ? r.traits.slice(0,4).map(escapeHtml).join(" · ") : "";
-    const comment = r.comments.find(x=>String(x).trim()) || "";
-
-    return `
-      <article class="topbook-card">
-        <div class="topbook-ratingline" aria-label="Bewertungen">
-          <div class="topbook-rank" title="Rang ${i+1}">#${i+1}</div>
-          ${r.recommendations ? `
-            <div class="topbook-score">
-              <div class="topbook-score-icon">⭐</div>
-              <div><strong>${r.recommendations}</strong><span>Empfehlungen</span></div>
-            </div>` : ""}
-          ${r.blinddates ? `
-            <div class="topbook-score match">
-              <div class="topbook-score-icon">💚</div>
-              <div><strong>${r.matches}/${r.blinddates}</strong><span>Blinddate-Matches</span></div>
-            </div>` : ""}
-        </div>
-        <div class="topbook-main">
-          <h3>${escapeHtml(title)}</h3>
-          ${author ? `<div class="topbook-author">${escapeHtml(author)}</div>` : ""}
-          ${traitText ? `<div class="topbook-stats"><span class="topbook-pill">${traitText}</span></div>` : ""}
-          ${comment ? `<div class="topbook-comment">„${escapeHtml(comment)}“</div>` : ""}
+    const title=book?book.title:r.title;
+    const author=book?(book.author || r.author || ""):(r.author || "");
+    const category=book?(book.category || r.category || ""):(r.category || "");
+    const shelf=category?shelfSignHTML(category):"";
+    const value=TOPBOOKS_VIEW==="month"?(r.months[TOPBOOKS_MONTH] || 0):r.recommendations;
+    // Keine aus Blinddate-Daten stammenden Texte anzeigen.
+    const traits=r.hasMixedSources?[]:r.traits;
+    const comments=r.hasMixedSources?[]:r.comments;
+    const traitText=traits.length?traits.slice(0,4).map(escapeHtml).join(" · "):"";
+    const comment=comments.find(x=>String(x).trim()) || "";
+    const detailHTML=`
+        <div class="topbook-details-content">
+          ${TOPBOOKS_VIEW==="month" ? `<div class="topbook-detail-note">Insgesamt ${r.recommendations} ${r.recommendations===1?"Empfehlung":"Empfehlungen"} (alle Monate)</div>` : ""}
+          ${traitText?`<div class="topbook-stats"><span class="topbook-pill">${traitText}</span></div>`:""}
+          ${comment?`<div class="topbook-comment">„${escapeHtml(comment)}“</div>`:""}
           ${shelf}
+          ${!shelf && !traitText && !comment ? '<div class="topbook-detail-note">Noch keine weiteren Buchdetails verfügbar.</div>':''}
+        </div>`;
+    return `<article class="topbook-card">
+        <div class="topbook-compact">
+          <div class="topbook-rank" title="Platz ${i+1}">#${i+1}</div>
+          <div class="topbook-compact-title">
+            <h3>${escapeHtml(title)}</h3>
+            ${author?`<div class="topbook-author">${escapeHtml(author)}</div>`:""}
+          </div>
+          <span class="topbook-count">⭐ ${value} ${value===1?"Empfehlung":"Empfehlungen"}</span>
         </div>
+        <details class="topbook-details"><summary>Details anzeigen</summary>${detailHTML}</details>
       </article>`;
   }).join("");
+
+  if(rows.length>TOPBOOKS_PAGE_SIZE){
+    more.innerHTML=TOPBOOKS_SHOW_ALL
+      ? '<button class="topbooks-more-btn" type="button" id="topBooksShowLess">Weniger anzeigen</button>'
+      : `<button class="topbooks-more-btn" type="button" id="topBooksShowAll">Alle anzeigen (${rows.length} Bücher)</button>`;
+    const btn=more.querySelector("button");
+    btn.addEventListener("click",()=>{
+      TOPBOOKS_SHOW_ALL=!TOPBOOKS_SHOW_ALL;
+      renderTopBooks();
+    });
+  }
 }
 
 document.querySelectorAll(".topbooks-age-btn").forEach(btn=>{
   btn.addEventListener("click",()=>{
     btn.classList.toggle("active");
-    renderTopBooks(getSelectedTopbookAges());
+    TOPBOOKS_SHOW_ALL=false;
+    renderTopBooks();
   });
 });
 
-loadTopBooksData();
+document.querySelectorAll(".topbooks-tab").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    TOPBOOKS_VIEW=btn.dataset.topView;
+    TOPBOOKS_SHOW_ALL=false;
+    renderTopBooks();
+  });
+});
+$("#topBooksMonth").addEventListener("change",e=>{
+  TOPBOOKS_MONTH=e.target.value;
+  TOPBOOKS_SHOW_ALL=false;
+  renderTopBooks();
+});
+
+loadTopBooksData().then(updateTopbookMonths);
 
 function advisorReset(){
   $("#advisorFree").value = "";
@@ -8623,6 +8703,7 @@ function setMainMode(next){
   topBooksMode.classList.toggle("active", next==="topbooks");
 
   if(next==="bookmatch"){
+    clearBmSessionResults(); // Neue Spielrunde; „Neues Date“ innerhalb derselben Runde sammelt weiter.
     bmReset();
     return;
   }
@@ -8684,7 +8765,7 @@ function setMainMode(next){
     return;
   }
   if(next==="topbooks"){
-    loadTopBooksData().then(()=>renderTopBooks(getSelectedTopbookAges()));
+    loadTopBooksData().then(()=>{ updateTopbookMonths(); renderTopBooks(getSelectedTopbookAges()); });
     return;
   }
   setMode();
