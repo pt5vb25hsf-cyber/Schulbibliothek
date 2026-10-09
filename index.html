@@ -1636,28 +1636,30 @@ body.speedteacher-mode .results-shell{display:none!important}
 @media(prefers-reduced-motion:reduce){.dsc-route:hover{transform:none}.dsc-confetti{display:none}.dsc-wheel-rotor{will-change:auto}}
 
 /* Gewählte Reiterfarben aus der Farbauswahl. */
-:root{--accent:#a2161b;--accent-dark:#6d0f12;--accent-soft:#fae7e8;--accent-ink:#fff}
-body.recommend-mode{--accent:#12a9e8;--accent-dark:#086084;--accent-soft:#e6f6fc;--accent-ink:#17202a}
+:root{--accent:#99cbe9;--accent-dark:#275b80;--accent-soft:#edf7fd;--accent-ink:#17202a}
+body.recommend-mode{--accent:#f7b924;--accent-dark:#805c10;--accent-soft:#fff7df;--accent-ink:#17202a}
 body.wish-mode{--accent:#f07419;--accent-dark:#9f430a;--accent-soft:#fff0e6;--accent-ink:#17202a}
 body.advisor-mode{--accent:#2563eb;--accent-dark:#172554;--accent-soft:#edf3ff;--accent-ink:#fff}
 body.topbooks-mode{--accent:#9d1794;--accent-dark:#660f60;--accent-soft:#f9e8f7;--accent-ink:#fff}
 body.fun-mode{--accent:#7c3aed;--accent-dark:#4c1d95;--accent-soft:#f3ecfd;--accent-ink:#fff}
-header{background:#a2161b;color:#fff}
-#search:focus{box-shadow:0 0 0 4px rgba(162,22,27,.12)}
-body.recommend-mode header{background:#12a9e8;color:#17202a}
-body.wish-mode header{background:#f07419;color:#17202a}
-body.topbooks-mode header{background:#9d1794;color:#fff}
-#searchMode{--tab-accent:#a2161b;--tab-ink:#fff}
-#recommendMode{--tab-accent:#12a9e8;--tab-ink:#17202a}
-#wishMode{--tab-accent:#f07419;--tab-ink:#17202a}
-#advisorMode{--tab-accent:#2563eb;--tab-ink:#fff}
-#topBooksMode{--tab-accent:#9d1794;--tab-ink:#fff}
-#funMode{--tab-accent:#7c3aed;--tab-ink:#fff}
-.modebar .modebtn.active{background:var(--tab-accent);border-color:var(--tab-accent);color:var(--tab-ink)}
-.rec-input:focus{border-color:#12a9e8;box-shadow:0 0 0 4px rgba(18,169,232,.15)}
-.rec-suggestion:hover,.rec-selected{background:#e6f6fc}
-.rec-selected{border-color:#abe1f7}
-.rec-chip.selected,.rec-submit{background:#12a9e8;border-color:#12a9e8;color:#17202a}
+header{background:linear-gradient(135deg,#599ac6,#99cbe9);color:#17202a}
+#search:focus{box-shadow:0 0 0 4px rgba(153,203,233,.2)}
+body.recommend-mode header{background:linear-gradient(135deg,#c99112,#f7b924);color:#17202a}
+body.wish-mode header{background:linear-gradient(135deg,#e66a12,#f07419);color:#17202a}
+body.advisor-mode header{background:linear-gradient(135deg,#172554,#2563eb);color:#fff}
+body.topbooks-mode header{background:linear-gradient(135deg,#5b1256,#9d1794);color:#fff}
+body.fun-mode header{background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff}
+#searchMode{--tab-accent:#99cbe9;--tab-ink:#17202a;--tab-gradient:linear-gradient(135deg,#599ac6,#99cbe9)}
+#recommendMode{--tab-accent:#f7b924;--tab-ink:#17202a;--tab-gradient:linear-gradient(135deg,#c99112,#f7b924)}
+#wishMode{--tab-accent:#f07419;--tab-ink:#17202a;--tab-gradient:linear-gradient(135deg,#e66a12,#f07419)}
+#advisorMode{--tab-accent:#2563eb;--tab-ink:#fff;--tab-gradient:linear-gradient(135deg,#172554,#2563eb)}
+#topBooksMode{--tab-accent:#9d1794;--tab-ink:#fff;--tab-gradient:linear-gradient(135deg,#5b1256,#9d1794)}
+#funMode{--tab-accent:#7c3aed;--tab-ink:#fff;--tab-gradient:linear-gradient(135deg,#4c1d95,#7c3aed)}
+.modebar .modebtn.active{background:var(--tab-gradient);border-color:var(--tab-accent);color:var(--tab-ink)}
+.rec-input:focus{border-color:#f7b924;box-shadow:0 0 0 4px rgba(247,185,36,.15)}
+.rec-suggestion:hover,.rec-selected{background:#fff7df}
+.rec-selected{border-color:#f4dda2}
+.rec-chip.selected,.rec-submit{background:#f7b924;border-color:#f7b924;color:#17202a}
 .wish-input:focus,.wish-textarea:focus{border-color:#f07419;box-shadow:0 0 0 4px rgba(240,116,25,.15)}
 .wish-submit{background:#f07419;color:#17202a}
 .topbooks-hero,.topbooks-month-controls{background:#fcf5fb;border-color:#ebc9e8}
