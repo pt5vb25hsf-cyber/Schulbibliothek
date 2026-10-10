@@ -1174,11 +1174,6 @@ body.forms-overlay-open{
   cursor:pointer;
   white-space:nowrap;
 }
-.forms-overlay-footer{
-  justify-content:flex-end;
-  border-top:1px solid #dbe2ea;
-  border-bottom:0;
-}
 .forms-overlay-frame{
   width:100%;
   flex:1 1 auto;
@@ -6455,9 +6450,6 @@ setTimeout(addTeacherSkip,0);
             title="Microsoft Forms"
             src="about:blank"
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
-    <div class="forms-overlay-bar forms-overlay-footer">
-      <button id="formsOverlayDone" type="button">← Zurück zur Bibliothek</button>
-    </div>
   </div>
 </div>
 
@@ -9105,7 +9097,6 @@ function closeFormsOverlay(){
 }
 
 $("#formsOverlayClose")?.addEventListener("click", closeFormsOverlay);
-$("#formsOverlayDone")?.addEventListener("click", closeFormsOverlay);
 document.addEventListener("keydown",(event)=>{
   const overlay = $("#formsOverlay");
   if(event.key === "Escape" && overlay && !overlay.classList.contains("bm-hidden")){
