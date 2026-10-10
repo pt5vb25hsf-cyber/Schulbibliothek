@@ -1174,6 +1174,11 @@ body.forms-overlay-open{
   cursor:pointer;
   white-space:nowrap;
 }
+.forms-overlay-footer{
+  justify-content:flex-end;
+  border-top:1px solid #dbe2ea;
+  border-bottom:0;
+}
 .forms-overlay-frame{
   width:100%;
   flex:1 1 auto;
@@ -1193,6 +1198,7 @@ body.forms-overlay-open{
     box-shadow:none;
   }
   .forms-overlay-bar{
+    flex-wrap:wrap;
     min-height:58px;
     padding:8px 10px 8px 12px;
   }
@@ -1635,43 +1641,105 @@ body.speedteacher-mode .results-shell{display:none!important}
 @media(max-width:640px){.dsc-choice-grid{grid-template-columns:1fr}.dsc-hero,.dsc-panel{padding:18px 15px}.dsc-route{padding:22px}.dsc-options{grid-template-columns:1fr}.dsc-book-head,.dsc-book-body{padding:16px}.dsc-wheel-holder{max-width:350px}.dsc-actions button{flex:1 1 auto}.dsc-wheel-hub{width:58px;height:58px;font-size:1.4rem}.dsc-wheel-rotor{border-width:5px}.dsc-sector-title{display:none}.dsc-sector-number{font-size:26px}}
 @media(prefers-reduced-motion:reduce){.dsc-route:hover{transform:none}.dsc-confetti{display:none}.dsc-wheel-rotor{will-change:auto}}
 
+/* Forms: direkter Link, falls die Einbettung nicht lädt. */
+.forms-overlay-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.forms-overlay-actions a{display:inline-block;border:1px solid #cbd5e1;border-radius:12px;padding:10px 13px;background:#fff;color:#17202a;font-weight:750;font-size:.95rem;text-decoration:none}
+.forms-overlay-actions a:hover{background:var(--accent-soft)}
+@media(max-width:700px){.forms-overlay-actions{width:100%}.forms-overlay-actions a{font-size:.86rem}}
+
 /* Gewählte Reiterfarben aus der Farbauswahl. */
 :root{--accent:#99cbe9;--accent-dark:#275b80;--accent-soft:#edf7fd;--accent-ink:#17202a}
 body.recommend-mode{--accent:#f7b924;--accent-dark:#805c10;--accent-soft:#fff7df;--accent-ink:#17202a}
-body.wish-mode{--accent:#f07419;--accent-dark:#9f430a;--accent-soft:#fff0e6;--accent-ink:#17202a}
-body.advisor-mode{--accent:#2563eb;--accent-dark:#172554;--accent-soft:#edf3ff;--accent-ink:#fff}
-body.topbooks-mode{--accent:#9d1794;--accent-dark:#660f60;--accent-soft:#f9e8f7;--accent-ink:#fff}
-body.fun-mode{--accent:#7c3aed;--accent-dark:#4c1d95;--accent-soft:#f3ecfd;--accent-ink:#fff}
+body.wish-mode{--accent:#9c6eec;--accent-dark:#4c1d95;--accent-soft:#f3ecfd;--accent-ink:#000000}
+body.advisor-mode{--accent:#769aeb;--accent-dark:#172554;--accent-soft:#edf3ff;--accent-ink:#000000}
+body.topbooks-mode{--accent:#bb6eb9;--accent-dark:#660f60;--accent-soft:#f9e8f7;--accent-ink:#000000}
+body.fun-mode{--accent:#ee893f;--accent-dark:#9f430a;--accent-soft:#fff0e6;--accent-ink:#17202a}
 header{background:linear-gradient(135deg,#599ac6,#99cbe9);color:#17202a}
 #search:focus{box-shadow:0 0 0 4px rgba(153,203,233,.2)}
 body.recommend-mode header{background:linear-gradient(135deg,#c99112,#f7b924);color:#17202a}
-body.wish-mode header{background:linear-gradient(135deg,#e66a12,#f07419);color:#17202a}
-body.advisor-mode header{background:linear-gradient(135deg,#172554,#2563eb);color:#fff}
-body.topbooks-mode header{background:linear-gradient(135deg,#5b1256,#9d1794);color:#fff}
-body.fun-mode header{background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#fff}
+body.wish-mode header{background:linear-gradient(135deg,#7a5aaf,#9c6eec);color:#000000}
+body.advisor-mode header{background:linear-gradient(135deg,#6e7693,#769aeb);color:#000000}
+body.topbooks-mode header{background:linear-gradient(135deg,#956b95,#bb6eb9);color:#000000}
+body.fun-mode header{background:linear-gradient(135deg,#e68039,#ee893f);color:#17202a}
 #searchMode{--tab-accent:#99cbe9;--tab-ink:#17202a;--tab-gradient:linear-gradient(135deg,#599ac6,#99cbe9)}
 #recommendMode{--tab-accent:#f7b924;--tab-ink:#17202a;--tab-gradient:linear-gradient(135deg,#c99112,#f7b924)}
-#wishMode{--tab-accent:#f07419;--tab-ink:#17202a;--tab-gradient:linear-gradient(135deg,#e66a12,#f07419)}
-#advisorMode{--tab-accent:#2563eb;--tab-ink:#fff;--tab-gradient:linear-gradient(135deg,#172554,#2563eb)}
-#topBooksMode{--tab-accent:#9d1794;--tab-ink:#fff;--tab-gradient:linear-gradient(135deg,#5b1256,#9d1794)}
-#funMode{--tab-accent:#7c3aed;--tab-ink:#fff;--tab-gradient:linear-gradient(135deg,#4c1d95,#7c3aed)}
+#wishMode{--tab-accent:#9c6eec;--tab-ink:#000000;--tab-gradient:linear-gradient(135deg,#7a5aaf,#9c6eec)}
+#advisorMode{--tab-accent:#769aeb;--tab-ink:#000000;--tab-gradient:linear-gradient(135deg,#6e7693,#769aeb)}
+#topBooksMode{--tab-accent:#bb6eb9;--tab-ink:#000000;--tab-gradient:linear-gradient(135deg,#956b95,#bb6eb9)}
+#funMode{--tab-accent:#ee893f;--tab-ink:#17202a;--tab-gradient:linear-gradient(135deg,#e68039,#ee893f)}
 .modebar .modebtn.active{background:var(--tab-gradient);border-color:var(--tab-accent);color:var(--tab-ink)}
 .rec-input:focus{border-color:#f7b924;box-shadow:0 0 0 4px rgba(247,185,36,.15)}
 .rec-suggestion:hover,.rec-selected{background:#fff7df}
 .rec-selected{border-color:#f4dda2}
 .rec-chip.selected,.rec-submit{background:#f7b924;border-color:#f7b924;color:#17202a}
-.wish-input:focus,.wish-textarea:focus{border-color:#f07419;box-shadow:0 0 0 4px rgba(240,116,25,.15)}
-.wish-submit{background:#f07419;color:#17202a}
+.wish-input:focus,.wish-textarea:focus{border-color:#9c6eec;box-shadow:0 0 0 4px rgba(156,110,236,.15)}
+.wish-submit{background:var(--accent);color:var(--accent-ink)}
 .topbooks-hero,.topbooks-month-controls{background:#fcf5fb;border-color:#ebc9e8}
 .topbooks-age-btn,.topbooks-tab,.topbooks-more-btn{background:#fff9fe;border-color:#ebc9e8}
 .topbooks-tab,.topbooks-more-btn,.topbooks-month-controls label,.topbooks-summary{color:#660f60}
-.topbooks-age-btn.active,.topbooks-tab.active{background:#9d1794;border-color:#9d1794;color:#fff}
-.topbooks-tab:focus-visible,.topbooks-age-btn:focus-visible,.topbooks-more-btn:focus-visible,.topbook-details summary:focus-visible{outline-color:#9d1794}
-.topbooks-more-btn{border-color:#9d1794}
+.topbooks-age-btn.active,.topbooks-tab.active{background:#bb6eb9;border-color:#bb6eb9;color:#000000}
+.topbooks-tab:focus-visible,.topbooks-age-btn:focus-visible,.topbooks-more-btn:focus-visible,.topbook-details summary:focus-visible{outline-color:#bb6eb9}
+.topbooks-more-btn{border-color:#bb6eb9}
 .topbooks-more-btn:hover,.topbook-rank{background:#f9e8f7}
 .topbooks-age-hint,.topbooks-month-note,.topbook-rank,.topbook-details summary{color:#660f60}
 .topbook-score,.topbook-count{background:#fcf5fb;border-color:#ebc9e8;color:#660f60}
 .topbook-score.match{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+
+/* Gewählte Reiterfarben auch auf den zugehörigen Unterseiten. */
+body.bookmatch-mode,body.teacher-mode,body.results-mode,body.speeddating-mode,body.speedteacher-mode{
+  --accent:#ee893f;--accent-dark:#9f430a;--accent-soft:#fff0e6;--accent-ink:#17202a;
+}
+body.bookmatch-mode header,body.teacher-mode header,body.results-mode header,
+body.speeddating-mode header,body.speedteacher-mode header{
+  background:linear-gradient(135deg,#e68039,#ee893f);color:#17202a;
+}
+.bookmatch-shell,.speeddating-shell{--game-border:#efd0b9;--game-text:#17202a;--game-muted:#475569}
+.bm-wrap{background:linear-gradient(180deg,var(--accent-soft),#fff);color:var(--game-text);box-shadow:0 18px 50px rgba(159,67,10,.12)}
+.bm-brand{color:var(--accent-dark)}
+.bm-lead,.bm-author,.bm-task,.bm-note,.sd-volume-note,.sd-summary-finish{color:var(--game-muted)}
+.bm-card,.bm-choice,.bm-chip,.bm-input,.sd-next-card,.sd-summary-stat,.sd-summary-row{
+  background:#fff;color:var(--game-text);border-color:var(--game-border);
+}
+.bm-card{box-shadow:0 12px 28px rgba(159,67,10,.08)}
+.bm-input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(238,137,63,.15)}
+.bookmatch-shell textarea{background:#fff!important;color:var(--game-text)!important;border-color:var(--game-border)!important}
+.bookmatch-shell textarea:focus{outline:2px solid var(--accent);outline-offset:2px}
+.bm-btn:not(.green):not(.red),.sd-main-btn{background:var(--accent);color:var(--accent-ink)}
+.bm-btn.secondary,.sd-back-top,.timer-admin button{background:var(--accent-soft);color:var(--accent-dark);border-color:var(--game-border)}
+.bm-choice:hover,.bm-choice.selected{background:var(--accent-soft);border-color:var(--accent)}
+.bm-error,.bm-inline-error{background:#fff1f2;color:#9f1239;border-color:#fecdd3}
+.bm-chip.selected{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.sd-next-card span,.sd-next-card small,.sd-summary-stat span,.sd-summary-book small{color:var(--game-muted)}
+.sd-next-card strong,.sd-summary-number{color:var(--accent-dark)}
+.sd-summary-book strong,.sd-summary-rating{color:var(--game-text)}
+.sd-end-link,.sd-end-link:hover,.sd-end-link:focus-visible{color:var(--accent-dark)}
+.teacher-shell .sack-no,.speedteacher-shell .sack-no{color:var(--accent-dark)}
+.teacher-shell .save-set,.speedteacher-shell .save-set{background:var(--accent);color:var(--accent-ink)}
+.teacher-shell .clear-set,.speedteacher-shell .clear-set{background:var(--accent-soft);color:var(--accent-dark)}
+.teacher-shell .teacher-settings,.speedteacher-shell .teacher-settings{background:var(--accent-soft);border-color:#efd0b9}
+.teacher-book:focus,.teacher-settings input[type="number"]:focus{outline:2px solid var(--accent);outline-offset:2px}
+.share-set{background:var(--accent)!important;color:var(--accent-ink)!important}
+.bmr-hero{background:var(--accent-soft);color:#17202a}
+.bmr-hero p{color:#475569}
+.bmr-pill{background:#fff;border-color:#efd0b9}
+.fun-choice,.role-btn,.rally-age-btn,.rally-version-btn{border-color:#efd0b9;background:var(--accent-soft);color:#17202a}
+.fun-choice:hover,.role-btn:hover,.rally-age-btn:hover,.rally-version-btn:hover{border-color:var(--accent);background:#ffe4d0}
+.back-fun,.rally-placeholder{color:var(--accent-dark);border-color:#efd0b9}
+.rally-frame-shell,.rally-frame{background:var(--accent-soft);border-color:#efd0b9}
+.blind-rules{background:var(--accent-soft);border-color:#efd0b9}
+.blind-rules h3{color:var(--accent-dark)}
+.blind-rule-step{background:#fff;border-color:#efd0b9}
+.blind-rule-step strong{color:var(--accent-dark)}
+.rec-textarea:focus{outline:2px solid var(--accent);outline-offset:2px}
+.advisor-textarea:focus,.advisor-textinput:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(118,154,235,.15)}
+.advisor-chip.selected,.advisor-find{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dsc-eyebrow,.dsc-route-link,.dsc-back{color:var(--accent-dark)}
+.dsc-route-wheel{background:var(--accent-soft);border-color:#c5d4ef}
+.dsc-option[aria-pressed="true"],.dsc-primary,.dsc-spin{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.dsc-primary:hover,.dsc-spin:hover{background:var(--accent-dark);border-color:var(--accent-dark);color:#fff}
+.dsc-wheel-rotor,.dsc-wheel-hub{border-color:var(--accent-dark)}
+.forms-overlay-bar{background:var(--accent-soft)}
+.forms-overlay-bar button{background:var(--accent);color:var(--accent-ink)}
 
 </style>
 </head>
@@ -1812,7 +1880,7 @@ body.fun-mode header{background:linear-gradient(135deg,#4c1d95,#7c3aed);color:#f
 
         <div class="forms-next-step" role="note" aria-label="Hinweis zum Absenden">
           <span class="arrow" aria-hidden="true">➡️</span>
-          <span>Auf <strong>„Buchwunsch senden“</strong> klicken. Dann öffnet sich Microsoft Forms. Dort ganz nach unten scrollen und auf <strong>„Absenden“</strong> drücken!</span>
+          <span>Auf <strong>„Buchwunsch senden“</strong> klicken. Microsoft Forms öffnet sich hier auf der Bibliotheksseite. Dort auf <strong>„Absenden“</strong> drücken und anschließend auf <strong>„Zurück zur Bibliothek“</strong> tippen.</span>
         </div>
 
         <button id="wishSubmit" class="wish-submit" type="button">Buchwunsch senden →</button>
@@ -2915,6 +2983,7 @@ textarea.field{resize:vertical;min-height:105px;line-height:1.45}
   position:relative !important;
   top:-0.48em !important;
 }
+
 
 &lt;/style&gt;
 &lt;/head&gt;
@@ -4926,6 +4995,7 @@ textarea.field{resize:vertical;min-height:105px;line-height:1.45}
   top:-0.48em !important;
 }
 
+
 &lt;/style&gt;
 &lt;/head&gt;
 &lt;body&gt;
@@ -6115,6 +6185,7 @@ setTimeout(addTeacherSkip,0);
         <div class="sd-summary-list bm-summary-list" id="bmSummaryList"></div>
         <button class="bm-btn secondary" id="bmRestart" type="button">🔄 Neues Date</button>
         <button class="bm-btn green" id="bmFoundMatch" type="button">💚 Ich habe mein Match gefunden, ich lese weiter</button>
+        <button class="bm-btn secondary" id="bmFinish" type="button">Spiel beenden · zurück zu Spiel und Spaß</button>
         <p class="bm-note" role="note" style="text-align:center">🔒 Nach dem Spiel: <strong>Einstellungen → Anzeige &amp; Helligkeit → Automatische Sperre</strong> wieder auf die vorherige Zeit stellen (z. B. 2 Minuten).</p>
       </div>
     </div>
@@ -6374,13 +6445,19 @@ setTimeout(addTeacherSkip,0);
   <div class="forms-overlay-panel">
     <div class="forms-overlay-bar">
       <strong id="formsOverlayTitle">Microsoft Forms</strong>
-      <button id="formsOverlayClose" type="button">← Zurück zur Bibliothek</button>
+      <div class="forms-overlay-actions">
+        <a id="formsOverlayDirect" target="_blank" rel="noopener noreferrer">Formular direkt öffnen ↗</a>
+        <button id="formsOverlayClose" type="button">← Zurück zur Bibliothek</button>
+      </div>
     </div>
     <iframe id="formsOverlayFrame"
             class="forms-overlay-frame"
             title="Microsoft Forms"
             src="about:blank"
             referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <div class="forms-overlay-bar forms-overlay-footer">
+      <button id="formsOverlayDone" type="button">← Zurück zur Bibliothek</button>
+    </div>
   </div>
 </div>
 
@@ -7805,12 +7882,12 @@ function bookCard(b, q){
 function renderStart(){
   const counts = new Map();
   for(const b of BOOKS) counts.set(b.category,(counts.get(b.category)||0)+1);
-  const topCats = [...counts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,18);
+  const allCats = [...counts.entries()].sort((a,b)=>a[0].localeCompare(b[0],"de"));
   stats.innerHTML = `<span class="pill"><strong>${BOOKS.length}</strong> Bücher/Datensätze im Suchbestand</span>
                      <span class="pill"><strong>${counts.size}</strong> Kategorien</span>`;
   content.innerHTML = `<div class="start">
-    <h2>Was möchtest du lesen?</h2>
-    <div class="categories">${topCats.map(([c,n]) =>
+    <h2>Alle Kategorien</h2>
+    <div class="categories">${allCats.map(([c,n]) =>
       `<button class="cat-chip" type="button" data-cat="${escapeHtml(c)}">${escapeHtml(c)} · ${n}</button>`
     ).join("")}</div>
   </div>`;
@@ -8359,6 +8436,7 @@ $("#bmResultsSubmit").addEventListener("click",()=>{
   bmShow("bmStepDone");
 });
 $("#bmRestart").addEventListener("click",bmReset);
+$("#bmFinish").addEventListener("click",()=>setMainMode("fun"));
 $("#bmFoundMatch").addEventListener("click",()=>{
   $("#bmDoneEmoji").textContent = "💚";
   $("#bmDoneTitle").textContent = "Du hast dein Match gefunden!";
@@ -8982,17 +9060,31 @@ function showRecValidation(message, target){
 }
 
 
+let formsReturnFocus = null;
+
 function openFormsOverlay(url, title){
   const overlay = $("#formsOverlay");
   const frame = $("#formsOverlayFrame");
   const heading = $("#formsOverlayTitle");
-  if(!overlay || !frame) return false;
+  const direct = $("#formsOverlayDirect");
+  if(!overlay || !frame || !direct) return false;
+  let embeddedUrl;
+  try{
+    embeddedUrl = new URL(url);
+    embeddedUrl.searchParams.set("embed", "true");
+  }catch(_){ return false; }
 
-  heading.textContent = title || "Microsoft Forms";
-  frame.src = url;
+  if(overlay.classList.contains("bm-hidden")){
+    formsReturnFocus = document.activeElement;
+  }
+  if(heading) heading.textContent = title || "Microsoft Forms";
+  frame.title = title || "Microsoft Forms";
+  direct.href = url;
+  frame.src = embeddedUrl.toString();
   overlay.classList.remove("bm-hidden");
   overlay.setAttribute("aria-hidden","false");
   document.body.classList.add("forms-overlay-open");
+  $("#formsOverlayClose")?.focus();
   return true;
 }
 
@@ -9004,10 +9096,16 @@ function closeFormsOverlay(){
   overlay.classList.add("bm-hidden");
   overlay.setAttribute("aria-hidden","true");
   frame.src = "about:blank";
+  $("#formsOverlayDirect")?.removeAttribute("href");
   document.body.classList.remove("forms-overlay-open");
+  if(formsReturnFocus && typeof formsReturnFocus.focus === "function"){
+    formsReturnFocus.focus({preventScroll:true});
+  }
+  formsReturnFocus = null;
 }
 
 $("#formsOverlayClose")?.addEventListener("click", closeFormsOverlay);
+$("#formsOverlayDone")?.addEventListener("click", closeFormsOverlay);
 document.addEventListener("keydown",(event)=>{
   const overlay = $("#formsOverlay");
   if(event.key === "Escape" && overlay && !overlay.classList.contains("bm-hidden")){
@@ -9061,14 +9159,10 @@ $("#recSubmit").addEventListener("click",()=>{
   const bookLabel = recSelectedBook.title + (recSelectedBook.author ? " — " + recSelectedBook.author : "");
   const formsUrl = buildRecommendationFormsUrl(bookLabel, positives, ages, text, userAge);
 
-  $("#recThanks").textContent = "Deine Angaben sind vorbereitet. Microsoft Forms öffnet sich jetzt innerhalb der Bibliotheksseite.";
-  $("#recThanks").classList.remove("bm-hidden");
-
   // Microsoft Forms bleibt innerhalb der Bibliotheksseite sichtbar.
   // So geht die Bibliotheksseite beim Absenden nicht verloren.
   if(!openFormsOverlay(formsUrl, "Buch empfehlen – Microsoft Forms")){
-    const opened = window.open(formsUrl, "_blank", "noopener");
-    if(!opened) window.location.href = formsUrl;
+    showRecValidation("Das Formular konnte nicht geöffnet werden. Bitte lade die Bibliotheksseite neu und versuche es noch einmal.");
   }
 });
 
@@ -10029,11 +10123,10 @@ $("#wishSubmit").addEventListener("click",()=>{
     return;
   }
 
-  box.textContent = "Dein Buchwunsch ist vorbereitet. Gleich öffnet sich Microsoft Forms. Dort bitte noch auf „Absenden“ drücken!";
-  box.className = "wish-status info";
-
-  const opened = window.open(formsUrl,"_blank","noopener");
-  if(!opened) window.location.href = formsUrl;
+  if(!openFormsOverlay(formsUrl, "Buchwunsch – Microsoft Forms")){
+    box.textContent = "Das Formular konnte nicht geöffnet werden. Bitte lade die Bibliotheksseite neu und versuche es noch einmal.";
+    box.className = "wish-status error";
+  }
 });
 
 function setMainMode(next){
@@ -10075,7 +10168,7 @@ function setMainMode(next){
   if(resultsMode) resultsMode.classList.toggle("active", next==="results");
   recommendMode.classList.toggle("active", next==="recommend");
   wishMode.classList.toggle("active", next==="wish");
-  funMode.classList.toggle("active", ["fun","speeddating","speedteacher"].includes(next));
+  funMode.classList.toggle("active", ["fun","bookmatch","teacher","results","speeddating","speedteacher"].includes(next));
   advisorMode.classList.toggle("active", next==="advisor");
   topBooksMode.classList.toggle("active", next==="topbooks");
 
