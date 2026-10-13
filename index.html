@@ -8632,7 +8632,7 @@ function applySharedGameSetup(){
 // ---------- BOOKMATCH Speeddating ----------
 const SD_STORAGE_KEY = "schulbibliothek_speeddating_books_v1";
 const SD_SESSION_KEY = "schulbibliothek_speeddating_session_v1";
-const SD_END_CODE = "123";
+// Für Speeddating und Blinddate gilt dasselbe Lehrkräfte-Passwort (BM_TEACHER_PASSWORD).
 let sdAssignments = loadSdAssignments();
 let sdResults = [];
 let sdCurrentNumber = null;
@@ -8930,12 +8930,7 @@ $("#sdNextBtn").addEventListener("click",()=>{
 });
 
 function requestSpeedEnd(){
-  const entered = window.prompt("Spiel beenden? Bitte Code eingeben:");
-  if(entered === null) return false;
-  if(entered !== SD_END_CODE){
-    window.alert("Code nicht korrekt. Das Spiel läuft weiter.");
-    return false;
-  }
+  if(!requireTeacherPassword("Spiel beenden? Bitte Lehrkräfte-Passwort eingeben:")) return false;
   if(sdInterval){
     clearInterval(sdInterval);
     sdInterval = null;
@@ -10180,11 +10175,7 @@ $("#wishSubmit").addEventListener("click",()=>{
 
 function setMainMode(next){
   if(sdTimerLocked && next !== "speeddating"){
-    const entered = window.prompt("Das Speeddating läuft noch. Zum Verlassen bitte Code eingeben:");
-    if(entered === null || entered !== SD_END_CODE){
-      if(entered !== null) window.alert("Code nicht korrekt. Das Spiel läuft weiter.");
-      return;
-    }
+    if(!requireTeacherPassword("Das Speeddating läuft noch. Zum Verlassen Lehrkräfte-Passwort eingeben:")) return;
     if(sdInterval){ clearInterval(sdInterval); sdInterval=null; }
     sdTimerEndsAt = null;
     sdTimerLocked = false;
