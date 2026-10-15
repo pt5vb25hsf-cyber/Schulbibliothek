@@ -9386,6 +9386,12 @@ let TOPBOOKS_SHOW_ALL = false;
 // Der aktuelle Kalendermonat ist der Ausgangspunkt, nicht ein zufällig bewerteter Monat.
 let TOPBOOKS_MONTH = new Date().toLocaleDateString("sv-SE", {year:"numeric",month:"2-digit"}).slice(0,7);
 
+function decodeTopbookComment(value){
+  // Form submissions encode word separators as +; decode before HTML escaping.
+  const text=String(value ?? "").replace(/(?<!\+)\+(?!\+)/g," ");
+  try{return decodeURIComponent(text);}catch{return text;}
+}
+
 function normalizeTopbookRows(age){
   const data = TOPBOOKS_DATA || {};
   const rows = Array.isArray(data[age]) ? data[age] : [];
@@ -9530,7 +9536,7 @@ function renderTopBooks(ages=getSelectedTopbookAges()){
     const traits=r.hasMixedSources?[]:r.traits;
     const comments=r.hasMixedSources?[]:r.comments;
     const traitText=traits.length?traits.slice(0,4).map(escapeHtml).join(" · "):"";
-    const comment=comments.find(x=>String(x).trim()) || "";
+    const comment=decodeTopbookComment(comments.find(x=>String(x).trim()) || "");
     const detailHTML=`
         <div class="topbook-details-content">
           ${TOPBOOKS_VIEW==="month" ? `<div class="topbook-detail-note">Insgesamt ${r.recommendations} ${r.recommendations===1?"Empfehlung":"Empfehlungen"} (alle Monate)</div>` : ""}
