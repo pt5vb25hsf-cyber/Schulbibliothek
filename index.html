@@ -1968,7 +1968,7 @@ body.speeddating-mode header,body.speedteacher-mode header{
                 </div>
                 <div class="blind-rule-step">
                   <strong>💌 2. Danach starten die Schüler*innen</strong>
-                  <p>Scanne zuerst den QR-Code der Lehrkraft. Such dir anschließend eines der vorbereiteten Säckchen aus – <b>noch nicht spicken!</b> Öffne <b>„Schüler*in“</b>, gib deine Säckchennummer ein und starte dein Buch-Date.</p>
+                  <p>Scanne den QR-Code der Lehrkraft: Dein Blind Date öffnet sich sofort. Such dir eines der vorbereiteten Säckchen aus – <b>noch nicht spicken!</b> Gib deine Säckchennummer ein und starte dein Buch-Date.</p>
                 </div>
                 <div class="blind-rule-step">
                   <strong>💜 Hat es gefunkt?</strong>
@@ -2009,7 +2009,7 @@ body.speeddating-mode header,body.speedteacher-mode header{
                 </div>
                 <div class="blind-rule-step">
                   <strong>⏱️ 2. Danach starten die Schüler*innen</strong>
-                  <p>Scanne zuerst den QR-Code der Lehrkraft. Nimm dann das Buch mit deiner Nummer, öffne <b>„Schüler*in“</b> und gib die Nummer ein. Jetzt hast du genau <b>eine Minute</b> für dein Buch-Date – bis es klingelt. 🔔</p>
+                  <p>Scanne den QR-Code der Lehrkraft: Das Speeddating öffnet sich sofort. Nimm das Buch mit deiner Nummer und gib die Nummer ein. Jetzt hast du genau <b>eine Minute</b> für dein Buch-Date – bis es klingelt. 🔔</p>
                 </div>
                 <div class="blind-rule-step">
                   <strong>💜 Hat es gefunkt?</strong>
@@ -6312,7 +6312,7 @@ setTimeout(addTeacherSkip,0);
           <input id="blindShareLink" class="share-link-input" readonly aria-label="Blinddate-Übernahmelink">
           <button id="copyBlindShareLink" type="button">Link kopieren</button>
         </div>
-        <p class="share-small">Der QR-Code öffnet immer die veröffentlichte Bibliotheksseite auf GitHub Pages und überträgt dort die vorbereiteten Buchnummern.</p>
+        <p class="share-small">Der QR-Code enthält die vorbereiteten Bücher und führt direkt zur Nummerneingabe im jeweiligen Spiel. Wichtig: Diese Version als index.html auf GitHub Pages veröffentlichen und danach den QR-Code neu erzeugen.</p>
       </div>
     </div>
   </section>
@@ -6411,7 +6411,7 @@ setTimeout(addTeacherSkip,0);
           <input id="speedShareLink" class="share-link-input" readonly aria-label="Speeddating-Übernahmelink">
           <button id="copySpeedShareLink" type="button">Link kopieren</button>
         </div>
-        <p class="share-small">Der QR-Code öffnet immer die veröffentlichte Bibliotheksseite auf GitHub Pages und überträgt dort die vorbereiteten Buchnummern.</p>
+        <p class="share-small">Der QR-Code enthält die vorbereiteten Bücher und führt direkt zur Nummerneingabe im jeweiligen Spiel. Wichtig: Diese Version als index.html auf GitHub Pages veröffentlichen und danach den QR-Code neu erzeugen.</p>
       </div>
     </div>
   </section>
@@ -8584,7 +8584,12 @@ function makeGameSetupLink(type, assignments){
   const u = new URL(currentBaseUrl());
   const payload = {v:1,type,assignments:clean};
   if(type === "blinddate") payload.minutes = bmSettings.minutes;
+  // QR-Code enthaelt Spielzuordnung UND direktes Einstiegsziel.
+  // Ein separater start-Parameter ermoeglicht die direkte Spielansicht
+  // auch dann, wenn jemand die Adresse spaeter ohne Spielzuordnung oeffnet.
   u.searchParams.set("spiel", encodeGameSetup(payload));
+  u.searchParams.set("start", type);
+  u.hash = type;
   return u.toString();
 }
 function renderQrInto(host, link){
@@ -8631,10 +8636,21 @@ async function copyShareLink(inputSelector, statusSelector){
   }
   status.textContent = "Übernahmelink kopiert.";
 }
+function directGameModeFromUrl(u){
+  const hint = (u.searchParams.get("start") || u.hash.slice(1) || "").trim().toLowerCase();
+  if(["blinddate", "blind-date", "bookmatch"].includes(hint)) return "bookmatch";
+  if(["speeddating", "speed-dating"].includes(hint)) return "speeddating";
+  return null;
+}
 function applySharedGameSetup(){
   const u = new URL(window.location.href);
   const raw = u.searchParams.get("spiel");
-  if(!raw) return;
+  // Auch reine Deep-Links ohne Zuordnungsdaten koennen das Spiel oeffnen.
+  if(!raw){
+    const requestedMode = directGameModeFromUrl(u);
+    if(requestedMode) setMainMode(requestedMode);
+    return;
+  }
 
   const payload = decodeGameSetup(raw);
   const notice = $("#gameImportNotice");
@@ -8661,18 +8677,21 @@ function applySharedGameSetup(){
       saveBmSettings();
     }
     const count = Object.keys(cleaned).length;
-    notice.textContent = `✅ Blinddate vorbereitet! Jetzt „Spiel und Spaß“ → „Blinddate“ → „Schüler*in“ öffnen.`;
+    notice.textContent = `✅ Blind Date bereit! Gib jetzt deine Säckchennummer ein und starte dein Buch-Date.`;
   }else{
     sdAssignments = cleaned;
     saveSdAssignments();
     const count = Object.keys(cleaned).length;
-    notice.textContent = `✅ Speeddating vorbereitet! ${count} Buchnummer${count===1?" wurde":"n wurden"} auf diesem iPad übernommen. Jetzt „Spiel und Spaß“ → „Speeddating“ → „Schüler*in“ öffnen.`;
+    notice.textContent = `✅ Speeddating bereit! ${count} Buchnummer${count===1?" wurde":"n wurden"} übertragen. Gib jetzt deine Buchnummer ein und starte dein Date.`;
   }
 
   notice.classList.remove("bm-hidden");
 
-  // Den langen Übernahmeparameter danach aus der Adresszeile entfernen.
-  history.replaceState({}, document.title, currentBaseUrl());
+  // Direkt zum Schueler-Spiel. Der Timer startet erst nach Nummerneingabe.
+  // Den ?spiel-Parameter absichtlich NICHT entfernen: So funktionieren
+  // auch Browser-Neuladen oder ein zurueckkehrender QR-Code zuverlässig.
+  setMainMode(payload.type === "blinddate" ? "bookmatch" : "speeddating");
+  window.scrollTo(0, 0);
 }
 
 // ---------- BOOKMATCH Speeddating ----------
