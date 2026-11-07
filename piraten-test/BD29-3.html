@@ -945,7 +945,22 @@ header .bd-controls button:focus-visible{outline:3px solid white;outline-offset:
 #accessDialog h2,#accessDialog p{margin:0}
 #accessPassword{font:inherit;padding:10px;border:1px solid #746487;border-radius:8px;width:100%}
 #accessError{color:#962440}
-</style></head><body class="blinddate-start" data-stage="start">
+</style>
+<style id="tablet-rating-label-size">
+@media (min-width:700px) and (max-width:980px) and (pointer:coarse) {
+  #play .tablet-action span {
+    font-size:calc(clamp(.52rem,1.3vw,.7rem) + 2pt);
+    overflow-wrap:normal;
+  }
+}
+@media (min-width:981px) and (max-width:1400px) and (pointer:coarse) {
+  #play .tablet-action span {
+    font-size:calc(clamp(.59rem,.8vw,.77rem) + 2.5pt);
+    overflow-wrap:normal;
+  }
+}
+</style>
+</head><body class="blinddate-start" data-stage="start">
 <header><div class="top"><div class="logo">Blinddate <span>mit einem Buch</span></div><div class="bd-controls"><nav class="nav" aria-label="Für Spielende"><button data-view="play" class="active">💗 Spiel</button></nav><div class="bd-staff"><button type="button" data-view="teacher">🔒 Spielleiter*in</button></div></div></div></header>
 <dialog id="accessDialog" aria-labelledby="accessTitle">
   <form id="accessForm">
