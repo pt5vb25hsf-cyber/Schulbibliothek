@@ -1000,8 +1000,9 @@ header .bd-controls button:focus-visible{outline:3px solid white;outline-offset:
 #flowDialog p{margin:0 0 18px}
 #flowActions{display:grid;gap:10px}
 #flowActions button{white-space:normal;min-height:44px}
-#play .round-footer{display:flex;justify-content:flex-end;flex:0 0 auto;padding-top:6px}
-#play #endDate{font-size:.72rem;padding:5px 9px;min-height:30px;white-space:normal;margin:0;width:auto;max-width:100%}
+#play .round-footer{display:flex;justify-content:flex-end;position:static;margin-top:32px;padding:8px 0 16px}
+#play #endDate{font-size:.75rem!important;font-weight:400!important;padding:10px 8px!important;min-height:44px;white-space:normal;margin:0;width:auto;max-width:100%;background:transparent!important;border:0!important;box-shadow:none!important;color:var(--bd-muted)!important;text-decoration:underline;text-underline-offset:3px}
+#play #endDate:focus-visible{outline:2px solid currentColor;outline-offset:-2px}
 #play .book-overview{margin:12px 0}
 #play .book-overview p{font-size:.9rem;margin:5px 0;overflow-wrap:anywhere}
 #results>.row{padding:12px 0;flex-wrap:wrap}
@@ -1107,7 +1108,7 @@ header .bd-controls button:focus-visible{outline:3px solid white;outline-offset:
 <div id="saveStep" class="panel hidden"><h2>Fast geschafft!</h2><p>Speichere deine Bewertung und schau dir anschließend die Ergebnisse deiner Speeddates an.</p><button class="primary wide" id="saveBtn">Speeddate speichern →</button></div>
 <div id="doneStep" class="panel hidden center"><h2 id="doneTitle">Danke für dein Date!</h2><p class="muted" id="doneText">Dein Date wurde gespeichert.</p><h3 style="text-align:left">📊 Deine Speeddate-Ergebnisse</h3><div class="summary" id="summary"></div><div id="sessionList"></div><button class="primary wide" id="againBtn">Nächstes Buch</button></div>
 <div class="tablet-extras hidden" id="tabletExtras"></div>
-</div></div><div class="round-footer"><button type="button" class="secondary" id="endDate">Spiel vorzeitig beenden</button></div><div class="tablet-bottom-bar" aria-hidden="true"></div></div></div>
+<div class="round-footer"><button type="button" class="secondary" id="endDate">Spiel vorzeitig beenden</button></div></div></div><div class="tablet-bottom-bar" aria-hidden="true"></div></div></div>
 </section>
 <section id="teacher" class="screen teacher-layout"><div class="intro"><span class="eyebrow">Spielleiter*in</span><h1>Speeddate vorbereiten</h1><p>Nummeriere die Bücher für das Speeddating mit Klebezetteln. Trage unten den Buchtitel und den Namen der Autorin oder des Autors ein. Über „Buch suchen“ kannst du das Buch auch online finden und die Angaben automatisch übernehmen.</p></div><div class="panel teacher-width"><p class="note">Jedes Speeddate dauert eine Minute. Die Zuordnungen und Ergebnisse werden lokal auf diesem Gerät gespeichert. Für die Schüler*innen wird weiter unten ein QR-Code erzeugt.</p></div><div id="teacherGrid"></div><div class="teacher-width" id="moreSacks"><button type="button" class="secondary" id="addSack" aria-controls="teacherGrid">Weitere Buchnummer anzeigen</button></div><div class="panel teacher-width"><div class="row"><button class="primary" id="saveAssignments">Zuordnungen speichern</button><button class="secondary" id="clearAssignments">Alle Zuordnungen löschen</button></div><p class="status" id="teacherStatus" role="status"></p><hr style="border:0;border-top:1px solid #f0dcea;margin:24px 0"><h2>📲 Spiel für Schüler*innen bereitstellen</h2>
 <p class="muted">Die Buchzuordnungen werden per QR-Code an die Geräte der Schüler*innen weitergegeben.</p>
