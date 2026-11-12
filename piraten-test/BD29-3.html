@@ -1072,6 +1072,59 @@ body.match-finale #bookPortrait{visibility:hidden}
 #teacher .catalog-search .note{margin:8px 0}
 @media(max-width:600px){#teacher .catalog-controls{align-items:stretch;flex-direction:column}}
 </style>
+<style id="requested-layout-adjustments">
+/* Gleiche linke und rechte Kante für alle drei Start-Steuerelemente. */
+#play #start #testBell,
+#play #start #sack,
+#play #start #startBtn{
+  display:block;box-sizing:border-box;width:100%;min-width:0;
+  max-width:100%!important;margin-left:0!important;margin-right:0!important;
+}
+#play #start #testBellStatus{display:block}
+</style>
+<style id="mobile-button-typography">
+@media(max-width:699px){
+  #play #tabletActions .tablet-action{
+    flex-direction:column;gap:3px;padding:5px 2px;min-height:48px;
+  }
+  #play #tabletActions .tablet-action span{
+    font-size:clamp(.78rem,3.2vw,.95rem);line-height:1.15;
+    letter-spacing:0;overflow-wrap:normal;word-break:normal;white-space:nowrap;
+  }
+  #play #start #testBell{
+    font-size:.65rem;line-height:1.2;padding:4px 7px;min-height:0;
+    min-width:0;width:auto;max-width:100%;border-radius:5px;
+  }
+}
+</style>
+<style id="mobile-heading-size">
+@media(max-width:699px){
+  #play .tablet-toolbar strong{
+    display:block;flex:1 1 100%;width:100%;max-width:100%;
+    font-size:clamp(1.2rem,4.8vw,1.7rem);line-height:1.08;letter-spacing:0;
+  }
+}
+</style>
+
+<style id="sound-hint-button-style">
+#play #start .sound-hint{
+  text-align:left!important;margin-bottom:4px;line-height:1.4;
+}
+#play #start #testBell{
+  display:block;width:auto;min-width:0;max-width:100%!important;
+  margin:0 0 12px auto!important;padding:4px 0!important;min-height:0;
+  background:transparent!important;border:0!important;border-radius:0;
+  box-shadow:none!important;color:var(--bd-subtext)!important;
+  font-size:.85rem;font-weight:500;line-height:1.4;text-align:right;
+  text-decoration:underline;text-underline-offset:3px;
+}
+#play #start #testBell:hover{transform:none;text-decoration-thickness:2px}
+#play #start #testBellStatus{display:block;text-align:left;font-size:.8rem}
+@media(max-width:699px){
+  #play #start .sound-hint{font-size:.85rem}
+  #play #start #testBell{font-size:.75rem}
+}
+</style>
 </head><body class="blinddate-start" data-stage="start">
 <header><div class="top"><div class="logo">Blinddate <span>mit einem Buch</span></div><div class="bd-controls"><nav class="nav" aria-label="Für Spielende"><button data-view="play" class="active">💗 Spiel</button></nav><div class="bd-staff"><button type="button" data-view="teacher">🔒 Spielleiter*in</button></div></div></div></header>
 <dialog id="accessDialog" aria-labelledby="accessTitle">
@@ -1102,7 +1155,7 @@ body.match-finale #bookPortrait{visibility:hidden}
 <div class="profile-info"><span class="mini-tag" id="counter">DEIN BUCH-DATE</span><h3 id="profileBookName">Ein Buch wartet auf dich</h3><p id="profileTitle" class="hidden"></p><p class="hidden" id="profileAuthor">Ist das euer Match?</p></div></div>
 <div class="tablet-actions" id="tabletActions"><button class="tablet-action tablet-no" id="left" aria-label="Kein Match" disabled>✕ <span>Kein Match</span></button><button class="tablet-action tablet-yes" id="right" aria-label="Match" disabled>♥ <span>Match</span></button><button class="tablet-action tablet-maybe" data-rating="maybe" disabled>★ <span>Vielleicht</span></button></div>
 </div>
-<div class="tablet-content"><div id="start" class="panel"><h2 class="center">Welches Buch-Date hast du?</h2><p class="muted center">Gib die Nummer auf deinem Büchersäckchen ein.</p><p class="muted center">🔔 Stelle die Lautstärke an deinem Handy oder Tablet auf laut. Wenn die Zeit vorbei ist, klingelt es.</p><button id="testBell" type="button" class="secondary">🔔 Klingeln testen</button><span id="testBellStatus" role="status"></span><input class="field number" id="sack" type="number" min="1" max="16" inputmode="numeric" aria-label="Nummer des Säckchens" placeholder="♡"><button class="primary wide" id="startBtn">Mein Blinddate öffnen →</button><div id="startError" class="error hidden" role="alert"></div></div>
+<div class="tablet-content"><div id="start" class="panel"><h2 class="center">Welches Buch-Date hast du?</h2><p class="muted center">Gib die Nummer auf deinem Büchersäckchen ein.</p><p class="muted center sound-hint">🔔 Stelle die Lautstärke an deinem Handy oder Tablet auf laut. Wenn die Zeit vorbei ist, klingelt es.</p><button id="testBell" type="button" class="secondary">🔔 Klingeln testen</button><span id="testBellStatus" role="status"></span><input class="field number" id="sack" type="number" min="1" max="16" inputmode="numeric" aria-label="Nummer des Säckchens" placeholder="♡"><button class="primary wide" id="startBtn">Mein Blinddate öffnen →</button><div id="startError" class="error hidden" role="alert"></div></div>
 <audio id="testAudio" preload="auto"></audio><audio id="dateAlarm" preload="auto"></audio><div id="timeStep" class="panel hidden center"><h2>Dein Blinddate läuft <span class="pink-heart" aria-hidden="true">♥</span></h2><p>Schau dir das Buch an, lies ein bisschen und lerne es kennen. Wird es die große Liebe – oder doch kein Match?</p><div class="timer" id="timer">10:00</div><div class="date-progress"><div id="progress"></div></div><p id="audioNotice" class="note" role="status"></p><div class="timer-admin"><button class="secondary" id="skip">🔐 Timer überspringen (Spielleiter*in)</button></div></div>
 <div id="swipeStep" class="panel hidden"><h2>Und, hat es gefunkt?</h2><p>Jetzt entscheidest du.</p><p class="muted">Entscheide dich: Match, Vielleicht oder Kein Match.</p></div>
 <div id="followStep" class="panel hidden"><h2 id="followTitle">Was hat dich überzeugt?</h2><p class="muted" id="followHint">Wähle eine passende Antwort.</p><div id="reasonChoices" class="choice-grid"></div><label for="reasonFree" class="muted smalltext">Optional: Erzähle kurz mehr</label><textarea id="reasonFree" class="field" rows="3" placeholder="Deine Gedanken …"></textarea><div class="error hidden" id="followError" role="alert"></div><button class="primary wide" id="followNext">Weiter →</button></div>
