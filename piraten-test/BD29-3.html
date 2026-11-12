@@ -600,6 +600,63 @@ html,body{width:100%;max-width:100%;overflow-x:hidden}
   #play .profile-info .mini-tag{display:block;text-align:left!important}
   #play .profile-info h3,#play .profile-info p{text-align:left!important}
 }
+
+/* Gesicht: gemeinsame Bezugswerte statt konkurrierender Randabstände. */
+#play .book-character{
+  --face-eyes-top:88px;--face-eyes-width:92px;--face-eye-width:24px;
+  --face-eye-height:35px;--face-cheek-gap:6px;--face-cheek-width:22px;
+  --face-cheek-height:13px;--face-look:2px;
+}
+#play .book-character .book-eyes{top:var(--face-eyes-top);width:var(--face-eyes-width)}
+#play .book-character .book-eyes .eye{
+  width:var(--face-eye-width);height:var(--face-eye-height);flex:0 0 var(--face-eye-width);
+}
+#play .book-character .book-eyes .pupil{
+  width:40%;height:42%;left:50%;top:50%;transform:translate(-50%,-50%);
+}
+#play .book-character.look-right .book-eyes .pupil{transform:translate(calc(-50% + var(--face-look)),-50%)}
+#play .book-character.look-left .book-eyes .pupil{transform:translate(calc(-50% - var(--face-look)),-50%)}
+/* Die Lichtpunkte gehören zu den Augen, nicht zur Konfetti-Animation. */
+#play .book-character .book-eyes .spark{
+  position:absolute;left:23%;top:19%;width:25%;height:auto;aspect-ratio:1;
+  animation:none;transform:none;opacity:1;z-index:1;
+}
+#play .book-character .book-blush{
+  top:calc(var(--face-eyes-top) + var(--face-eye-height) + var(--face-cheek-gap));
+  width:var(--face-cheek-width);height:var(--face-cheek-height);
+}
+#play .book-character .book-blush.left{
+  left:calc(50% - var(--face-eyes-width)/2 + var(--face-eye-width)/2 - var(--face-cheek-width)/2 - 2px);right:auto;
+}
+#play .book-character .book-blush.right{
+  right:calc(50% - var(--face-eyes-width)/2 + var(--face-eye-width)/2 - var(--face-cheek-width)/2 - 2px);left:auto;
+}
+@media(min-width:700px) and (max-width:980px){
+  #play .book-character{
+    --face-eyes-top:53px;--face-eyes-width:77px;--face-eye-width:21px;
+    --face-eye-height:29px;--face-cheek-gap:5px;--face-cheek-width:17px;--face-cheek-height:11px;
+  }
+}
+@media(max-width:699px){
+  #play .book-character{
+    --face-eyes-top:41px;--face-eyes-width:53px;--face-eye-width:14px;
+    --face-eye-height:22px;--face-cheek-gap:4px;--face-cheek-width:12px;
+    --face-cheek-height:8px;--face-look:1px;
+  }
+  #play .book-character.maybe .book-brows span{width:15px}
+  #play .book-character.maybe .book-mouth{top:88px;width:27px}
+}
+@media(max-width:699px) and (max-height:660px){
+  #play .book-character{
+    --face-eyes-top:32px;--face-eyes-width:45px;--face-eye-width:12px;
+    --face-eye-height:18px;--face-cheek-gap:3px;--face-cheek-width:10px;--face-cheek-height:7px;
+  }
+  #play .book-character.maybe .book-mouth{top:68px;width:26px}
+}
+@media(min-width:700px) and (max-width:980px){
+  #play .book-character.maybe .book-brows span{width:21px}
+  #play .book-character.maybe .book-mouth{top:114px;width:42px}
+}
 </style><style id="blinddate-new-colorway">
 :root{
 --bd-outer:radial-gradient(circle at 86% 18%,rgba(255,215,147,.23),transparent 37%),linear-gradient(128deg,#4D73DC 0%,#7E5FDB 53%,#B758D1 100%);
