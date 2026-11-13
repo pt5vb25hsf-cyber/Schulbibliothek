@@ -1158,6 +1158,28 @@ body.match-finale #play #doneTitle{font-size:clamp(1.8rem,5vw,3rem);text-align:c
   #play .finale-dancer .finale-heart:last-child{display:none}
 }
 </style>
+<style id="mobile-profile-left-alignment">
+@media(max-width:699px){
+  #play .tablet-portrait .profile-info,
+  #play .tablet-portrait .profile-info > *{
+    text-align:left!important;
+  }
+  #play .tablet-portrait .profile-info .mini-tag{justify-content:flex-start}
+}
+</style>
+<style id="start-profile-label-alignment">
+@media(max-width:699px){
+  body[data-stage="start"] #play .tablet-portrait .profile-info{
+    display:grid;grid-template-columns:minmax(0,1fr);padding-left:6px!important;
+  }
+  body[data-stage="start"] #play .profile-info #counter,
+  body[data-stage="start"] #play .profile-info #profileBookName{
+    display:block;position:static;transform:none!important;
+    width:100%;margin-left:0!important;margin-right:0!important;
+    padding-left:0;padding-right:0;text-align:left!important;justify-self:start;
+  }
+}
+</style>
 </head><body class="blinddate-start" data-stage="start">
 <header><div class="top"><div class="logo">Blinddate <span>mit einem Buch</span></div><div class="bd-controls"><nav class="nav" aria-label="Für Spielende"><button data-view="play" class="active">💗 Spiel</button></nav><div class="bd-staff"><button type="button" data-view="teacher">🔒 Spielleiter*in</button></div></div></div></header>
 <dialog id="accessDialog" aria-labelledby="accessTitle">
@@ -2717,6 +2739,25 @@ function dnbQuery(value) {
   if (/^(?:\d{13}|\d{9}[\dXx])$/.test(isbn)) return 'num="' + isbn + '"';
   return '(tit all "' + term + '" or per all "' + term + '")';
 }
+// Nur die bibliografischen Suchtreffer bereinigen; manuelle Eingaben bleiben erhalten.
+function cleanCatalogTitle(value) {
+  return String(value || '').replace(/\s+/g, ' ').trim()
+    .split(/\s+\/\s+/)[0]
+    .split(/\s+:\s+/)[0]
+    .replace(/\s*\[(?:Elektronische Ressource|Online-Ressource|Hörbuch|Tonträger)\]\s*/gi, ' ')
+    .replace(/\s+/g, ' ').trim();
+}
+function cleanCatalogAuthors(values) {
+  const authors = values.filter(value => !/\[(?:Übersetzer(?:in)?|Illustrator(?:in)?|Herausgeber(?:in)?|Sprecher(?:in)?|Verlag)\]/i.test(value))
+    .map(value => String(value).replace(/\s*\[[^\]]*\]/g, '')
+      .replace(/\s*\(?(?:\d{4}\s*[-–]\s*\d{0,4}|\*\s*\d{4})\)?\s*$/g, '')
+      .replace(/[,;\s]+$/, '').trim())
+    .map(name => {
+      const parts = name.split(/,\s*/);
+      return parts.length === 2 && parts.every(Boolean) ? parts[1] + ' ' + parts[0] : name;
+    }).map(name => name.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  return [...new Set(authors)].join('; ');
+}
 function parseDnbBooks(xml) {
   const doc = new DOMParser().parseFromString(xml, 'application/xml');
   if (doc.querySelector('parsererror') || doc.getElementsByTagNameNS('*', 'diagnostic').length) {
@@ -2727,9 +2768,8 @@ function parseDnbBooks(xml) {
   const books = [];
   for (const record of doc.getElementsByTagNameNS('*', 'recordData')) {
     const values = name => Array.from(record.getElementsByTagNameNS(dc, name), n => n.textContent.trim());
-    const title = (values('title')[0] || '').split(' / ')[0].trim();
-    const creators = values('creator').map(name => name.replace(/\s*\[[^\]]*\]/g, '').trim());
-    const author = creators.join('; ');
+    const title = cleanCatalogTitle(values('title')[0]);
+    const author = cleanCatalogAuthors(values('creator'));
     if (!title) continue;
     const key = JSON.stringify([title, author]);
     if (seen.has(key)) continue;
