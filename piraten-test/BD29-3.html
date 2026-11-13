@@ -1125,6 +1125,39 @@ body.match-finale #bookPortrait{visibility:hidden}
   #play #start #testBell{font-size:.75rem}
 }
 </style>
+<style id="multiple-match-finale">
+body.match-finale header .logo,
+body.match-finale #play .tablet-toolbar,
+body.match-finale #play .tablet-visual{display:none!important}
+body.match-finale #play .tablet-layout{display:flex!important;flex-direction:column}
+body.match-finale #play .tablet-content{width:100%;flex:1;min-height:0;overflow-y:auto;padding:12px 8px 20px}
+body.match-finale #play #doneTitle{font-size:clamp(1.8rem,5vw,3rem);text-align:center;margin:8px 0 12px}
+#play #matchStage{display:grid;grid-template-columns:repeat(auto-fit,84px);align-content:center;justify-content:center;gap:12px 4px;padding:20px 8px;min-height:180px;flex:1;width:100%}
+#play #matchStage.hidden{display:none}
+.finale-dancer{position:relative;width:84px;height:122px;animation:match-book-dance .65s var(--dance-delay) ease-in-out infinite alternate}
+#play .finale-dancer .finale-book{position:absolute;left:13px;top:12px;transform:scale(.52);transform-origin:top left}
+.finale-flight{width:110px;height:155px;border-radius:15px;background:linear-gradient(var(--cover1),var(--cover2));border:2px solid var(--trim);box-shadow:5px 3px 0 var(--page);transform-origin:top left}
+@keyframes match-book-dance{from{transform:translateY(3px) rotate(-7deg)}to{transform:translateY(-9px) rotate(7deg)}}
+@media(prefers-reduced-motion:reduce){.finale-dancer{animation:none}}
+</style>
+<style id="match-kiss-hearts">
+#play .finale-dancer .finale-mouth,
+#play .finale-dancer .finale-arm.right{animation-iteration-count:infinite}
+#play .finale-dancer .finale-heart{
+  left:49px;top:52px;font-size:17px;color:#ffb8d7;
+  animation:match-heart-kiss 2s ease-out infinite;pointer-events:none;
+}
+@keyframes match-heart-kiss{
+  0%,20%{opacity:0;transform:translate(0,0) scale(.4)}
+  35%{opacity:1;transform:translate(5px,-9px) scale(.8)}
+  75%{opacity:.9;transform:translate(14px,-31px) scale(1.1)}
+  100%{opacity:0;transform:translate(20px,-45px) scale(.7)}
+}
+@media(prefers-reduced-motion:reduce){
+  #play .finale-dancer .finale-heart{animation:none;opacity:1;transform:translate(8px,-22px)}
+  #play .finale-dancer .finale-heart:last-child{display:none}
+}
+</style>
 </head><body class="blinddate-start" data-stage="start">
 <header><div class="top"><div class="logo">Blinddate <span>mit einem Buch</span></div><div class="bd-controls"><nav class="nav" aria-label="Für Spielende"><button data-view="play" class="active">💗 Spiel</button></nav><div class="bd-staff"><button type="button" data-view="teacher">🔒 Spielleiter*in</button></div></div></div></header>
 <dialog id="accessDialog" aria-labelledby="accessTitle">
@@ -2574,7 +2607,14 @@ function openSwipe(){restoreProfileCard();setPortraitMood('neutral');swiping=fal
 function confetti(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;for(let i=0;i<32;i++){const f=document.createElement('span');f.className='spark';f.textContent=['💗','💜','✨'][i%3];f.style.left=Math.random()*100+'vw';f.style.animationDelay=Math.random()*.4+'s';document.body.appendChild(f);setTimeout(()=>f.remove(),3200)}}
 function swipe(rating){if(swiping||$('swipeStep').classList.contains('hidden'))return;swiping=true;state.rating=rating;restoreProfileCard();setPortraitMood(rating==='match'?'happy':rating==='no'?'sad':rating==='maybe'?'maybe':'neutral');if(rating==='match')confetti();setTimeout(()=>{swiping=false;showFollow()},420)}
 function showFollow(){const yes=state.rating==='match';$('followTitle').textContent=yes?'Was hat dich überzeugt?':'Für wen könnte das Buch etwas sein?';$('followHint').textContent=yes?'Wähle aus, was bei euch gefunkt hat.':'Jemand, der …';const arr=yes?[{label:'spannend',emoji:'😲'},{label:'lustig',emoji:'😂'},{label:'berührend',emoji:'❤️'},{label:'interessant',emoji:'🧠'},{label:'schnell drin',emoji:'🔥'},{label:'cool gemacht',emoji:'🎨'}]:[{label:'gern lacht',emoji:'😂'},{label:'Spannung mag',emoji:'😲'},{label:'Fantasy mag',emoji:'✨'},{label:'echte Geschichten mag',emoji:'📖'},{label:'Tiere mag',emoji:'🐾'},{label:'Comics/Manga mag',emoji:'🖼️'},{label:'kurze Texte mag',emoji:'⚡'},{label:'gern tief eintaucht',emoji:'🌊'},{label:'gern Neues erfährt',emoji:'💡'},{label:'Ungewöhnliches mag',emoji:'🌟'}];state.detail='';$('reasonFree').value='';$('followError').classList.add('hidden');$('reasonChoices').innerHTML='';arr.forEach(item=>{const b=document.createElement('button');b.type='button';b.className='choice';b.textContent=`${item.emoji} ${item.label}`;b.addEventListener('click',()=>{state.detail=item.label;document.querySelectorAll('#reasonChoices .choice').forEach(c=>c.classList.toggle('selected',c===b));$('followError').classList.add('hidden')});$('reasonChoices').appendChild(b)});stage('followStep')}
+const sessionMatches = new Map();
 let matchFlight;
+function rememberMatch() {
+  if (state.rating !== 'match' || !state.book) return;
+  const key = JSON.stringify([state.book.title.trim(), (state.book.author || '').trim()]);
+  const style = getComputedStyle($('bookPortrait'));
+  sessionMatches.set(key, Object.fromEntries(['--cover1','--cover2','--trim','--page'].map(name => [name, style.getPropertyValue(name)])));
+}
 function clearMatchFinale() {
   if (matchFlight) matchFlight.cancel();
   matchFlight = null;
@@ -2586,61 +2626,73 @@ function clearMatchFinale() {
   document.body.classList.remove('match-finale');
 }
 function playMatchJingle() {
-  $('matchJingle').play().catch(() => $('playMatchJingle').classList.remove('hidden'));
+  $('playMatchJingle').classList.add('hidden');
+  $('matchJingle').play().catch(() => {
+    if (document.body.classList.contains('match-finale')) $('playMatchJingle').classList.remove('hidden');
+  });
 }
 $('playMatchJingle').addEventListener('click', playMatchJingle);
 function showMatchFinale() {
   const original = $('bookPortrait');
   const origin = original.getBoundingClientRect();
-  const style = getComputedStyle(original);
-  const book = document.createElement('div');
-  book.className = 'finale-book';
-  for (const name of ['--cover1','--cover2','--trim','--page']) book.style.setProperty(name, style.getPropertyValue(name));
-  book.innerHTML = '<i class="finale-eye left"></i><i class="finale-eye right"></i><i class="finale-mouth"></i><i class="finale-arm left"></i><i class="finale-arm right"></i><i class="finale-leg left"></i><i class="finale-leg right"></i>';
   const area = $('matchStage');
-  area.replaceChildren(book);
-  for (const extra of ['', ' second']) {
-    const heart = document.createElement('span');
-    heart.className = 'finale-heart' + extra;
-    heart.textContent = '♥';
-    area.appendChild(heart);
+  area.replaceChildren();
+  for (const [index, colors] of [...sessionMatches.values()].entries()) {
+    const dancer = document.createElement('div');
+    dancer.className = 'finale-dancer';
+    dancer.style.setProperty('--dance-delay', (-index * .13) + 's');
+    const book = document.createElement('div');
+    book.className = 'finale-book';
+    for (const [name, color] of Object.entries(colors)) book.style.setProperty(name, color);
+    book.innerHTML = '<i class="finale-eye left"></i><i class="finale-eye right"></i><i class="finale-mouth"></i><i class="finale-arm left"></i><i class="finale-arm right"></i><i class="finale-leg left"></i><i class="finale-leg right"></i>';
+    dancer.appendChild(book);
+    for (let h = 0; h < 2; h++) {
+      const heart = document.createElement('span');
+      heart.className = 'finale-heart';
+      heart.textContent = '♥';
+      heart.style.animationDelay = (index * .13 + h * .45) + 's';
+      dancer.appendChild(heart);
+    }
+    area.appendChild(dancer);
   }
   area.classList.remove('hidden');
   document.body.classList.add('match-finale');
-  const target = book.getBoundingClientRect();
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && book.animate) {
-    // The same book travels from its portrait to the finale, above the frame's clipping.
-    const flying = book.cloneNode(true);
+  const first = area.querySelector('.finale-book');
+  const target = first.getBoundingClientRect();
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches && first.animate) {
+    const flying = first.cloneNode(true);
+    flying.classList.add('finale-flight');
     document.body.appendChild(flying);
-    Object.assign(flying.style, {position:'fixed',left:target.left+'px',top:target.top+'px',width:target.width+'px',height:target.height+'px',zIndex:'100',pointerEvents:'none',background:style.background,border:style.border,borderRadius:'15px'});
-    book.style.visibility = 'hidden';
+    Object.assign(flying.style, {position:'fixed',left:target.left+'px',top:target.top+'px',zIndex:'100',pointerEvents:'none'});
+    area.style.visibility = 'hidden';
     const dx=origin.left-target.left, dy=origin.top-target.top;
     matchFlight = flying.animate([
-      {transform:'translate('+dx+'px,'+dy+'px) scale(1)'},
-      {transform:'translate('+(dx*.5)+'px,'+(dy*.5-70)+'px) rotate(12deg)',offset:.45},
-      {transform:'translate(0,0) rotate(0deg)'}
+      {transform:`translate(${dx}px,${dy}px) scale(${origin.width/110},${origin.height/155})`},
+      {transform:`translate(${dx*.5}px,${dy*.5-70}px) rotate(12deg) scale(.8)`,offset:.45},
+      {transform:'translate(0,0) rotate(0deg) scale(.52)'}
     ],{duration:850,easing:'ease-in-out'});
-    const land=()=>{flying.remove();book.style.visibility='';};
+    const land=()=>{flying.remove();area.style.visibility='';};
     matchFlight.onfinish=land;
     matchFlight.oncancel=land;
   }
   playMatchJingle();
 }
 function finishDate(decision) {
+  rememberMatch();
   if (decision === 'again') {
     reset();
     return;
   }
-  $('doneTitle').textContent = state.rating === 'match' ? 'Du hast dein Match gefunden!' : 'Danke für dein Blinddate!';
-  $('doneText').textContent = state.rating === 'match' ? 'Viel Spaß beim Weiterlesen!' : 'Vielleicht findest du beim nächsten Mal ein Buch für dich.';
-  const matched = state.rating === 'match';
+  const count = sessionMatches.size;
+  $('doneTitle').textContent = count === 1 ? '1 Match gefunden!' : count + ' Matches gefunden!';
+  $('doneText').textContent = count ? 'Viel Spaß mit deinen Buch-Matches!' : 'Vielleicht findest du beim nächsten Mal ein Buch für dich.';
   state = {};
   $('reasonFree').value = '';
   stage('doneStep');
-  if (matched) showMatchFinale();
+  if (count) showMatchFinale();
 }
 function reset(){clearMatchFinale();stopTimer();state={};$('reasonFree').value='';$('sack').value='';$('startError').classList.add('hidden');$('profileTitle').textContent='';$('profileTitle').classList.add('hidden');$('profileBookName').textContent='Ein Buch wartet auf dich';$('coverTitle').textContent='';$('counter').textContent='DEIN BUCH-DATE';stage('start')}
-$('startBtn').addEventListener('click',startDate);$('sack').addEventListener('keydown',e=>{if(e.key==='Enter')startDate()});$('skip').addEventListener('click',()=>{if(!pass('Passwort eingeben, um den Timer zu überspringen:'))return;stopTimer();openSwipe()});$('left').addEventListener('click',()=>swipe('no'));$('right').addEventListener('click',()=>swipe('match'));document.querySelectorAll('#tabletActions [data-rating="maybe"]').forEach(b=>b.addEventListener('click',()=>swipe('maybe')));document.querySelectorAll('#swipeStep [data-rating]').forEach(b=>b.addEventListener('click',()=>swipe(b.dataset.rating)));const card=$('profile');card.addEventListener('pointerdown',e=>{if(swiping||e.button!==0&&e.pointerType==='mouse')return;startPoint={x:e.clientX,y:e.clientY,id:e.pointerId};card.style.transition='none'});card.addEventListener('pointermove',e=>{if(!startPoint||startPoint.id!==e.pointerId)return;const dx=e.clientX-startPoint.x,dy=e.clientY-startPoint.y;if(Math.abs(dy)>Math.abs(dx)+25)return;if(Math.abs(dx)>12){try{card.setPointerCapture(e.pointerId)}catch{}}card.style.transform=`translateX(${dx}px) rotate(${dx/20}deg)`;$('likeStamp').style.opacity=Math.min(1,Math.max(0,dx/90));$('nopeStamp').style.opacity=Math.min(1,Math.max(0,-dx/90))});card.addEventListener('pointerup',e=>{if(!startPoint||startPoint.id!==e.pointerId)return;const dx=e.clientX-startPoint.x;startPoint=null;if(Math.abs(dx)>85){swipe(dx>0?'match':'no');return}card.style.transition='transform .2s';card.style.transform='';$('likeStamp').style.opacity='0';$('nopeStamp').style.opacity='0'});card.addEventListener('pointercancel',()=>{startPoint=null;card.style.transform=''});card.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();swipe(e.key==='ArrowRight'?'match':'no')}});$('followNext').addEventListener('click',()=>{if(!state.detail){$('followError').textContent='Bitte eine Antwort auswählen.';$('followError').classList.remove('hidden');return}stage('decisionStep')});document.querySelectorAll('[data-decision]').forEach(b=>b.addEventListener('click',()=>{finishDate(b.dataset.decision)}));$('againBtn').addEventListener('click',reset);
+$('startBtn').addEventListener('click',startDate);$('sack').addEventListener('keydown',e=>{if(e.key==='Enter')startDate()});$('skip').addEventListener('click',()=>{if(!pass('Passwort eingeben, um den Timer zu überspringen:'))return;stopTimer();openSwipe()});$('left').addEventListener('click',()=>swipe('no'));$('right').addEventListener('click',()=>swipe('match'));document.querySelectorAll('#tabletActions [data-rating="maybe"]').forEach(b=>b.addEventListener('click',()=>swipe('maybe')));document.querySelectorAll('#swipeStep [data-rating]').forEach(b=>b.addEventListener('click',()=>swipe(b.dataset.rating)));const card=$('profile');card.addEventListener('pointerdown',e=>{if(swiping||e.button!==0&&e.pointerType==='mouse')return;startPoint={x:e.clientX,y:e.clientY,id:e.pointerId};card.style.transition='none'});card.addEventListener('pointermove',e=>{if(!startPoint||startPoint.id!==e.pointerId)return;const dx=e.clientX-startPoint.x,dy=e.clientY-startPoint.y;if(Math.abs(dy)>Math.abs(dx)+25)return;if(Math.abs(dx)>12){try{card.setPointerCapture(e.pointerId)}catch{}}card.style.transform=`translateX(${dx}px) rotate(${dx/20}deg)`;$('likeStamp').style.opacity=Math.min(1,Math.max(0,dx/90));$('nopeStamp').style.opacity=Math.min(1,Math.max(0,-dx/90))});card.addEventListener('pointerup',e=>{if(!startPoint||startPoint.id!==e.pointerId)return;const dx=e.clientX-startPoint.x;startPoint=null;if(Math.abs(dx)>85){swipe(dx>0?'match':'no');return}card.style.transition='transform .2s';card.style.transform='';$('likeStamp').style.opacity='0';$('nopeStamp').style.opacity='0'});card.addEventListener('pointercancel',()=>{startPoint=null;card.style.transform=''});card.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();swipe(e.key==='ArrowRight'?'match':'no')}});$('followNext').addEventListener('click',()=>{if(!state.detail){$('followError').textContent='Bitte eine Antwort auswählen.';$('followError').classList.remove('hidden');return}stage('decisionStep')});document.querySelectorAll('[data-decision]').forEach(b=>b.addEventListener('click',()=>{finishDate(b.dataset.decision)}));$('againBtn').addEventListener('click',()=>{sessionMatches.clear();reset()});
 let visibleSacks = 10;
 
 function updateSackRows() {
