@@ -2899,6 +2899,25 @@ function dnbQuery(value) {
   if (/^(?:\d{13}|\d{9}[\dXx])$/.test(isbn)) return 'num="' + isbn + '"';
   return '(tit all "' + term + '" or per all "' + term + '")';
 }
+// Nur die bibliografischen Suchtreffer bereinigen; manuelle Eingaben bleiben erhalten.
+function cleanCatalogTitle(value) {
+  return String(value || '').replace(/\s+/g, ' ').trim()
+    .split(/\s+\/\s+/)[0]
+    .split(/\s+:\s+/)[0]
+    .replace(/\s*\[(?:Elektronische Ressource|Online-Ressource|Hörbuch|Tonträger)\]\s*/gi, ' ')
+    .replace(/\s+/g, ' ').trim();
+}
+function cleanCatalogAuthors(values) {
+  const authors = values.filter(value => !/\[(?:Übersetzer(?:in)?|Illustrator(?:in)?|Herausgeber(?:in)?|Sprecher(?:in)?|Verlag)\]/i.test(value))
+    .map(value => String(value).replace(/\s*\[[^\]]*\]/g, '')
+      .replace(/\s*\(?(?:\d{4}\s*[-–]\s*\d{0,4}|\*\s*\d{4})\)?\s*$/g, '')
+      .replace(/[,;\s]+$/, '').trim())
+    .map(name => {
+      const parts = name.split(/,\s*/);
+      return parts.length === 2 && parts.every(Boolean) ? parts[1] + ' ' + parts[0] : name;
+    }).map(name => name.replace(/\s+/g, ' ').trim()).filter(Boolean);
+  return [...new Set(authors)].join('; ');
+}
 function parseDnbBooks(xml) {
   const doc = new DOMParser().parseFromString(xml, 'application/xml');
   if (doc.querySelector('parsererror') || doc.getElementsByTagNameNS('*', 'diagnostic').length) {
@@ -2909,9 +2928,8 @@ function parseDnbBooks(xml) {
   const books = [];
   for (const record of doc.getElementsByTagNameNS('*', 'recordData')) {
     const values = name => Array.from(record.getElementsByTagNameNS(dc, name), n => n.textContent.trim());
-    const title = (values('title')[0] || '').split(' / ')[0].trim();
-    const creators = values('creator').map(name => name.replace(/\s*\[[^\]]*\]/g, '').trim());
-    const author = creators.join('; ');
+    const title = cleanCatalogTitle(values('title')[0]);
+    const author = cleanCatalogAuthors(values('creator'));
     if (!title) continue;
     const key = JSON.stringify([title, author]);
     if (seen.has(key)) continue;
@@ -3189,7 +3207,20 @@ $('printSavedMatches').addEventListener('click', () => {
   window.print();
 });
 
-function renderResults(){updatePrintMatches();const data=round;const groups=new Map();data.forEach(r=>{const key=String(r.bookIndex??r.title);if(!groups.has(key))groups.set(key,{title:r.title||'Buch',author:r.author||'',rows:[]});groups.get(key).rows.push(r)});$('resultTotal').textContent=data.length+' Bewertungen für '+groups.size+' Bücher';$('community').innerHTML=[...groups.values()].sort((a,b)=>b.rows.length-a.rows.length).map(g=>{const counts={match:0,maybe:0,no:0};g.rows.forEach(x=>{if(Object.hasOwn(counts,x.rating))counts[x.rating]++});const pct=Math.round(100*counts.match/g.rows.length);const notes=g.rows.filter(x=>x.positiveFree||x.freeAudience).slice(-3).map(x=>`<div class="note">💬 ${esc(x.positiveFree||x.freeAudience)}</div>`).join('');return `<article class="community-card"><div class="result-head"><h3>${esc(g.title)}</h3><span class="pill">💚 ${pct}% Match</span></div><div class="muted">${esc(g.author)} · ${g.rows.length} Date(s)</div><div class="votes"><span>💚 ${counts.match} Match</span><span>👀 ${counts.maybe} Vielleicht</span><span>❌ ${counts.no} Kein Match</span></div>${notes}</article>`}).join('')||'<div class="panel">In diesem Durchgang hast du noch kein Buch bewertet.</div>'}
+function renderResults(){
+  updatePrintMatches();
+  const books = new Map();
+  for (const entry of round) {
+    const key = String(entry.bookIndex ?? JSON.stringify([entry.title, entry.author]));
+    books.set(key, entry);
+  }
+  const labels = {match:'💚 Match', maybe:'👀 Vielleicht', no:'❌ Kein Match'};
+  $('resultTotal').textContent = books.size + (books.size === 1 ? ' Buch in deiner Leseliste' : ' Bücher in deiner Leseliste');
+  $('community').innerHTML = [...books.values()].map(entry => {
+    const note = entry.positiveFree || entry.freeAudience;
+    return `<article class="community-card"><div class="result-head"><h3>${esc(entry.title || 'Buch')}</h3><span class="pill">${labels[entry.rating] || 'Noch nicht bewertet'}</span></div><div class="muted">${esc(entry.author || '')}</div>${note ? `<div class="note">💬 ${esc(note)}</div>` : ''}</article>`;
+  }).join('') || '<div class="panel">In diesem Durchgang hast du noch kein Buch bewertet.</div>';
+}
 $('clearResults').addEventListener('click',()=>{if(!pass('Passwort zum Löschen der Ergebnisse:'))return;if(!confirm('Alle lokal gespeicherten Bewertungen löschen?'))return;feedback=[];round=[];rememberSession();persist(FEEDBACKKEY,feedback);renderResults()});document.addEventListener('visibilitychange',tick);window.addEventListener('pageshow',tick);importSetup();updateBookOverview();
 })();
 </script><section id="matchPrintout" aria-hidden="true"></section><script>
